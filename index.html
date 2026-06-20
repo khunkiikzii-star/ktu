@@ -53,7 +53,7 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
                     <div class="flex justify-between items-center border-b border-white/10 pb-6 mb-12">
                         <div class="flex items-center space-x-3">
-                            <img src="https://github.com/khunkiikzii-star/ktu/blob/main/logo.png" alt="โลโก้โรงเรียนอนุบาลแห่งมหาวิทยาลัยธรรมศาสตร์" class="w-12 h-12 object-contain rounded-xl shadow-sm">
+                            <img src="https://raw.githubusercontent.com/khunkiikzii-star/ktu/main/logo.png" alt="โลโก้โรงเรียนอนุบาลแห่งมหาวิทยาลัยธรรมศาสตร์" class="w-12 h-12 object-contain rounded-xl shadow-sm">
                             <div>
                                 <h1 class="text-lg font-bold tracking-tight">KTU BUDGET SYSTEM</h1>
                                 <p class="text-xs text-indigo-200">โรงเรียนอนุบาลแห่งมหาวิทยาลัยธรรมศาสตร์ฯ</p>
@@ -191,7 +191,7 @@
             <aside id="sidebar-desktop" class="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 fixed inset-y-0 left-0 z-30 p-6 justify-between shadow-sm">
                 <div class="space-y-8">
                     <div class="flex items-center space-x-3 pb-4 border-b border-slate-100">
-                        <img src="https://github.com/khunkiikzii-star/ktu/blob/main/logo.png" alt="โลโก้โรงเรียน" class="w-9 h-9 object-contain rounded-lg">
+                        <img src="https://raw.githubusercontent.com/khunkiikzii-star/ktu/main/logo.png" alt="โลโก้โรงเรียน" class="w-9 h-9 object-contain rounded-lg">
                         <div>
                             <h2 class="text-sm font-bold tracking-tight text-slate-900">KTU Admin Suite</h2>
                             <p class="text-[11px] font-medium text-slate-400" id="user-display-role">สิทธิ์การทำงาน: -</p>
@@ -264,7 +264,7 @@
                                         <span class="text-sm sm:text-base font-bold text-indigo-600" id="dash-est-income">0.00</span>
                                     </div>
                                     <div>
-                                        <span class="text-[11px] text-slate-400 block">รับเข้าจริง</span>
+                                        <span class="text-[11px] text-slate-400 block">รับเข้าจริง (อนุมัติแล้ว)</span>
                                         <span class="text-sm sm:text-base font-bold text-emerald-600" id="dash-act-income">0.00</span>
                                     </div>
                                     <div>
@@ -292,7 +292,7 @@
                                         <span class="text-sm sm:text-base font-bold text-slate-700" id="dash-est-expense">0.00</span>
                                     </div>
                                     <div>
-                                        <span class="text-[11px] text-slate-400 block">เบิกจ่ายจริง</span>
+                                        <span class="text-[11px] text-slate-400 block">เบิกจ่ายจริง (อนุมัติแล้ว)</span>
                                         <span class="text-sm sm:text-base font-bold text-red-600" id="dash-act-expense">0.00</span>
                                     </div>
                                     <div>
@@ -861,7 +861,6 @@
         }
 
         async function supabaseRequest(endpoint, method = 'GET', body = null) {
-            if (isOfflineMode) return null;
             const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
             const headers = {
                 'apikey': SUPABASE_ANON_KEY,
@@ -889,7 +888,6 @@
         }
 
         function saveToLocalStorage() {
-            if(!isOfflineMode) return;
             localStorage.setItem('ktu_users', JSON.stringify(cacheSystemUsers));
             localStorage.setItem('ktu_items', JSON.stringify(cacheBudgetItems));
             localStorage.setItem('ktu_trans', JSON.stringify(cacheTransactions));
@@ -922,20 +920,24 @@
             const liveBadge = document.getElementById('live-status-container');
             if(liveBadge) {
                 liveBadge.className = "bg-amber-100 text-amber-800 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5";
-                liveBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span> `;
+                liveBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span> <span>Offline Mode</span>`;
             }
         }
 
         async function syncDataFromDatabase() {
-            if (isOfflineMode) return;
-            const items = await supabaseRequest('budget_items?select=*', 'GET');
-            const trans = await supabaseRequest('budget_transactions?select=*', 'GET');
-            const users = await supabaseRequest('system_users?select=*', 'GET');
+            if (!isOfflineMode) {
+                const items = await supabaseRequest('budget_items?select=*', 'GET');
+                const trans = await supabaseRequest('budget_transactions?select=*', 'GET');
+                const users = await supabaseRequest('system_users?select=*', 'GET');
 
-            if (items && trans && users) {
-                cacheBudgetItems = items;
-                cacheTransactions = trans;
-                cacheSystemUsers = users;
+                if (items && trans && users) {
+                    cacheBudgetItems = items;
+                    cacheTransactions = trans;
+                    cacheSystemUsers = users;
+                    saveToLocalStorage();
+                } else {
+                    enableOfflineSandboxMode();
+                }
             } else {
                 enableOfflineSandboxMode();
             }
@@ -1006,7 +1008,7 @@
             XLSX.writeFile(wb, `Sample_${type}_Items.xlsx`);
         }
 
-        function importBudgetItems(event, type) {
+        async function importBudgetItems(event, type) {
             const file = event.target.files[0];
             if(!file) return;
             const reader = new FileReader();
@@ -1036,18 +1038,21 @@
                             allocated_amount: isNaN(amount) ? 0 : amount
                         };
                         
-                        if(isOfflineMode) {
-                            payload.id = "i_" + Date.now() + Math.random().toString().substring(2,6);
-                            cacheBudgetItems.push(payload);
-                            saveToLocalStorage();
-                        } else {
-                            await supabaseRequest('budget_items', 'POST', payload);
+                        // Optimistic Update ล่วงหน้า
+                        payload.id = "i_" + Date.now() + Math.random().toString().substring(2,6);
+                        cacheBudgetItems.push(payload);
+                        
+                        if(!isOfflineMode) {
+                            let dbPayload = {...payload}; delete dbPayload.id;
+                            await supabaseRequest('budget_items', 'POST', dbPayload);
                         }
                         importedCount++;
                     }
                     
+                    saveToLocalStorage();
                     createToast(`นำเข้าข้อมูลสำเร็จจำนวน ${importedCount} รายการ`, 'success');
-                    await syncDataFromDatabase();
+                    if (!isOfflineMode) await syncDataFromDatabase();
+                    
                     if(type === 'INCOME') renderBudgetIncomeTable();
                     else renderBudgetExpenseTable();
                     showLoader(false);
@@ -1067,10 +1072,13 @@
                 if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount);
             });
             cacheTransactions.forEach(t => {
-                const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                if (matchedItem) {
-                    if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                    if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                // นับเฉพาะรายการที่ "ตรวจสอบแล้ว" เท่านั้นถึงจะขึ้นเป็นยอดจริง
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                    if (matchedItem) {
+                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
+                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                    }
                 }
             });
             document.getElementById('landing-est-income').textContent = formatMoney(estInc);
@@ -1087,10 +1095,12 @@
 
             let actInc = 0, actExp = 0;
             filteredTrans.forEach(t => {
-                const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                if (matchedItem) {
-                    if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                    if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                    if (matchedItem) {
+                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
+                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                    }
                 }
             });
 
@@ -1123,7 +1133,6 @@
 
         function handleLogin(event) {
             if (event) event.preventDefault();
-            enableOfflineSandboxMode(); 
 
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
@@ -1151,7 +1160,6 @@
         }
 
         function bypassLoginQuick() {
-            enableOfflineSandboxMode();
             document.getElementById('login-username').value = 'admin';
             document.getElementById('login-password').value = 'admin1234';
             handleLogin(null);
@@ -1283,10 +1291,13 @@
                 if (t.status === 'ตรวจสอบแล้ว') approvedCount++;
                 if (t.status === 'ต้องแก้ไข') revCount++;
 
-                const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                if (matchedItem) {
-                    if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                    if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                // นับเฉพาะรายการที่ "ตรวจสอบแล้ว" เท่านั้น
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                    if (matchedItem) {
+                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
+                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                    }
                 }
             });
 
@@ -1327,7 +1338,7 @@
                     labels: ['หมวดรายรับสะสม', 'หมวดรายจ่ายสะสม'],
                     datasets: [
                         { label: 'ประมาณการตั้งต้นประจำปี', data: [estInc, estExp], backgroundColor: '#475569' },
-                        { label: 'ยอดธุรกรรมจริงตามเงื่อนไข', data: [actInc, actExp], backgroundColor: '#4f46e5' }
+                        { label: 'ยอดธุรกรรมจริงที่ตรวจสอบแล้ว', data: [actInc, actExp], backgroundColor: '#4f46e5' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -1460,27 +1471,31 @@
                 allocated_amount: Number(document.getElementById('item-amount').value)
             };
 
-            if (isOfflineMode) {
-                if (id) {
-                    const idx = cacheBudgetItems.findIndex(i => i.id === id);
-                    cacheBudgetItems[idx] = { ...cacheBudgetItems[idx], ...payload };
-                } else {
-                    payload.id = "i_" + Date.now();
-                    cacheBudgetItems.push(payload);
-                }
-                saveToLocalStorage();
+            // 1. Optimistic Local Update
+            if (id) {
+                const idx = cacheBudgetItems.findIndex(i => i.id === id);
+                cacheBudgetItems[idx] = { ...cacheBudgetItems[idx], ...payload };
             } else {
-                if (id) await supabaseRequest(`budget_items?id=eq.${id}`, 'PATCH', payload);
-                else await supabaseRequest('budget_items', 'POST', payload);
+                payload.id = "i_" + Date.now();
+                cacheBudgetItems.push(payload);
+            }
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode) {
+                let dbPayload = { ...payload };
+                if (!id) delete dbPayload.id;
+                
+                let res;
+                if (id && !id.startsWith('i_')) res = await supabaseRequest(`budget_items?id=eq.${id}`, 'PATCH', dbPayload);
+                else res = await supabaseRequest('budget_items', 'POST', dbPayload);
+                if(res) await syncDataFromDatabase();
             }
 
             createToast('บันทึกผังโครงสร้างบัญชีเรียบร้อย', 'success');
-            await syncDataFromDatabase();
             closeBudgetItemModal();
-            
             if(typeVal === 'INCOME') renderBudgetIncomeTable();
             else renderBudgetExpenseTable();
-            
             showLoader(false);
         }
 
@@ -1489,18 +1504,20 @@
             const type = cacheBudgetItems.find(i => i.id === id)?.type;
             
             showLoader(true, 'กำลังลบ...');
-            if (isOfflineMode) {
-                cacheBudgetItems = cacheBudgetItems.filter(i => i.id !== id);
-                saveToLocalStorage();
-            } else {
-                await supabaseRequest(`budget_items?id=eq.${id}`, 'DELETE');
-            }
-            createToast('ลบผังรายการบัญชีสำเร็จเรียบร้อย', 'warning');
-            await syncDataFromDatabase();
             
+            // 1. Optimistic Delete
+            cacheBudgetItems = cacheBudgetItems.filter(i => i.id !== id);
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode && !id.startsWith('i_')) {
+                await supabaseRequest(`budget_items?id=eq.${id}`, 'DELETE');
+                await syncDataFromDatabase();
+            }
+
+            createToast('ลบผังรายการบัญชีสำเร็จเรียบร้อย', 'warning');
             if(type === 'INCOME') renderBudgetIncomeTable();
             else renderBudgetExpenseTable();
-            
             showLoader(false);
         }
 
@@ -1703,62 +1720,86 @@
                 status: 'รอตรวจสอบ'
             };
 
-            if (isOfflineMode) {
-                if (id) {
-                    const idx = cacheTransactions.findIndex(t => t.id === id);
-                    cacheTransactions[idx] = { ...cacheTransactions[idx], ...payload };
-                } else {
-                    payload.id = "t_" + Date.now();
-                    cacheTransactions.push(payload);
-                }
-                saveToLocalStorage();
+            // 1. Optimistic Local Update
+            if (id) {
+                const idx = cacheTransactions.findIndex(t => t.id === id);
+                cacheTransactions[idx] = { ...cacheTransactions[idx], ...payload };
             } else {
-                if (id) await supabaseRequest(`budget_transactions?id=eq.${id}`, 'PATCH', payload);
-                else await supabaseRequest('budget_transactions', 'POST', payload);
+                payload.id = "t_" + Date.now();
+                cacheTransactions.push(payload);
+            }
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode) {
+                let dbPayload = { ...payload };
+                if (!id) delete dbPayload.id;
+                
+                let res;
+                if (id && !id.startsWith('t_')) res = await supabaseRequest(`budget_transactions?id=eq.${id}`, 'PATCH', dbPayload);
+                else res = await supabaseRequest('budget_transactions', 'POST', dbPayload);
+                if(res) await syncDataFromDatabase();
             }
 
             createToast('ลงบันทึกรายการเรียบร้อย', 'success');
-            await syncDataFromDatabase();
             closeTransactionModal();
             
             if(type === 'INCOME') renderTransIncomeTable();
             else renderTransExpenseTable();
 
+            // รีเฟรชยอดรวมบนแดชบอร์ดทันที
+            loadDashboardData();
+            calculateLandingOverview();
+
             showLoader(false);
         }
 
         async function changeTransStatus(id, newStatus) {
-            const itemType = cacheBudgetItems.find(i => i.id === cacheTransactions.find(t => t.id === id).budget_item_id)?.type;
-            
-            if (isOfflineMode) {
-                const idx = cacheTransactions.findIndex(t => t.id === id);
+            // 1. Optimistic Update
+            const idx = cacheTransactions.findIndex(t => t.id === id);
+            if (idx > -1) {
                 cacheTransactions[idx].status = newStatus;
                 saveToLocalStorage();
-            } else {
-                await supabaseRequest(`budget_transactions?id=eq.${id}`, 'PATCH', { status: newStatus });
             }
+
+            // 2. Try Supabase
+            if (!isOfflineMode && !id.startsWith('t_')) {
+                const res = await supabaseRequest(`budget_transactions?id=eq.${id}`, 'PATCH', { status: newStatus });
+                if(res) await syncDataFromDatabase();
+            }
+
             createToast(`ปรับสถานะเป็น [${newStatus}] สำเร็จ`, 'success');
-            await syncDataFromDatabase();
+            const itemType = cacheBudgetItems.find(i => i.id === cacheTransactions.find(t => t.id === id).budget_item_id)?.type;
             
             if(itemType === 'INCOME') renderTransIncomeTable();
             else renderTransExpenseTable();
+            
+            // อัปเดตตารางยอดรวมทันทีที่เปลี่ยนสถานะเป็นตรวจสอบแล้ว
+            loadDashboardData();
+            calculateLandingOverview();
         }
 
         async function deleteTransaction(id) {
             if(!confirm('ยืนยันลบรายการนี้?')) return;
             const itemType = cacheBudgetItems.find(i => i.id === cacheTransactions.find(t => t.id === id).budget_item_id)?.type;
 
-            if (isOfflineMode) {
-                cacheTransactions = cacheTransactions.filter(t => t.id !== id);
-                saveToLocalStorage();
-            } else {
-                await supabaseRequest(`budget_transactions?id=eq.${id}`, 'DELETE');
+            // 1. Optimistic Delete
+            cacheTransactions = cacheTransactions.filter(t => t.id !== id);
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode && !id.startsWith('t_')) {
+                const res = await supabaseRequest(`budget_transactions?id=eq.${id}`, 'DELETE');
+                if(res) await syncDataFromDatabase();
             }
+
             createToast('ลบรายการสำเร็จ', 'warning');
-            await syncDataFromDatabase();
             
             if(itemType === 'INCOME') renderTransIncomeTable();
             else renderTransExpenseTable();
+
+            loadDashboardData();
+            calculateLandingOverview();
         }
 
         let generatedReportRawData = [];
@@ -1794,7 +1835,7 @@
                 let accumBeforeAmt = 0;
 
                 cacheTransactions.forEach(t => {
-                    if (t.budget_item_id === item.id) {
+                    if (t.budget_item_id === item.id && t.status === 'ตรวจสอบแล้ว') {
                         const amt = Number(t.amount);
                         if (mode === 'ALL') currentMonthAmt += amt;
                         else {
@@ -1835,7 +1876,7 @@
                     let accumBeforeAmt = 0;
 
                     cacheTransactions.forEach(t => {
-                        if (t.budget_item_id === item.id) {
+                        if (t.budget_item_id === item.id && t.status === 'ตรวจสอบแล้ว') {
                             const amt = Number(t.amount);
                             if (mode === 'ALL') currentMonthAmt += amt;
                             else {
@@ -1936,22 +1977,28 @@
                 avatar_url: ""
             };
 
-            if (isOfflineMode) {
-                if (id) {
-                    const idx = cacheSystemUsers.findIndex(u => u.id === id);
-                    cacheSystemUsers[idx] = { ...cacheSystemUsers[idx], ...payload };
-                } else {
-                    payload.id = "u_" + Date.now();
-                    cacheSystemUsers.push(payload);
-                }
-                saveToLocalStorage();
+            // 1. Optimistic Local Update
+            if (id) {
+                const idx = cacheSystemUsers.findIndex(u => u.id === id);
+                cacheSystemUsers[idx] = { ...cacheSystemUsers[idx], ...payload };
             } else {
-                if (id) await supabaseRequest(`system_users?id=eq.${id}`, 'PATCH', payload);
-                else await supabaseRequest('system_users', 'POST', payload);
+                payload.id = "u_" + Date.now();
+                cacheSystemUsers.push(payload);
+            }
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode) {
+                let dbPayload = { ...payload };
+                if (!id) delete dbPayload.id;
+                
+                let res;
+                if (id && !id.startsWith('u_')) res = await supabaseRequest(`system_users?id=eq.${id}`, 'PATCH', dbPayload);
+                else res = await supabaseRequest('system_users', 'POST', dbPayload);
+                if(res) await syncDataFromDatabase();
             }
 
             createToast('บันทึกข้อมูลเจ้าหน้าที่เรียบร้อย', 'success');
-            await syncDataFromDatabase();
             closeUserModal();
             renderUsersTable();
         }
@@ -1959,14 +2006,18 @@
         async function deleteUser(id) {
             if(id === currentUser.id) return;
             if(!confirm('ยืนยันลบผู้ใช้งานรายนี้?')) return;
-            if (isOfflineMode) {
-                cacheSystemUsers = cacheSystemUsers.filter(u => u.id !== id);
-                saveToLocalStorage();
-            } else {
-                await supabaseRequest(`system_users?id=eq.${id}`, 'DELETE');
+            
+            // 1. Optimistic Delete
+            cacheSystemUsers = cacheSystemUsers.filter(u => u.id !== id);
+            saveToLocalStorage();
+
+            // 2. Try Supabase
+            if (!isOfflineMode && !id.startsWith('u_')) {
+                const res = await supabaseRequest(`system_users?id=eq.${id}`, 'DELETE');
+                if(res) await syncDataFromDatabase();
             }
+
             createToast('ลบสมาชิกสำเร็จ', 'warning');
-            await syncDataFromDatabase();
             renderUsersTable();
         }
     </script>
