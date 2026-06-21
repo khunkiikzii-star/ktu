@@ -930,7 +930,8 @@
                 const trans = await supabaseRequest('budget_transactions?select=*', 'GET');
                 const users = await supabaseRequest('system_users?select=*', 'GET');
 
-                if (items && trans && users) {
+                // แก้ไขเงื่อนไขตรงนี้ เพิ่มการเช็ค users.length > 0
+                if (items && trans && users && users.length > 0) {
                     cacheBudgetItems = items;
                     cacheTransactions = trans;
                     cacheSystemUsers = users;
