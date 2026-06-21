@@ -696,9 +696,9 @@
                     <label class="block text-slate-600 font-medium mb-1">ค้นหาและเลือกหัวข้องบประมาณ</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="search" class="w-3.5 h-3.5"></i></span>
-                        <input type="text" id="trans-item-search" oninput="filterBudgetItemOptions(this.value)" class="w-full bg-slate-50 border rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500" placeholder="พิมพ์เพื่อค้นหาหัวข้อบัญชีที่มีอยู่ในระบบ...">
+                        <input type="text" id="trans-item-search" autocomplete="off" oninput="filterBudgetItemOptions(this.value)" class="w-full bg-slate-50 border rounded-xl py-2.5 pl-9 pr-4 text-xs focus:ring-2 focus:ring-indigo-500" placeholder="พิมพ์เพื่อค้นหาหัวข้อบัญชีที่มีอยู่ในระบบ...">
                     </div>
-                    <input type="hidden" id="trans-item-id" required>
+                    <input type="hidden" id="trans-item-id">
                     <div id="trans-item-dropdown" class="absolute left-0 right-0 mt-1 bg-white border rounded-xl shadow-lg max-h-40 overflow-y-auto z-50 divide-y divide-slate-50 hidden"></div>
                 </div>
 
@@ -930,7 +930,7 @@
                 const trans = await supabaseRequest('budget_transactions?select=*', 'GET');
                 const users = await supabaseRequest('system_users?select=*', 'GET');
 
-                // แก้ไขเงื่อนไขตรงนี้ เพิ่มการเช็ค users.length > 0
+                // มีการเช็คว่า users ต้องมีความยาวมากกว่า 0 (มีข้อมูลผู้ใช้จริงๆ)
                 if (items && trans && users && users.length > 0) {
                     cacheBudgetItems = items;
                     cacheTransactions = trans;
