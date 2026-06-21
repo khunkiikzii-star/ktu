@@ -1695,7 +1695,9 @@
             calculateFiscalPeriod();
             modal.classList.remove('opacity-0', 'pointer-events-none');
         }
-
+function closeTransactionModal() {
+    document.getElementById('modal-transaction').classList.add('opacity-0', 'pointer-events-none');
+}
         async function saveTransaction(event) {
             event.preventDefault();
             const headingId = document.getElementById('trans-item-id').value;
