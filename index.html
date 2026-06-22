@@ -217,8 +217,9 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 border-l-4 border-l-indigo-600">
-                                <div class="flex justify-between items-center">
+                                <div class="flex justify-between items-center mb-2">
                                     <span class="text-xs font-bold text-slate-400 tracking-wider uppercase block">หมวดข้อมูลฝั่งรายรับรวม</span>
+                                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md" id="dash-pct-income">0%</span>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
                                     <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm font-bold text-indigo-600" id="dash-est-income">0.00</span></div>
@@ -228,8 +229,9 @@
                                 <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="dash-bar-income" class="bg-indigo-600 h-full w-0 transition-all duration-500"></div></div>
                             </div>
                             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 border-l-4 border-l-amber-500">
-                                <div class="flex justify-between items-center">
+                                <div class="flex justify-between items-center mb-2">
                                     <span class="text-xs font-bold text-slate-400 tracking-wider uppercase block">หมวดข้อมูลฝั่งรายจ่ายรวม</span>
+                                    <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md" id="dash-pct-expense">0%</span>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
                                     <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm font-bold text-slate-700" id="dash-est-expense">0.00</span></div>
@@ -579,7 +581,7 @@
 
         function handleLogin(event) {
             if (event) event.preventDefault();
-            loadFromLocalStorage(); // บังคับดึงข้อมูล LocalStorage ล่าสุดทุกครั้งที่ล็อกอิน (แก้ปัญหาเทสจอเดียวกัน)
+            loadFromLocalStorage(); 
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
 
@@ -593,7 +595,6 @@
                 document.getElementById('form-login').reset();
                 switchView('workspace');
                 
-                // แจ้งเตือนสิทธิ์เพื่อความเข้าใจเรื่อง LocalStorage ในเครื่อง
                 createToast(`ล็อกอินสิทธิ์ ${currentUser.role} สำเร็จ (ระบบออฟไลน์ โหมดจำลองในเครื่อง)`, 'success');
             } else {
                 createToast('ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', 'danger');
@@ -679,31 +680,37 @@
                 }
             });
 
-            document.getElementById('dash-est-income').textContent = formatMoney(estInc);
-            document.getElementById('dash-act-income').textContent = formatMoney(actInc);
-            document.getElementById('dash-bal-income').textContent = formatMoney(Math.max(0, estInc - actInc));
-            document.getElementById('dash-pct-income').textContent = `${estInc > 0 ? Math.round((actInc / estInc) * 100) : 0}%`;
-            document.getElementById('dash-bar-income').style.width = `${estInc > 0 ? Math.min(100, (actInc / estInc) * 100) : 0}%`;
+            // ดัก Error กันโค้ดพัง หากหา element หน้า HTML ไม่เจอ
+            if (document.getElementById('dash-est-income')) document.getElementById('dash-est-income').textContent = formatMoney(estInc);
+            if (document.getElementById('dash-act-income')) document.getElementById('dash-act-income').textContent = formatMoney(actInc);
+            if (document.getElementById('dash-bal-income')) document.getElementById('dash-bal-income').textContent = formatMoney(Math.max(0, estInc - actInc));
+            if (document.getElementById('dash-pct-income')) document.getElementById('dash-pct-income').textContent = `${estInc > 0 ? Math.round((actInc / estInc) * 100) : 0}%`;
+            if (document.getElementById('dash-bar-income')) document.getElementById('dash-bar-income').style.width = `${estInc > 0 ? Math.min(100, (actInc / estInc) * 100) : 0}%`;
 
-            document.getElementById('dash-est-expense').textContent = formatMoney(estExp);
-            document.getElementById('dash-act-expense').textContent = formatMoney(actExp);
-            document.getElementById('dash-bal-expense').textContent = formatMoney(Math.max(0, estExp - actExp));
-            document.getElementById('dash-pct-expense').textContent = `${estExp > 0 ? Math.round((actExp / estExp) * 100) : 0}%`;
-            document.getElementById('dash-bar-expense').style.width = `${estExp > 0 ? Math.min(100, (actExp / estExp) * 100) : 0}%`;
+            if (document.getElementById('dash-est-expense')) document.getElementById('dash-est-expense').textContent = formatMoney(estExp);
+            if (document.getElementById('dash-act-expense')) document.getElementById('dash-act-expense').textContent = formatMoney(actExp);
+            if (document.getElementById('dash-bal-expense')) document.getElementById('dash-bal-expense').textContent = formatMoney(Math.max(0, estExp - actExp));
+            if (document.getElementById('dash-pct-expense')) document.getElementById('dash-pct-expense').textContent = `${estExp > 0 ? Math.round((actExp / estExp) * 100) : 0}%`;
+            if (document.getElementById('dash-bar-expense')) document.getElementById('dash-bar-expense').style.width = `${estExp > 0 ? Math.min(100, (actExp / estExp) * 100) : 0}%`;
 
-            document.getElementById('dash-status-summary').innerHTML = `
-                <div class="flex justify-between items-center bg-amber-50 border border-amber-100 p-3 rounded-xl"><span class="font-medium text-amber-800 flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i> รายการค้างรอการตรวจสอบอนุมัติ</span><span class="font-bold bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs">${pendingCount} รายการ</span></div>
-                <div class="flex justify-between items-center bg-emerald-50 border border-emerald-100 p-3 rounded-xl"><span class="font-medium text-emerald-800 flex items-center"><i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> รายการอนุมัติ/บันทึกเสร็จสิ้น</span><span class="font-bold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-xs">${approvedCount} รายการ</span></div>
-            `;
+            if (document.getElementById('dash-status-summary')) {
+                document.getElementById('dash-status-summary').innerHTML = `
+                    <div class="flex justify-between items-center bg-amber-50 border border-amber-100 p-3 rounded-xl"><span class="font-medium text-amber-800 flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i> รายการค้างรอการตรวจสอบอนุมัติ</span><span class="font-bold bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs">${pendingCount} รายการ</span></div>
+                    <div class="flex justify-between items-center bg-emerald-50 border border-emerald-100 p-3 rounded-xl"><span class="font-medium text-emerald-800 flex items-center"><i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> รายการอนุมัติ/บันทึกเสร็จสิ้น</span><span class="font-bold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-xs">${approvedCount} รายการ</span></div>
+                `;
+            }
             lucide.createIcons();
 
-            if (chartInstances['workspace-bar']) chartInstances['workspace-bar'].destroy();
-            const ctxBar = document.getElementById('chart-workspace-bar').getContext('2d');
-            chartInstances['workspace-bar'] = new Chart(ctxBar, {
-                type: 'bar',
-                data: { labels: ['หมวดรายรับสะสม', 'หมวดรายจ่ายสะสม'], datasets: [ { label: 'ประมาณการตั้งต้นประจำปี', data: [estInc, estExp], backgroundColor: '#475569' }, { label: 'ยอดธุรกรรมจริงที่ตรวจสอบแล้ว', data: [actInc, actExp], backgroundColor: '#4f46e5' } ] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+            const chartEl = document.getElementById('chart-workspace-bar');
+            if (chartEl) {
+                if (chartInstances['workspace-bar']) chartInstances['workspace-bar'].destroy();
+                const ctxBar = chartEl.getContext('2d');
+                chartInstances['workspace-bar'] = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: { labels: ['หมวดรายรับสะสม', 'หมวดรายจ่ายสะสม'], datasets: [ { label: 'ประมาณการตั้งต้นประจำปี', data: [estInc, estExp], backgroundColor: '#475569' }, { label: 'ยอดธุรกรรมจริงที่ตรวจสอบแล้ว', data: [actInc, actExp], backgroundColor: '#4f46e5' } ] },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
         }
 
         function calculateLandingOverview() {
@@ -723,15 +730,15 @@
                     }
                 }
             });
-            document.getElementById('landing-est-income').textContent = formatMoney(estInc);
-            document.getElementById('landing-act-income').textContent = formatMoney(actInc);
-            document.getElementById('landing-est-expense').textContent = formatMoney(estExp);
-            document.getElementById('landing-act-expense').textContent = formatMoney(actExp);
+            if (document.getElementById('landing-est-income')) document.getElementById('landing-est-income').textContent = formatMoney(estInc);
+            if (document.getElementById('landing-act-income')) document.getElementById('landing-act-income').textContent = formatMoney(actInc);
+            if (document.getElementById('landing-est-expense')) document.getElementById('landing-est-expense').textContent = formatMoney(estExp);
+            if (document.getElementById('landing-act-expense')) document.getElementById('landing-act-expense').textContent = formatMoney(actExp);
             renderLandingCharts();
         }
 
         function renderLandingCharts() {
-            const filterValue = document.getElementById('landing-month-filter').value;
+            const filterValue = document.getElementById('landing-month-filter') ? document.getElementById('landing-month-filter').value : 'ALL';
             let filteredTrans = cacheTransactions;
             if (filterValue !== 'ALL') filteredTrans = cacheTransactions.filter(t => t.fiscal_month == filterValue);
 
@@ -752,17 +759,24 @@
             if (chartInstances['landing-inc']) chartInstances['landing-inc'].destroy();
             if (chartInstances['landing-exp']) chartInstances['landing-exp'].destroy();
 
-            chartInstances['landing-inc'] = new Chart(document.getElementById('chart-landing-income').getContext('2d'), {
-                type: 'doughnut', data: { labels: ['รับจริง', 'ประมาณการคงเหลือ'], datasets: [{ data: [actInc, Math.max(0, totalEstInc - actInc)], backgroundColor: ['#4f46e5', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
-            });
-            chartInstances['landing-exp'] = new Chart(document.getElementById('chart-landing-expense').getContext('2d'), {
-                type: 'doughnut', data: { labels: ['เบิกจ่ายจริง', 'งบประมาณคงเหลือ'], datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
-            });
+            const landingIncEl = document.getElementById('chart-landing-income');
+            if (landingIncEl) {
+                chartInstances['landing-inc'] = new Chart(landingIncEl.getContext('2d'), {
+                    type: 'doughnut', data: { labels: ['รับจริง', 'ประมาณการคงเหลือ'], datasets: [{ data: [actInc, Math.max(0, totalEstInc - actInc)], backgroundColor: ['#4f46e5', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+            
+            const landingExpEl = document.getElementById('chart-landing-expense');
+            if (landingExpEl) {
+                chartInstances['landing-exp'] = new Chart(landingExpEl.getContext('2d'), {
+                    type: 'doughnut', data: { labels: ['เบิกจ่ายจริง', 'งบประมาณคงเหลือ'], datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
         }
 
         // BANK ACCOUNTS SYSTEM 
         function renderBankTable() {
-            const body = document.getElementById('table-bank-body'); body.innerHTML='';
+            const body = document.getElementById('table-bank-body'); if(!body) return; body.innerHTML='';
             cacheBankAccounts.forEach(b => {
                 let currentBal = Number(b.initial_balance);
                 cacheTransactions.filter(t => t.bank_account_id === b.id && t.status === 'ตรวจสอบแล้ว').forEach(t => {
@@ -807,7 +821,7 @@
         // BUDGET SETUP CRUD
         function importBudgetItems(event, type) { /* ... import func ... */ }
         function renderBudgetIncomeTable() {
-            const body = document.getElementById('table-budget-income-body'); const searchVal = document.getElementById('filter-item-search-income').value.toLowerCase(); body.innerHTML = '';
+            const body = document.getElementById('table-budget-income-body'); if(!body) return; const searchVal = document.getElementById('filter-item-search-income').value.toLowerCase(); body.innerHTML = '';
             let filtered = cacheBudgetItems.filter(i => i.type === 'INCOME' && (i.category_name.toLowerCase().includes(searchVal) || i.item_name.toLowerCase().includes(searchVal)));
             if(filtered.length === 0) { body.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">ไม่พบข้อมูลผังรายรับ</td></tr>`; return; }
             filtered.forEach(i => {
@@ -817,7 +831,7 @@
             lucide.createIcons();
         }
         function renderBudgetExpenseTable() {
-            const body = document.getElementById('table-budget-expense-body'); const searchVal = document.getElementById('filter-item-search-expense').value.toLowerCase(); body.innerHTML = '';
+            const body = document.getElementById('table-budget-expense-body'); if(!body) return; const searchVal = document.getElementById('filter-item-search-expense').value.toLowerCase(); body.innerHTML = '';
             let filtered = cacheBudgetItems.filter(i => i.type === 'EXPENSE' && (i.category_name.toLowerCase().includes(searchVal) || i.item_name.toLowerCase().includes(searchVal)));
             if(filtered.length === 0) { body.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">ไม่พบข้อมูลผังรายจ่าย</td></tr>`; return; }
             filtered.forEach(i => {
@@ -861,7 +875,7 @@
         function selectBudgetItemForTrans(id, fullname) { document.getElementById('trans-item-id').value = id; document.getElementById('trans-item-search').value = fullname; document.getElementById('trans-item-dropdown').classList.add('hidden'); document.getElementById('quick-add-panel').classList.add('hidden'); }
 
         function renderTransIncomeTable() {
-            const body = document.getElementById('table-trans-income-body'); const search = document.getElementById('filter-trans-search-inc').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-inc').value; const statusFilter = document.getElementById('filter-trans-status-inc').value; body.innerHTML = '';
+            const body = document.getElementById('table-trans-income-body'); if(!body) return; const search = document.getElementById('filter-trans-search-inc').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-inc').value; const statusFilter = document.getElementById('filter-trans-status-inc').value; body.innerHTML = '';
             let filtered = cacheTransactions.filter(t => { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || {}; if(item.type !== 'INCOME') return false; const matchSearch = (t.remarks || '').toLowerCase().includes(search) || (item.item_name && item.item_name.toLowerCase().includes(search)) || (t.receipt_no || '').toLowerCase().includes(search) || (t.doc_no || '').toLowerCase().includes(search); const matchMonth = monthFilter === 'ALL' || t.fiscal_month == monthFilter; const matchStatus = statusFilter === 'ALL' || t.status === statusFilter; return matchSearch && matchMonth && matchStatus; });
             filtered.sort((a,b) => new Date(a.transaction_date) - new Date(b.transaction_date));
             if (filtered.length === 0) { body.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">ไม่มีข้อมูลบันทึกรายการ</td></tr>`; return; }
@@ -886,7 +900,7 @@
         }
 
         function renderTransExpenseTable() {
-            const body = document.getElementById('table-trans-expense-body'); const search = document.getElementById('filter-trans-search-exp').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-exp').value; const statusFilter = document.getElementById('filter-trans-status-exp').value; body.innerHTML = '';
+            const body = document.getElementById('table-trans-expense-body'); if(!body) return; const search = document.getElementById('filter-trans-search-exp').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-exp').value; const statusFilter = document.getElementById('filter-trans-status-exp').value; body.innerHTML = '';
             let filtered = cacheTransactions.filter(t => { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || {}; if(item.type !== 'EXPENSE') return false; const matchSearch = (t.remarks || '').toLowerCase().includes(search) || (item.item_name && item.item_name.toLowerCase().includes(search)) || (t.receipt_no || '').toLowerCase().includes(search) || (t.doc_no || '').toLowerCase().includes(search); const matchMonth = monthFilter === 'ALL' || t.fiscal_month == monthFilter; const matchStatus = statusFilter === 'ALL' || t.status === statusFilter; return matchSearch && matchMonth && matchStatus; });
             filtered.sort((a,b) => new Date(a.transaction_date) - new Date(b.transaction_date));
             if (filtered.length === 0) { body.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">ไม่มีข้อมูลบันทึกรายการเบิกจ่าย</td></tr>`; return; }
@@ -1089,7 +1103,7 @@
 
         // USERS SYSTEM
         function renderUsersTable() {
-            const body = document.getElementById('table-users-body'); body.innerHTML = '';
+            const body = document.getElementById('table-users-body'); if(!body) return; body.innerHTML = '';
             cacheSystemUsers.forEach(u => {
                 body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-2 px-4"><div class="w-8 h-8 rounded-full bg-indigo-50 border text-indigo-600 font-bold text-xs flex items-center justify-center">${u.first_name[0]}</div></td><td class="py-2 px-4 font-bold">${u.username}</td><td class="py-2 px-4">${u.first_name} ${u.last_name}</td><td class="py-2 px-4 text-slate-500">${u.position}</td><td class="py-2 px-4"><span class="bg-slate-100 px-2 py-0.5 rounded text-[10px] font-bold">${u.role}</span></td><td class="py-2 px-4 font-mono font-bold text-slate-400">${u.password}</td><td class="py-2 px-4 text-center"><button onclick="openUserModal('${u.id}')" class="text-indigo-600 mr-2">แก้ไข</button><button onclick="deleteUser('${u.id}')" class="text-red-500">ลบ</button></td></tr>`;
             });
