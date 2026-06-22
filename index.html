@@ -149,7 +149,7 @@
                         <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">ชื่อผู้ใช้งาน (Username)</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i data-lucide="user" class="w-4 h-4"></i></span>
-                            <input type="text" id="login-username" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" placeholder="แอดมินใช้ admin / การเงินใช้ finance">
+                            <input type="text" id="login-username" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" placeholder="แอดมินใช้ admin">
                         </div>
                     </div>
                     <div>
@@ -216,6 +216,7 @@
 
                 <div class="p-4 sm:p-6 lg:p-8 flex-grow w-full" id="workspace-content-container">
                     
+                    <!-- 1. DASHBOARD -->
                     <div id="subview-dashboard" class="space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -225,18 +226,12 @@
                             <div class="flex items-center space-x-2 w-full sm:w-auto">
                                 <select id="dash-month-filter" onchange="loadDashboardData()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 py-2 px-3 font-medium w-full sm:w-auto">
                                     <option value="ALL">ภาพรวมทั้งปีงบประมาณ 2569</option>
-                                    <option value="1">พฤษภาคม 2569</option>
-                                    <option value="2">มิถุนายน 2569</option>
-                                    <option value="3">กรกฎาคม 2569</option>
-                                    <option value="4">สิงหาคม 2569</option>
-                                    <option value="5">กันยายน 2569</option>
-                                    <option value="6">ตุลาคม 2569</option>
-                                    <option value="7">พฤศจิกายน 2569</option>
-                                    <option value="8">ธันวาคม 2569</option>
-                                    <option value="9">มกราคม 2570</option>
-                                    <option value="10">กุมภาพันธ์ 2570</option>
-                                    <option value="11">มีนาคม 2570</option>
-                                    <option value="12">เมษายน 2570</option>
+                                    <option value="1">พฤษภาคม 2569</option><option value="2">มิถุนายน 2569</option>
+                                    <option value="3">กรกฎาคม 2569</option><option value="4">สิงหาคม 2569</option>
+                                    <option value="5">กันยายน 2569</option><option value="6">ตุลาคม 2569</option>
+                                    <option value="7">พฤศจิกายน 2569</option><option value="8">ธันวาคม 2569</option>
+                                    <option value="9">มกราคม 2570</option><option value="10">กุมภาพันธ์ 2570</option>
+                                    <option value="11">มีนาคม 2570</option><option value="12">เมษายน 2570</option>
                                 </select>
                             </div>
                         </div>
@@ -248,18 +243,9 @@
                                     <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">ประมาณการ</span>
-                                        <span class="text-sm sm:text-base font-bold text-indigo-600" id="dash-est-income">0.00</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">รับเข้าจริง (อนุมัติแล้ว)</span>
-                                        <span class="text-sm sm:text-base font-bold text-emerald-600" id="dash-act-income">0.00</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">คงเหลือรับเพิ่ม</span>
-                                        <span class="text-sm sm:text-base font-bold text-slate-700" id="dash-bal-income">0.00</span>
-                                    </div>
+                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm sm:text-base font-bold text-indigo-600" id="dash-est-income">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">รับเข้าจริง (อนุมัติแล้ว)</span><span class="text-sm sm:text-base font-bold text-emerald-600" id="dash-act-income">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">คงเหลือรับเพิ่ม</span><span class="text-sm sm:text-base font-bold text-slate-700" id="dash-bal-income">0.00</span></div>
                                 </div>
                                 <div class="flex justify-between items-center text-xs">
                                     <span class="text-slate-400 font-medium">ความคืบหน้าการจัดเก็บเงิน:</span>
@@ -276,18 +262,9 @@
                                     <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="arrow-down-left" class="w-4 h-4"></i></div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">ประมาณการ</span>
-                                        <span class="text-sm sm:text-base font-bold text-slate-700" id="dash-est-expense">0.00</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">เบิกจ่ายจริง (อนุมัติแล้ว)</span>
-                                        <span class="text-sm sm:text-base font-bold text-slate-800" id="dash-act-expense">0.00</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-[11px] text-slate-400 block">งบประมาณเหลือจ่าย</span>
-                                        <span class="text-sm sm:text-base font-bold text-emerald-600" id="dash-bal-expense">0.00</span>
-                                    </div>
+                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm sm:text-base font-bold text-slate-700" id="dash-est-expense">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">เบิกจ่ายจริง (อนุมัติแล้ว)</span><span class="text-sm sm:text-base font-bold text-slate-800" id="dash-act-expense">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">งบประมาณเหลือจ่าย</span><span class="text-sm sm:text-base font-bold text-emerald-600" id="dash-bal-expense">0.00</span></div>
                                 </div>
                                 <div class="flex justify-between items-center text-xs">
                                     <span class="text-slate-400 font-medium">สัดส่วนการใช้งบประมาณ:</span>
@@ -311,7 +288,7 @@
                         </div>
                     </div>
 
-                    <!-- TRANS INCOME -->
+                    <!-- 2. TRANS INCOME -->
                     <div id="subview-trans-income" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -358,7 +335,7 @@
                                 <table class="w-full text-left border-collapse">
                                     <thead>
                                         <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                            <th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-inc" onclick="toggleSelectAll('INCOME')" class="w-4 h-4 rounded text-indigo-600"></th>
+                                            <th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-inc" onclick="toggleSelectAll('INCOME')" class="w-4 h-4 rounded text-indigo-600 border-slate-300"></th>
                                             <th class="py-3.5 px-4">วันที่ทำรายการ</th>
                                             <th class="py-3.5 px-4">ชื่อหัวข้อบัญชี</th>
                                             <th class="py-3.5 px-4">บัญชีธนาคาร</th>
@@ -373,7 +350,7 @@
                         </div>
                     </div>
 
-                    <!-- TRANS EXPENSE -->
+                    <!-- 3. TRANS EXPENSE -->
                     <div id="subview-trans-expense" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -420,7 +397,7 @@
                                 <table class="w-full text-left border-collapse">
                                     <thead>
                                         <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                            <th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-exp" onclick="toggleSelectAll('EXPENSE')" class="w-4 h-4 rounded text-indigo-600"></th>
+                                            <th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-exp" onclick="toggleSelectAll('EXPENSE')" class="w-4 h-4 rounded text-indigo-600 border-slate-300"></th>
                                             <th class="py-3.5 px-4">วันที่ทำรายการ</th>
                                             <th class="py-3.5 px-4">ชื่อหัวข้อบัญชี</th>
                                             <th class="py-3.5 px-4">จ่ายจากธนาคาร</th>
@@ -435,7 +412,7 @@
                         </div>
                     </div>
 
-                    <!-- BUDGET INCOME -->
+                    <!-- 4. BUDGET INCOME -->
                     <div id="subview-budget-income" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -482,7 +459,7 @@
                         </div>
                     </div>
 
-                    <!-- BUDGET EXPENSE -->
+                    <!-- 5. BUDGET EXPENSE -->
                     <div id="subview-budget-expense" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -529,12 +506,12 @@
                         </div>
                     </div>
 
-                    <!-- BANK ACCOUNTS -->
+                    <!-- 6. BANK ACCOUNTS -->
                     <div id="subview-bank-accounts" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
                                 <h4 class="font-bold text-slate-900 text-base">ระบบจัดการบัญชีธนาคาร (Statement)</h4>
-                                <p class="text-xs text-slate-400">เพิ่มและบริหารบัญชีธนาคารสำหรับรับ-จ่ายเงิน</p>
+                                <p class="text-xs text-slate-400">เพิ่ม แก้ไข ยอดยกมา และตรวจสอบยอดคงเหลือ</p>
                             </div>
                             <button onclick="openBankModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center">
                                 <i data-lucide="plus" class="w-4 h-4 mr-1"></i> เพิ่มบัญชีธนาคาร
@@ -545,11 +522,11 @@
                                 <thead class="bg-slate-50 border-b text-[11px] font-bold text-slate-500 uppercase">
                                     <tr>
                                         <th class="py-3 px-4 text-center">รหัสบัญชี</th>
-                                        <th class="py-3 px-4">ชื่อธนาคาร / หน่วยงาน</th>
+                                        <th class="py-3 px-4">ชื่อธนาคาร / หน่วยงาน / วัตถุประสงค์</th>
                                         <th class="py-3 px-4">เลขที่บัญชี</th>
                                         <th class="py-3 px-4 text-right">ยอดยกมา (ตั้งต้น)</th>
                                         <th class="py-3 px-4 text-right">ยอดคงเหลือปัจจุบัน</th>
-                                        <th class="py-3 px-4 text-center">การจัดการ</th>
+                                        <th class="py-3 px-4 text-center">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-bank-body" class="text-xs divide-y"></tbody>
@@ -557,14 +534,14 @@
                         </div>
                     </div>
 
-                    <!-- REPORTS -->
+                    <!-- 7. REPORTS -->
                     <div id="subview-reports" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
-                                <h4 class="font-bold text-slate-900 text-base">ระบบพิมพ์รายงาน</h4>
+                                <h4 class="font-bold text-slate-900 text-base">ระบบพิมพ์รายงานงบประมาณหลัก</h4>
                                 <p class="text-xs text-slate-400">แสดงผลโครงร่างตารางบัญชีเชิงเปรียบเทียบในลักษณะเดียวกับไฟล์แบบฟอร์มโรงเรียน</p>
                             </div>
-                            <button onclick="exportToExcel()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center space-x-1.5">
+                            <button onclick="exportToExcelMain()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center space-x-1.5">
                                 <i data-lucide="download" class="w-4 h-4"></i> <span>ดาวน์โหลดรายงานในรูปแบบ Excel (.xlsx)</span>
                             </button>
                         </div>
@@ -596,7 +573,7 @@
                         </div>
                     </div>
 
-                    <!-- USERS -->
+                    <!-- 8. USERS -->
                     <div id="subview-users" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -963,7 +940,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
             showLoader(true, 'กำลังเตรียมระบบ...');
-            enableOfflineSandboxMode(); // ใช้ Offline mode เป็นหลักตามที่พัฒนา
+            enableOfflineSandboxMode(); 
             showLoader(false);
             switchView('landing');
         });
@@ -1130,7 +1107,7 @@
                 { id: 'budget-income', label: 'ผังตั้งค่ารายรับ', icon: 'download', roles: ['Admin', 'การเงิน', 'บัญชี'] },
                 { id: 'budget-expense', label: 'ผังตั้งค่ารายจ่าย', icon: 'upload', roles: ['Admin', 'การเงิน', 'บัญชี'] },
                 { id: 'bank-accounts', label: 'จัดการบัญชีธนาคาร', icon: 'credit-card', roles: ['Admin', 'การเงิน', 'บัญชี'] },
-                { id: 'reports', label: 'หน้ารายงานโรงเรียน', icon: 'file-text', roles: ['Admin', 'การเงิน', 'บัญชี', 'ผอ.', 'เจ้าหน้าที่'] },
+                { id: 'reports', label: 'หน้ารายงานงบประมาณ', icon: 'file-text', roles: ['Admin', 'การเงิน', 'บัญชี', 'ผอ.', 'เจ้าหน้าที่'] },
                 { id: 'users', label: 'ผู้ใช้งานและสิทธิ์', icon: 'users', roles: ['Admin'] }
             ];
 
@@ -1323,14 +1300,14 @@
                 type: 'doughnut',
                 data: {
                     labels: ['เบิกจ่ายจริง', 'งบประมาณคงเหลือ'],
-                    datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] // Changed to slate
+                    datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] 
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
 
-        // BANK ACCOUNTS SYSTEM
+        // BANK ACCOUNTS SYSTEM 
         function renderBankTable() {
             const body = document.getElementById('table-bank-body'); body.innerHTML='';
             cacheBankAccounts.forEach(b => {
@@ -1414,7 +1391,8 @@
         function populateBankDropdown() {
             const sel = document.getElementById('trans-bank'); sel.innerHTML = '';
             cacheBankAccounts.forEach(b => {
-                sel.innerHTML += `<option value="${b.id}">[${b.account_code||'-'}] ${b.bank_name}</option>`;
+                // แก้ไขการแสดงผลให้เป็น [รหัสบัญชี] ชื่อบัญชี เลขที่บัญชี ตามที่ต้องการ
+                sel.innerHTML += `<option value="${b.id}">[${b.account_code||'-'}] ${b.bank_name} ${b.account_no ? 'เลขที่ ' + b.account_no : ''}</option>`;
             });
             if(lastSelectedBank) sel.value = lastSelectedBank;
         }
@@ -1683,7 +1661,8 @@
             filtered.forEach(t => {
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' };
                 const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
-                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name}` : '-';
+                // แก้ให้หน้าตารางตรงกันกับหน้า Dropdown 
+                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
                 
                 let badge = t.status === 'ตรวจสอบแล้ว' ? 
                     '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' :
@@ -1738,7 +1717,8 @@
             filtered.forEach(t => {
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' };
                 const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
-                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name}` : '-';
+                // แก้ให้หน้าตารางตรงกันกับหน้า Dropdown 
+                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
                 
                 let badge = t.status === 'ตรวจสอบแล้ว' ? 
                     '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' :
@@ -1814,7 +1794,7 @@
             document.getElementById('quick-add-panel').classList.add('hidden');
             
             let applyType = forcedType;
-            populateTransactionDropdown(applyType); // also populates banks
+            populateTransactionDropdown(applyType); 
 
             if (id) {
                 const t = cacheTransactions.find(trans => trans.id === id);
@@ -1844,7 +1824,6 @@
         }
 
         function editTransaction(id) {
-            // Find type first
             const t = cacheTransactions.find(trans => trans.id === id);
             if(t) {
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id);
@@ -1860,7 +1839,6 @@
             const searchInputText = document.getElementById('trans-item-search').value.trim();
             const type = document.getElementById('trans-type-hidden').value;
 
-            // ตรวจสอบ Quick Add
             if(!headingId && searchInputText) {
                 const quickItem = {
                     id: "i_" + Date.now(),
@@ -1898,12 +1876,12 @@
                 amount: Number(document.getElementById('trans-amount').value),
                 remarks: document.getElementById('trans-remarks').value,
                 created_by: currentUser.id,
-                status: 'ตรวจสอบแล้ว' // อนุมัติทันทีเพื่อให้แก้ไข/ดูในหน้าแรกได้เลย ไม่ต้องรอตรวจสอบ
+                status: 'ตรวจสอบแล้ว' 
             };
 
             if (id) {
                 const idx = cacheTransactions.findIndex(t => t.id === id);
-                cacheTransactions[idx] = { ...cacheTransactions[idx], ...payload, status: cacheTransactions[idx].status }; // คงสถานะเดิมไว้ถ้าแก้
+                cacheTransactions[idx] = { ...cacheTransactions[idx], ...payload, status: cacheTransactions[idx].status }; 
             } else {
                 payload.id = "t_" + Date.now();
                 cacheTransactions.push(payload);
@@ -1914,7 +1892,6 @@
             if(type === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable();
             loadDashboardData();
 
-            // เช็คว่าเปิดค้างไหม
             if(document.getElementById('trans-keep-open').checked && !id) {
                 document.getElementById('trans-amount').value = '';
                 document.getElementById('trans-item-search').value = '';
@@ -2094,7 +2071,7 @@
             lucide.createIcons();
         }
 
-        function exportToExcel() {
+        function exportToExcelMain() {
             if (generatedReportRawData.length === 0) return;
             const ws = XLSX.utils.json_to_sheet(generatedReportRawData);
             const wb = XLSX.utils.book_new();
