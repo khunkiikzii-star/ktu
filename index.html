@@ -501,7 +501,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
             loadFromLocalStorage();
             switchView('login');
         });
@@ -514,7 +514,7 @@
             let icon = type === 'success' ? 'check-circle' : type === 'warning' ? 'alert-circle' : 'x-circle';
             toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 flex-shrink-0"></i> <span>${message}</span>`;
             container.appendChild(toast);
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
             setTimeout(() => { toast.classList.remove('opacity-0', 'translate-y-2'); }, 50);
             setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => { toast.remove(); }, 3000); }, 3000);
         }
@@ -640,7 +640,7 @@
             backofficeMob.forEach(m => {
                 mobGrid.innerHTML += `<button onclick="switchSubview('${m.id}')" class="bg-slate-50 border border-slate-100 p-3 rounded-xl flex flex-col items-center text-slate-700 active:bg-indigo-50"><i data-lucide="${m.icon}" class="w-5 h-5 text-indigo-600 mb-1"></i><span class="text-[10px] font-bold text-center leading-tight">${m.label}</span></button>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
 
         function toggleAdminPanel(open) { const panel = document.getElementById('admin-mobile-panel'); if(panel) panel.classList.toggle('translate-y-full', !open); }
@@ -652,126 +652,142 @@
             });
         }
 
-        // CALCULATE DASHBOARD
+        // CALCULATE DASHBOARD (100% Crash-Proof)
         function loadDashboardData() {
-            const filterMonth = document.getElementById('dash-month-filter').value;
-            let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
-            let pendingCount = 0, approvedCount = 0;
+            try {
+                const monthFilterEl = document.getElementById('dash-month-filter');
+                const filterMonth = monthFilterEl ? monthFilterEl.value : 'ALL';
+                let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
+                let pendingCount = 0, approvedCount = 0;
 
-            cacheBudgetItems.forEach(i => {
-                if (i.is_in_budget !== false) {
-                    if (i.type === 'INCOME') estInc += Number(i.allocated_amount);
-                    if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount);
-                }
-            });
-
-            let targetTrans = cacheTransactions;
-            if (filterMonth !== 'ALL') targetTrans = cacheTransactions.filter(t => t.fiscal_month == filterMonth);
-
-            targetTrans.forEach(t => {
-                if (t.status === 'รอตรวจสอบ') pendingCount++;
-                if (t.status === 'ตรวจสอบแล้ว') {
-                    approvedCount++;
-                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                    if (matchedItem) {
-                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                cacheBudgetItems.forEach(i => {
+                    if (i.is_in_budget !== false) {
+                        if (i.type === 'INCOME') estInc += Number(i.allocated_amount || 0);
+                        if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount || 0);
                     }
-                }
-            });
-
-            // ดัก Error กันโค้ดพัง หากหา element หน้า HTML ไม่เจอ
-            if (document.getElementById('dash-est-income')) document.getElementById('dash-est-income').textContent = formatMoney(estInc);
-            if (document.getElementById('dash-act-income')) document.getElementById('dash-act-income').textContent = formatMoney(actInc);
-            if (document.getElementById('dash-bal-income')) document.getElementById('dash-bal-income').textContent = formatMoney(Math.max(0, estInc - actInc));
-            if (document.getElementById('dash-pct-income')) document.getElementById('dash-pct-income').textContent = `${estInc > 0 ? Math.round((actInc / estInc) * 100) : 0}%`;
-            if (document.getElementById('dash-bar-income')) document.getElementById('dash-bar-income').style.width = `${estInc > 0 ? Math.min(100, (actInc / estInc) * 100) : 0}%`;
-
-            if (document.getElementById('dash-est-expense')) document.getElementById('dash-est-expense').textContent = formatMoney(estExp);
-            if (document.getElementById('dash-act-expense')) document.getElementById('dash-act-expense').textContent = formatMoney(actExp);
-            if (document.getElementById('dash-bal-expense')) document.getElementById('dash-bal-expense').textContent = formatMoney(Math.max(0, estExp - actExp));
-            if (document.getElementById('dash-pct-expense')) document.getElementById('dash-pct-expense').textContent = `${estExp > 0 ? Math.round((actExp / estExp) * 100) : 0}%`;
-            if (document.getElementById('dash-bar-expense')) document.getElementById('dash-bar-expense').style.width = `${estExp > 0 ? Math.min(100, (actExp / estExp) * 100) : 0}%`;
-
-            if (document.getElementById('dash-status-summary')) {
-                document.getElementById('dash-status-summary').innerHTML = `
-                    <div class="flex justify-between items-center bg-amber-50 border border-amber-100 p-3 rounded-xl"><span class="font-medium text-amber-800 flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i> รายการค้างรอการตรวจสอบอนุมัติ</span><span class="font-bold bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs">${pendingCount} รายการ</span></div>
-                    <div class="flex justify-between items-center bg-emerald-50 border border-emerald-100 p-3 rounded-xl"><span class="font-medium text-emerald-800 flex items-center"><i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> รายการอนุมัติ/บันทึกเสร็จสิ้น</span><span class="font-bold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-xs">${approvedCount} รายการ</span></div>
-                `;
-            }
-            lucide.createIcons();
-
-            const chartEl = document.getElementById('chart-workspace-bar');
-            if (chartEl) {
-                if (chartInstances['workspace-bar']) chartInstances['workspace-bar'].destroy();
-                const ctxBar = chartEl.getContext('2d');
-                chartInstances['workspace-bar'] = new Chart(ctxBar, {
-                    type: 'bar',
-                    data: { labels: ['หมวดรายรับสะสม', 'หมวดรายจ่ายสะสม'], datasets: [ { label: 'ประมาณการตั้งต้นประจำปี', data: [estInc, estExp], backgroundColor: '#475569' }, { label: 'ยอดธุรกรรมจริงที่ตรวจสอบแล้ว', data: [actInc, actExp], backgroundColor: '#4f46e5' } ] },
-                    options: { responsive: true, maintainAspectRatio: false }
                 });
+
+                let targetTrans = cacheTransactions;
+                if (filterMonth !== 'ALL') targetTrans = cacheTransactions.filter(t => t.fiscal_month == filterMonth);
+
+                targetTrans.forEach(t => {
+                    if (t.status === 'รอตรวจสอบ') pendingCount++;
+                    if (t.status === 'ตรวจสอบแล้ว') {
+                        approvedCount++;
+                        const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                        if (matchedItem) {
+                            if (matchedItem.type === 'INCOME') actInc += Number(t.amount || 0);
+                            if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount || 0);
+                        }
+                    }
+                });
+
+                // Helper ฟังก์ชันเพื่อกันพังเวลาหา HTML Element ไม่เจอ
+                const setElText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+                const setElWidth = (id, w) => { const el = document.getElementById(id); if (el) el.style.width = w; };
+
+                setElText('dash-est-income', formatMoney(estInc));
+                setElText('dash-act-income', formatMoney(actInc));
+                setElText('dash-bal-income', formatMoney(Math.max(0, estInc - actInc)));
+                setElText('dash-pct-income', `${estInc > 0 ? Math.round((actInc / estInc) * 100) : 0}%`);
+                setElWidth('dash-bar-income', `${estInc > 0 ? Math.min(100, (actInc / estInc) * 100) : 0}%`);
+
+                setElText('dash-est-expense', formatMoney(estExp));
+                setElText('dash-act-expense', formatMoney(actExp));
+                setElText('dash-bal-expense', formatMoney(Math.max(0, estExp - actExp)));
+                setElText('dash-pct-expense', `${estExp > 0 ? Math.round((actExp / estExp) * 100) : 0}%`);
+                setElWidth('dash-bar-expense', `${estExp > 0 ? Math.min(100, (actExp / estExp) * 100) : 0}%`);
+
+                const summaryEl = document.getElementById('dash-status-summary');
+                if (summaryEl) {
+                    summaryEl.innerHTML = `
+                        <div class="flex justify-between items-center bg-amber-50 border border-amber-100 p-3 rounded-xl"><span class="font-medium text-amber-800 flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i> รายการค้างรอการตรวจสอบอนุมัติ</span><span class="font-bold bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs">${pendingCount} รายการ</span></div>
+                        <div class="flex justify-between items-center bg-emerald-50 border border-emerald-100 p-3 rounded-xl"><span class="font-medium text-emerald-800 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1.5"></i> รายการอนุมัติ/บันทึกเสร็จสิ้น</span><span class="font-bold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-xs">${approvedCount} รายการ</span></div>
+                    `;
+                }
+
+                try { lucide.createIcons(); } catch(e) { console.warn("Lucide Error", e); }
+
+                const chartEl = document.getElementById('chart-workspace-bar');
+                if (chartEl) {
+                    if (chartInstances['workspace-bar']) chartInstances['workspace-bar'].destroy();
+                    const ctxBar = chartEl.getContext('2d');
+                    chartInstances['workspace-bar'] = new Chart(ctxBar, {
+                        type: 'bar',
+                        data: { labels: ['หมวดรายรับสะสม', 'หมวดรายจ่ายสะสม'], datasets: [ { label: 'ประมาณการตั้งต้นประจำปี', data: [estInc, estExp], backgroundColor: '#475569' }, { label: 'ยอดธุรกรรมจริงที่ตรวจสอบแล้ว', data: [actInc, actExp], backgroundColor: '#4f46e5' } ] },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+            } catch (err) {
+                console.error("Dashboard Render Failed:", err);
             }
         }
 
         function calculateLandingOverview() {
-            let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
-            cacheBudgetItems.forEach(i => {
-                if (i.is_in_budget !== false) {
-                    if (i.type === 'INCOME') estInc += Number(i.allocated_amount);
-                    if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount);
-                }
-            });
-            cacheTransactions.forEach(t => {
-                if (t.status === 'ตรวจสอบแล้ว') {
-                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                    if (matchedItem) {
-                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+            try {
+                let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
+                cacheBudgetItems.forEach(i => {
+                    if (i.is_in_budget !== false) {
+                        if (i.type === 'INCOME') estInc += Number(i.allocated_amount || 0);
+                        if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount || 0);
                     }
-                }
-            });
-            if (document.getElementById('landing-est-income')) document.getElementById('landing-est-income').textContent = formatMoney(estInc);
-            if (document.getElementById('landing-act-income')) document.getElementById('landing-act-income').textContent = formatMoney(actInc);
-            if (document.getElementById('landing-est-expense')) document.getElementById('landing-est-expense').textContent = formatMoney(estExp);
-            if (document.getElementById('landing-act-expense')) document.getElementById('landing-act-expense').textContent = formatMoney(actExp);
-            renderLandingCharts();
+                });
+                cacheTransactions.forEach(t => {
+                    if (t.status === 'ตรวจสอบแล้ว') {
+                        const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                        if (matchedItem) {
+                            if (matchedItem.type === 'INCOME') actInc += Number(t.amount || 0);
+                            if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount || 0);
+                        }
+                    }
+                });
+
+                const setElText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+                setElText('landing-est-income', formatMoney(estInc));
+                setElText('landing-act-income', formatMoney(actInc));
+                setElText('landing-est-expense', formatMoney(estExp));
+                setElText('landing-act-expense', formatMoney(actExp));
+
+                renderLandingCharts();
+            } catch (err) { console.error("Landing Calc Failed:", err); }
         }
 
         function renderLandingCharts() {
-            const filterValue = document.getElementById('landing-month-filter') ? document.getElementById('landing-month-filter').value : 'ALL';
-            let filteredTrans = cacheTransactions;
-            if (filterValue !== 'ALL') filteredTrans = cacheTransactions.filter(t => t.fiscal_month == filterValue);
+            try {
+                const filterValue = document.getElementById('landing-month-filter') ? document.getElementById('landing-month-filter').value : 'ALL';
+                let filteredTrans = cacheTransactions;
+                if (filterValue !== 'ALL') filteredTrans = cacheTransactions.filter(t => t.fiscal_month == filterValue);
 
-            let actInc = 0, actExp = 0;
-            filteredTrans.forEach(t => {
-                if (t.status === 'ตรวจสอบแล้ว') {
-                    const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                    if (matchedItem) {
-                        if (matchedItem.type === 'INCOME') actInc += Number(t.amount);
-                        if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount);
+                let actInc = 0, actExp = 0;
+                filteredTrans.forEach(t => {
+                    if (t.status === 'ตรวจสอบแล้ว') {
+                        const matchedItem = cacheBudgetItems.find(i => i.id === t.budget_item_id);
+                        if (matchedItem) {
+                            if (matchedItem.type === 'INCOME') actInc += Number(t.amount || 0);
+                            if (matchedItem.type === 'EXPENSE') actExp += Number(t.amount || 0);
+                        }
                     }
+                });
+
+                let totalEstInc = cacheBudgetItems.filter(i => i.type === 'INCOME' && i.is_in_budget !== false).reduce((a, b) => a + Number(b.allocated_amount || 0), 0);
+                let totalEstExp = cacheBudgetItems.filter(i => i.type === 'EXPENSE' && i.is_in_budget !== false).reduce((a, b) => a + Number(b.allocated_amount || 0), 0);
+
+                const landingIncEl = document.getElementById('chart-landing-income');
+                if (landingIncEl) {
+                    if (chartInstances['landing-inc']) chartInstances['landing-inc'].destroy();
+                    chartInstances['landing-inc'] = new Chart(landingIncEl.getContext('2d'), {
+                        type: 'doughnut', data: { labels: ['รับจริง', 'ประมาณการคงเหลือ'], datasets: [{ data: [actInc, Math.max(0, totalEstInc - actInc)], backgroundColor: ['#4f46e5', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
+                    });
                 }
-            });
-
-            let totalEstInc = cacheBudgetItems.filter(i => i.type === 'INCOME' && i.is_in_budget !== false).reduce((a, b) => a + Number(b.allocated_amount), 0);
-            let totalEstExp = cacheBudgetItems.filter(i => i.type === 'EXPENSE' && i.is_in_budget !== false).reduce((a, b) => a + Number(b.allocated_amount), 0);
-
-            if (chartInstances['landing-inc']) chartInstances['landing-inc'].destroy();
-            if (chartInstances['landing-exp']) chartInstances['landing-exp'].destroy();
-
-            const landingIncEl = document.getElementById('chart-landing-income');
-            if (landingIncEl) {
-                chartInstances['landing-inc'] = new Chart(landingIncEl.getContext('2d'), {
-                    type: 'doughnut', data: { labels: ['รับจริง', 'ประมาณการคงเหลือ'], datasets: [{ data: [actInc, Math.max(0, totalEstInc - actInc)], backgroundColor: ['#4f46e5', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-            
-            const landingExpEl = document.getElementById('chart-landing-expense');
-            if (landingExpEl) {
-                chartInstances['landing-exp'] = new Chart(landingExpEl.getContext('2d'), {
-                    type: 'doughnut', data: { labels: ['เบิกจ่ายจริง', 'งบประมาณคงเหลือ'], datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
+                
+                const landingExpEl = document.getElementById('chart-landing-expense');
+                if (landingExpEl) {
+                    if (chartInstances['landing-exp']) chartInstances['landing-exp'].destroy();
+                    chartInstances['landing-exp'] = new Chart(landingExpEl.getContext('2d'), {
+                        type: 'doughnut', data: { labels: ['เบิกจ่ายจริง', 'งบประมาณคงเหลือ'], datasets: [{ data: [actExp, Math.max(0, totalEstExp - actExp)], backgroundColor: ['#475569', '#e2e8f0'] }] }, options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
+            } catch (err) { console.error("Landing Chart Failed:", err); }
         }
 
         // BANK ACCOUNTS SYSTEM 
@@ -793,7 +809,7 @@
                         <td class="py-3 px-4 text-center"><button onclick="editBank('${b.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBank('${b.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td>
                     </tr>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
         function openBankModal() { document.getElementById('form-bank').reset(); document.getElementById('bank-id').value = ''; document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none'); }
         function editBank(id) {
@@ -813,7 +829,7 @@
         }
         function deleteBank(id) { if(!confirm('ยืนยันลบบัญชีธนาคารนี้? (รายการที่ผูกไว้อาจได้รับผลกระทบ)')) return; cacheBankAccounts = cacheBankAccounts.filter(b => b.id !== id); saveToLocalStorage(); renderBankTable(); }
         function populateBankDropdown() {
-            const sel = document.getElementById('trans-bank'); sel.innerHTML = '';
+            const sel = document.getElementById('trans-bank'); if(!sel) return; sel.innerHTML = '';
             cacheBankAccounts.forEach(b => { sel.innerHTML += `<option value="${b.id}">[${b.account_code||'-'}] ${b.bank_name} ${b.account_no ? 'เลขที่ ' + b.account_no : ''}</option>`; });
             if(lastSelectedBank) sel.value = lastSelectedBank;
         }
@@ -828,7 +844,7 @@
                 const badgeType = i.is_in_budget !== false ? '<span class="bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-medium text-[10px]">ในแผนงบฯ</span>' : '<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md font-medium text-[10px]">นอกแผนงบฯ</span>';
                 body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-slate-500">${i.plan_name}</td><td class="py-3 px-4 text-slate-700">${i.category_name}</td><td class="py-3 px-4 font-bold text-indigo-600">${i.item_name}</td><td class="py-3 px-4 text-right font-bold">${formatMoney(i.allocated_amount)}</td><td class="py-3 px-4 text-center">${badgeType}</td><td class="py-3 px-4 text-center"><button onclick="editBudgetItem('${i.id}', 'INCOME')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
         function renderBudgetExpenseTable() {
             const body = document.getElementById('table-budget-expense-body'); if(!body) return; const searchVal = document.getElementById('filter-item-search-expense').value.toLowerCase(); body.innerHTML = '';
@@ -838,10 +854,10 @@
                 const badgeType = i.is_in_budget !== false ? '<span class="bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-medium text-[10px]">ในแผนงบฯ</span>' : '<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md font-medium text-[10px]">นอกแผนงบฯ</span>';
                 body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-slate-500">${i.plan_name}</td><td class="py-3 px-4 text-slate-700">${i.category_name}</td><td class="py-3 px-4 font-bold text-slate-700">${i.item_name}</td><td class="py-3 px-4 text-right font-bold">${formatMoney(i.allocated_amount)}</td><td class="py-3 px-4 text-center">${badgeType}</td><td class="py-3 px-4 text-center"><button onclick="editBudgetItem('${i.id}', 'EXPENSE')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
         function openBudgetItemModal(id = null, forcedType = 'INCOME') {
-            document.getElementById('form-budget-item').reset(); document.getElementById('item-type-container').style.display = 'none'; document.getElementById('item-type').value = forcedType; document.getElementById('item-is-in-budget').checked = true;
+            document.getElementById('form-budget-item').reset(); document.getElementById('item-type-container') ? document.getElementById('item-type-container').style.display = 'none' : null; document.getElementById('item-type').value = forcedType; document.getElementById('item-is-in-budget').checked = true;
             if (id) {
                 document.getElementById('modal-item-title').textContent = 'แก้ไขหัวข้องบประมาณ'; const item = cacheBudgetItems.find(i => i.id === id); document.getElementById('item-id').value = item.id; document.getElementById('item-plan').value = item.plan_name; document.getElementById('item-category').value = item.category_name; document.getElementById('item-name').value = item.item_name; document.getElementById('item-amount').value = item.allocated_amount; document.getElementById('item-is-in-budget').checked = item.is_in_budget !== false;
             } else { document.getElementById('modal-item-title').textContent = forcedType === 'INCOME' ? 'เพิ่มหัวข้อรายรับใหม่' : 'เพิ่มหัวข้อรายจ่ายใหม่'; document.getElementById('item-id').value = ''; if(forcedType === 'INCOME') document.getElementById('item-plan').value = 'รายรับ'; }
@@ -896,7 +912,7 @@
                 let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-[10px] text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
                 body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-indigo-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-emerald-600">+${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
 
         function renderTransExpenseTable() {
@@ -921,10 +937,10 @@
                 let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-[10px] text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
                 body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-slate-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-slate-800">${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
             });
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
         }
 
-        function toggleSelectAll(type) { const isChecked = document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`).checked; document.querySelectorAll(`.chk-del-${type.toLowerCase()}`).forEach(cb => cb.checked = isChecked); }
+        function toggleSelectAll(type) { const chkAll = document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`); if(!chkAll) return; const isChecked = chkAll.checked; document.querySelectorAll(`.chk-del-${type.toLowerCase()}`).forEach(cb => cb.checked = isChecked); }
 
         function deleteSelectedTrans(type) {
             const checked = Array.from(document.querySelectorAll(`.chk-del-${type.toLowerCase()}:checked`)).map(cb => cb.value);
@@ -935,7 +951,7 @@
 
             if(!confirm(`ยืนยันการลบ ${checked.length} รายการที่เลือกทิ้ง?`)) return;
             cacheTransactions = cacheTransactions.filter(t => !checked.includes(t.id)); saveToLocalStorage();
-            document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`).checked = false;
+            const chkAll = document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`); if (chkAll) chkAll.checked = false;
             if(type === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable();
             createToast(`ลบรายการสำเร็จแล้วจำนวน ${checked.length} รายการ`, 'success'); loadDashboardData();
         }
@@ -967,7 +983,9 @@
         }
 
         function openTransactionModal(id = null, forcedType = 'INCOME') {
-            document.getElementById('form-transaction').reset(); document.getElementById('trans-item-dropdown').classList.add('hidden'); document.getElementById('quick-add-panel').classList.add('hidden');
+            document.getElementById('form-transaction').reset(); 
+            const drop = document.getElementById('trans-item-dropdown'); if (drop) drop.classList.add('hidden'); 
+            const qPanel = document.getElementById('quick-add-panel'); if (qPanel) qPanel.classList.add('hidden');
             let applyType = forcedType; populateTransactionDropdown(applyType); 
             if (id) {
                 const t = cacheTransactions.find(trans => trans.id === id); const item = cacheBudgetItems.find(i => i.id === t.budget_item_id);
@@ -1058,7 +1076,7 @@
         // GENERATE MAIN REPORT
         let generatedReportRawData = [];
         function generateMainReport() {
-            const table = document.getElementById('table-excel-mockup'); const mode = document.getElementById('report-view-mode').value; if(!table) return; table.innerHTML = '';
+            const table = document.getElementById('table-excel-mockup'); const mode = document.getElementById('report-view-mode') ? document.getElementById('report-view-mode').value : 'ALL'; if(!table) return; table.innerHTML = '';
             let headerHTML = `<thead><tr class="bg-indigo-900 text-white text-center font-bold"><th class="p-2 border" rowspan="2">แผนการดำเนินงาน / ผังโครงสร้างงบประมาณ</th><th class="p-2 border" rowspan="2">ประมาณการตั้งต้น (บาท)</th><th class="p-2 border" colspan="3">ผลสะสมการรับ/เบิกจ่ายจริง ณ ปัจจุบัน</th></tr><tr class="bg-indigo-800 text-white text-center font-bold"><th class="p-2 border">ยอดเดือนที่เลือก (บาท)</th><th class="p-2 border">ยอดยกสะสมมา (บาท)</th><th class="p-2 border">งบประมาณคงเหลือ (บาท)</th></tr></thead><tbody>`;
             let rowHTML = ''; generatedReportRawData = [];
             rowHTML += `<tr class="bg-slate-100 font-bold text-indigo-950"><td class="p-2" colspan="5">ส่วนที่ 1: หมวดงบประมาณรายรับ</td></tr>`;
@@ -1093,7 +1111,8 @@
                     generatedReportRawData.push({ "แผนงาน/รายการบัญชี": `(${planName}) ${item.category_name} - ${item.item_name}`, "งบประมาณจัดสรรตั้งต้น": Number(item.allocated_amount), "ยอดตามรอบเดือนตรวจ": currentMonthAmt, "ยอดยกสะสมมา": accumBeforeAmt, "งบประมาณคงเหลือ": balance });
                 });
             });
-            table.innerHTML = headerHTML + rowHTML + `</tbody>`; lucide.createIcons();
+            table.innerHTML = headerHTML + rowHTML + `</tbody>`; 
+            try { lucide.createIcons(); } catch(e) {}
         }
 
         function exportToExcelMain() {
