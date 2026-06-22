@@ -869,9 +869,18 @@
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' }; const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
                 const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
                 let badge = t.status === 'ตรวจสอบแล้ว' ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-md font-bold shadow-sm animate-pulse">⏳ รอตรวจสอบ</span>';
-                let ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                
+                let ops = ''; let chkBox = '';
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    ops = `<div class="flex justify-center space-x-1"><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถแก้ไขได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถลบได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                    chkBox = `<input type="checkbox" disabled class="w-4 h-4 rounded border-slate-200 bg-slate-100 cursor-not-allowed" title="รายการอนุมัติแล้ว">`;
+                } else {
+                    ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                    chkBox = `<input type="checkbox" class="chk-del-income w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}">`;
+                }
+
                 let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-[10px] text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center"><input type="checkbox" class="chk-del-income w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}"></td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-indigo-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-emerald-600">+${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
+                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-indigo-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-emerald-600">+${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
             });
             lucide.createIcons();
         }
@@ -885,9 +894,18 @@
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' }; const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
                 const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
                 let badge = t.status === 'ตรวจสอบแล้ว' ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-md font-bold shadow-sm animate-pulse">⏳ รอตรวจสอบ</span>';
-                let ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                
+                let ops = ''; let chkBox = '';
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    ops = `<div class="flex justify-center space-x-1"><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถแก้ไขได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถลบได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                    chkBox = `<input type="checkbox" disabled class="w-4 h-4 rounded border-slate-200 bg-slate-100 cursor-not-allowed" title="รายการอนุมัติแล้ว">`;
+                } else {
+                    ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-3.5 h-3.5 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button></div>`;
+                    chkBox = `<input type="checkbox" class="chk-del-expense w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}">`;
+                }
+
                 let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-[10px] text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center"><input type="checkbox" class="chk-del-expense w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}"></td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-slate-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-slate-800">${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
+                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${t.transaction_date}</td><td class="py-3 px-4 font-bold text-slate-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-[11px] text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-slate-800">${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
             });
             lucide.createIcons();
         }
@@ -897,6 +915,10 @@
         function deleteSelectedTrans(type) {
             const checked = Array.from(document.querySelectorAll(`.chk-del-${type.toLowerCase()}:checked`)).map(cb => cb.value);
             if(checked.length === 0) return createToast('กรุณาเลือกรายการที่ต้องการลบ (คลิกช่องสี่เหลี่ยมด้านหน้า)', 'danger');
+            
+            const hasApproved = checked.some(id => cacheTransactions.find(t => t.id === id)?.status === 'ตรวจสอบแล้ว');
+            if(hasApproved) return createToast('ไม่สามารถลบรายการที่อนุมัติแล้วได้ กรุณาตรวจสอบใหม่', 'danger');
+
             if(!confirm(`ยืนยันการลบ ${checked.length} รายการที่เลือกทิ้ง?`)) return;
             cacheTransactions = cacheTransactions.filter(t => !checked.includes(t.id)); saveToLocalStorage();
             document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`).checked = false;
@@ -921,9 +943,12 @@
         }
 
         function deleteTransaction(id) {
+            const t = cacheTransactions.find(trans => trans.id === id);
+            if(t && t.status === 'ตรวจสอบแล้ว') return createToast('รายการนี้ตรวจสอบ/อนุมัติแล้ว ไม่สามารถลบได้', 'danger');
+
             if(!confirm('ยืนยันลบรายการนี้?')) return;
-            const itemType = cacheBudgetItems.find(i => i.id === cacheTransactions.find(t => t.id === id).budget_item_id)?.type;
-            cacheTransactions = cacheTransactions.filter(t => t.id !== id); saveToLocalStorage(); createToast('ลบรายการสำเร็จ', 'warning');
+            const itemType = cacheBudgetItems.find(i => i.id === t.budget_item_id)?.type;
+            cacheTransactions = cacheTransactions.filter(x => x.id !== id); saveToLocalStorage(); createToast('ลบรายการสำเร็จ', 'warning');
             if(itemType === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable(); loadDashboardData();
         }
 
@@ -937,10 +962,17 @@
             } else {
                 document.getElementById('trans-id').value = ''; document.getElementById('trans-date').value = lastSelectedDate || new Date().toISOString().split('T')[0]; document.getElementById('modal-trans-title').textContent = applyType === 'INCOME' ? 'บันทึกการรับเงินจริง' : 'บันทึกการเบิกจ่ายจริง';
             }
-            document.getElementById('trans-type-hidden').value = applyType; calculateFiscalPeriod(); document.getElementById('modal-transaction').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('trans-type-hidden').value = applyType; document.getElementById('modal-transaction').classList.remove('opacity-0', 'pointer-events-none');
         }
 
-        function editTransaction(id) { const t = cacheTransactions.find(trans => trans.id === id); if(t) { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id); openTransactionModal(id, item ? item.type : 'INCOME'); } }
+        function editTransaction(id) { 
+            const t = cacheTransactions.find(trans => trans.id === id); 
+            if(t) { 
+                if(t.status === 'ตรวจสอบแล้ว') return createToast('รายการนี้ตรวจสอบ/อนุมัติแล้ว ไม่สามารถแก้ไขได้', 'danger');
+                const item = cacheBudgetItems.find(i => i.id === t.budget_item_id); 
+                openTransactionModal(id, item ? item.type : 'INCOME'); 
+            } 
+        }
         function closeTransactionModal() { document.getElementById('modal-transaction').classList.add('opacity-0', 'pointer-events-none'); }
         
         function saveTransaction(event) {
