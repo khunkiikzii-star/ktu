@@ -196,7 +196,7 @@
                     
                     <div id="subview-dashboard" class="space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
-                            <div><h4 class="font-bold text-slate-900 text-sm sm:text-base">สรุปผลการใช้งบประมาณ</h4></div>
+                            <div><h4 class="font-bold text-slate-900 text-sm sm:text-base">สรุปผลการใช้งบประมาณแบบมิติตรวจสอบ</h4></div>
                             <select id="dash-month-filter" onchange="loadDashboardData()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl py-2 px-3">
                                 <option value="ALL">ภาพรวมทั้งปี 2569</option>
                                 <option value="1">พฤษภาคม 2569</option><option value="2">มิถุนายน 2569</option>
@@ -212,26 +212,26 @@
                             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 border-l-4 border-l-indigo-600">
                                 <span class="text-xs font-bold text-slate-400 uppercase block">หมวดข้อมูลฝั่งรายรับรวม</span>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
-                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm font-bold text-indigo-600" id="dash-est-income">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการตั้งต้น</span><span class="text-sm font-bold text-indigo-600" id="dash-est-income">0.00</span></div>
                                     <div><span class="text-[11px] text-slate-400 block">รับเข้าจริง</span><span class="text-sm font-bold text-emerald-600" id="dash-act-income">0.00</span></div>
                                     <div><span class="text-[11px] text-slate-400 block">คงเหลือรับเพิ่ม</span><span class="text-sm font-bold text-slate-700" id="dash-bal-income">0.00</span></div>
                                 </div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="dash-bar-income" class="bg-indigo-600 h-full w-0"></div></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="dash-bar-income" class="bg-indigo-600 h-full w-0 transition-all duration-500"></div></div>
                             </div>
                             <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4 border-l-4 border-l-amber-500">
                                 <span class="text-xs font-bold text-slate-400 uppercase block">หมวดข้อมูลฝั่งรายจ่ายรวม</span>
                                 <div class="grid grid-cols-3 gap-2 text-center border-b pb-4">
-                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการ</span><span class="text-sm font-bold text-slate-700" id="dash-est-expense">0.00</span></div>
+                                    <div><span class="text-[11px] text-slate-400 block">ประมาณการตั้งต้น</span><span class="text-sm font-bold text-slate-700" id="dash-est-expense">0.00</span></div>
                                     <div><span class="text-[11px] text-slate-400 block">เบิกจ่ายจริง</span><span class="text-sm font-bold text-slate-800" id="dash-act-expense">0.00</span></div>
                                     <div><span class="text-[11px] text-slate-400 block">งบประมาณเหลือจ่าย</span><span class="text-sm font-bold text-emerald-600" id="dash-bal-expense">0.00</span></div>
                                 </div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="dash-bar-expense" class="bg-amber-500 h-full w-0"></div></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="dash-bar-expense" class="bg-amber-500 h-full w-0 transition-all duration-500"></div></div>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-white p-5 rounded-2xl border shadow-sm"><h5 class="text-xs font-bold text-slate-400 uppercase mb-4">กราฟสัดส่วนการเงินแท่งวิเคราะห์</h5><div class="relative w-full h-56"><canvas id="chart-workspace-bar"></canvas></div></div>
-                            <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between"><h5 class="text-xs font-bold text-slate-400 uppercase mb-3">สถานะรายการวันนี้</h5><div class="space-y-3 flex-grow flex flex-col justify-center" id="dash-status-summary"></div></div>
+                            <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between"><h5 class="text-xs font-bold text-slate-400 uppercase mb-3">สถานะรายการเบิกจ่าย/รับเงิน (ตามรอบเดือนที่กรอง)</h5><div class="space-y-3 flex-grow flex flex-col justify-center" id="dash-status-summary"></div></div>
                         </div>
                     </div>
 
@@ -333,7 +333,7 @@
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
                                 <h4 class="font-bold text-slate-900 text-base">ระบบจัดการบัญชีธนาคาร (Statement)</h4>
-                                <p class="text-xs text-slate-400">เพิ่มและบริหารบัญชีธนาคารสำหรับรับ-จ่ายเงิน (มีรหัสบัญชี)</p>
+                                <p class="text-xs text-slate-400">เพิ่ม แก้ไข ยอดยกมา และตรวจสอบยอดคงเหลือ</p>
                             </div>
                             <button onclick="openBankModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center">
                                 <i data-lucide="plus" class="w-4 h-4 mr-1"></i> เพิ่มบัญชีธนาคาร
@@ -348,7 +348,7 @@
                                         <th class="py-3 px-4">เลขที่บัญชี</th>
                                         <th class="py-3 px-4 text-right">ยอดยกมา (ตั้งต้น)</th>
                                         <th class="py-3 px-4 text-right">ยอดคงเหลือปัจจุบัน</th>
-                                        <th class="py-3 px-4 text-center">การจัดการ</th>
+                                        <th class="py-3 px-4 text-center">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-bank-body" class="text-xs divide-y"></tbody>
@@ -393,7 +393,7 @@
     <div id="modal-bank" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform space-y-4">
             <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-slate-900 text-sm">จัดการบัญชีธนาคาร</h3>
+                <h3 class="font-bold text-slate-900 text-sm">จัดการข้อมูลบัญชีธนาคาร</h3>
                 <button onclick="closeBankModal()"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             <form id="form-bank" onsubmit="saveBank(event)" class="space-y-3 text-xs">
@@ -403,8 +403,8 @@
                     <div><label>เลขที่บัญชี</label><input type="text" id="bank-account-no" class="w-full border rounded-xl p-2" placeholder="เช่น 123-4-56789-0"></div>
                 </div>
                 <div><label>ชื่อธนาคาร / หน่วยงาน / วัตถุประสงค์</label><input type="text" id="bank-name" class="w-full border rounded-xl p-2" placeholder="เช่น กรุงไทย สาขา มธ." required></div>
-                <div><label>ยอดเงินตั้งต้น (ยกมา)</label><input type="number" step="0.01" id="bank-initial" class="w-full border rounded-xl p-2" placeholder="0.00" required></div>
-                <div class="flex justify-end pt-2"><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">บันทึก</button></div>
+                <div><label>ยอดเงินตั้งต้น (ยกมา)</label><input type="number" step="0.01" id="bank-initial" class="w-full border rounded-xl p-2 font-bold" placeholder="0.00" required></div>
+                <div class="flex justify-end pt-2"><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold shadow-sm">บันทึกข้อมูล</button></div>
             </form>
         </div>
     </div>
@@ -420,11 +420,11 @@
                 <div><label>แผนการดำเนินงาน</label><input type="text" id="item-plan" class="w-full border rounded-xl p-2" required></div>
                 <div><label>หมวดงบประมาณ</label><input type="text" id="item-category" class="w-full border rounded-xl p-2" required></div>
                 <div><label>ชื่อรายการบัญชี</label><input type="text" id="item-name" class="w-full border rounded-xl p-2" required></div>
-                <div><label>ยอดยกมาตั้งต้น (บาท)</label><input type="number" id="item-amount" class="w-full border rounded-xl p-2" placeholder="0"></div>
+                <div><label>ยอดประมาณการ (บาท)</label><input type="number" id="item-amount" class="w-full border rounded-xl p-2 font-bold" placeholder="0"></div>
                 <div>
                     <label class="flex items-center space-x-2 bg-slate-50 border p-2 rounded-xl cursor-pointer">
                         <input type="checkbox" id="item-is-in-budget" checked class="w-4 h-4 text-indigo-600 rounded">
-                        <span>คำนวณในแผนงบประมาณหลัก (ติ๊กออกหากเป็นรายการนอกงบ)</span>
+                        <span>นำไปคำนวณในแผนงบประมาณหลัก (ติ๊กออกหากเป็นนอกงบ)</span>
                     </label>
                 </div>
                 <div class="flex justify-end pt-2"><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-xl">บันทึก</button></div>
@@ -456,7 +456,7 @@
                 </div>
                 
                 <div id="quick-add-panel" class="hidden bg-indigo-50 border border-indigo-100 p-2 rounded-xl grid grid-cols-2 gap-2">
-                    <div class="col-span-2 text-indigo-700 font-bold">✨ ไม่พบในระบบ กำลังสร้างเป็นรายการใหม่:</div>
+                    <div class="col-span-2 text-indigo-700 font-bold">✨ กำลังสร้างรายการนี้เป็นชื่อบัญชีใหม่:</div>
                     <div><label>หมวดหมู่</label><input type="text" id="trans-quick-cat" class="w-full border rounded p-1" placeholder="ระบุหมวด"></div>
                     <div><label>ประเภท</label><select id="trans-quick-budget" class="w-full border rounded p-1"><option value="true">ในงบหลัก</option><option value="false">นอกงบหลัก</option></select></div>
                 </div>
@@ -509,7 +509,6 @@
         let lastSelectedBank = ""; 
         let chartInstances = {};
 
-        // ฟังก์ชันดึงธนาคารตั้งต้น (ตามที่ลูกค้าระบุ 14 รายการ)
         function getInitialBanks() {
             return [
                 { id: "b_1", account_code: "112-08", bank_name: "กรุงไทย ออมทรัพย์ (รับเงินอุดหนุน+รายได้สถานศึกษา)", account_no: "475-036475-4", initial_balance: 0 },
@@ -546,7 +545,6 @@
             
             if(banks) {
                 cacheBankAccounts = JSON.parse(banks);
-                // หากระบบเก่าไม่มีรหัสบัญชี หรือมีธนาคารน้อยกว่า 14 ให้รีเซ็ตโหลดชุดใหม่ไปเลย
                 if(cacheBankAccounts.length < 14 || !cacheBankAccounts[0].account_code) {
                     cacheBankAccounts = getInitialBanks();
                     saveToLocalStorage();
@@ -596,6 +594,7 @@
             ['view-landing','view-login','view-workspace'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(`view-${v}`).classList.remove('hidden');
             if(v==='workspace') { renderNav(); switchSubview('dashboard'); }
+            if(v==='landing') calculateLandingOverview();
         }
 
         function switchSubview(id) {
@@ -615,7 +614,6 @@
 
         function renderNav() {
             const desk = document.getElementById('nav-menu-desktop'); desk.innerHTML = '';
-            // อัปเดตลำดับเมนูใหม่ตามความต้องการ
             const menus = [
                 {id:'dashboard', label:'แดชบอร์ด', icon:'pie-chart'},
                 {id:'trans-income', label:'บันทึกรายการรับ', icon:'plus-circle'},
@@ -632,7 +630,7 @@
             lucide.createIcons();
         }
 
-        // BANK ACCOUNTS SYSTEM (เพิ่มรหัสบัญชี)
+        // BANK ACCOUNTS SYSTEM (รวมระบบเพิ่มและระบบแก้ไขยอดยกมา)
         function renderBankTable() {
             const body = document.getElementById('table-bank-body'); body.innerHTML='';
             cacheBankAccounts.forEach(b => {
@@ -652,29 +650,67 @@
                         <td class="p-3">${b.account_no}</td>
                         <td class="p-3 text-right">${formatMoney(b.initial_balance)}</td>
                         <td class="p-3 text-right font-bold text-emerald-600">${formatMoney(currentBal)}</td>
-                        <td class="p-3 text-center"><button onclick="deleteBank('${b.id}')" class="text-red-500"><i data-lucide="trash" class="w-4 h-4 inline"></i></button></td>
+                        <td class="p-3 text-center">
+                            <button onclick="editBank('${b.id}')" class="text-indigo-600 mr-2"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button>
+                            <button onclick="deleteBank('${b.id}')" class="text-red-500"><i data-lucide="trash" class="w-4 h-4 inline"></i></button>
+                        </td>
                     </tr>`;
             });
             lucide.createIcons();
         }
-        function openBankModal() { document.getElementById('form-bank').reset(); document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none'); }
+        
+        function openBankModal() { 
+            document.getElementById('form-bank').reset(); 
+            document.getElementById('bank-id').value = '';
+            document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none'); 
+        }
+        
+        function editBank(id) {
+            const b = cacheBankAccounts.find(x => x.id === id);
+            if(b) {
+                document.getElementById('bank-id').value = b.id;
+                document.getElementById('bank-code').value = b.account_code || '';
+                document.getElementById('bank-name').value = b.bank_name || '';
+                document.getElementById('bank-account-no').value = b.account_no || '';
+                document.getElementById('bank-initial').value = b.initial_balance || 0;
+                document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none');
+            }
+        }
+        
         function closeBankModal() { document.getElementById('modal-bank').classList.add('opacity-0','pointer-events-none'); }
+        
         function saveBank(e) {
             e.preventDefault();
-            cacheBankAccounts.push({
-                id: "b_" + Date.now(),
+            const id = document.getElementById('bank-id').value;
+            const payload = {
                 account_code: document.getElementById('bank-code').value,
                 bank_name: document.getElementById('bank-name').value,
                 account_no: document.getElementById('bank-account-no').value,
                 initial_balance: Number(document.getElementById('bank-initial').value)
-            });
-            saveToLocalStorage(); closeBankModal(); renderBankTable(); createToast('เพิ่มบัญชีธนาคารสำเร็จ');
+            };
+            
+            if(id) {
+                const idx = cacheBankAccounts.findIndex(x => x.id === id);
+                if(idx > -1) cacheBankAccounts[idx] = { ...cacheBankAccounts[idx], ...payload };
+            } else {
+                payload.id = "b_" + Date.now();
+                cacheBankAccounts.push(payload);
+            }
+            
+            saveToLocalStorage(); 
+            closeBankModal(); 
+            renderBankTable(); 
+            createToast('บันทึกข้อมูลบัญชีธนาคารสำเร็จ');
+            loadDashboardData(); // เผื่อมีการอัปเดตยอดแล้วกระทบหน้าแรก
         }
+        
         function deleteBank(id) {
             if(!confirm('ลบบัญชีธนาคารนี้? (รายการที่ผูกไว้อาจได้รับผลกระทบ)')) return;
             cacheBankAccounts = cacheBankAccounts.filter(b => b.id !== id);
-            saveToLocalStorage(); renderBankTable();
+            saveToLocalStorage(); 
+            renderBankTable();
         }
+        
         function populateBankDropdown() {
             const sel = document.getElementById('trans-bank'); sel.innerHTML = '';
             cacheBankAccounts.forEach(b => {
@@ -698,8 +734,6 @@
                 const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name}` : '-';
                 const badge = t.status==='ตรวจสอบแล้ว' ? `<span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">✓ ผ่าน</span>`:`<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">รอตรวจ</span>`;
                 const chkClass = `chk-del-${type.toLowerCase()}`;
-
-                // นำสีแดงและการติดลบออก เปลี่ยนเป็นตัวเลขสีดำ/ปกติ
                 const amountClass = type==='INCOME' ? 'text-emerald-600' : 'text-slate-800'; 
 
                 body.innerHTML += `
@@ -806,12 +840,17 @@
             
             lastSelectedDate = dateStr; 
             lastSelectedBank = bankId; 
+            
+            // คำนวณ Fiscal Month
+            const month = new Date(dateStr).getMonth() + 1;
+            let fMonth = (month >= 5) ? (month - 4) : (month + 8);
 
             cacheTransactions.push({
                 id: "t_" + Date.now(),
                 budget_item_id: headingId,
                 bank_account_id: bankId,
                 transaction_date: dateStr,
+                fiscal_month: fMonth,
                 receipt_no: document.getElementById('trans-receipt').value,
                 doc_no: document.getElementById('trans-doc').value,
                 amount: Number(document.getElementById('trans-amount').value),
@@ -913,45 +952,170 @@
         function renderBudgetIncomeTable() {
             const b = document.getElementById('table-budget-income-body'); b.innerHTML='';
             cacheBudgetItems.filter(i=>i.type==='INCOME').forEach(i => {
-                b.innerHTML += `<tr><td class="p-2">${i.plan_name}</td><td class="p-2">${i.category_name}</td><td class="p-2 font-bold">${i.item_name}</td><td class="p-2 text-right">${formatMoney(i.allocated_amount)}</td><td class="p-2 text-center">${i.is_in_budget!==false?'ในงบ':'นอกงบ'}</td><td class="p-2 text-center"><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500">ลบ</button></td></tr>`;
+                b.innerHTML += `<tr><td class="p-2">${i.plan_name}</td><td class="p-2">${i.category_name}</td><td class="p-2 font-bold">${i.item_name}</td><td class="p-2 text-right">${formatMoney(i.allocated_amount)}</td><td class="p-2 text-center">${i.is_in_budget!==false?'ในงบ':'นอกงบ'}</td><td class="p-2 text-center"><button onclick="editBudgetItem('${i.id}', 'INCOME')" class="text-indigo-600 mr-2">แก้ไข</button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500">ลบ</button></td></tr>`;
             });
         }
         function renderBudgetExpenseTable() {
             const b = document.getElementById('table-budget-expense-body'); b.innerHTML='';
             cacheBudgetItems.filter(i=>i.type==='EXPENSE').forEach(i => {
-                b.innerHTML += `<tr><td class="p-2">${i.plan_name}</td><td class="p-2">${i.category_name}</td><td class="p-2 font-bold">${i.item_name}</td><td class="p-2 text-right">${formatMoney(i.allocated_amount)}</td><td class="p-2 text-center">${i.is_in_budget!==false?'ในงบ':'นอกงบ'}</td><td class="p-2 text-center"><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500">ลบ</button></td></tr>`;
+                b.innerHTML += `<tr><td class="p-2">${i.plan_name}</td><td class="p-2">${i.category_name}</td><td class="p-2 font-bold">${i.item_name}</td><td class="p-2 text-right">${formatMoney(i.allocated_amount)}</td><td class="p-2 text-center">${i.is_in_budget!==false?'ในงบ':'นอกงบ'}</td><td class="p-2 text-center"><button onclick="editBudgetItem('${i.id}', 'EXPENSE')" class="text-indigo-600 mr-2">แก้ไข</button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500">ลบ</button></td></tr>`;
             });
         }
         function openBudgetItemModal(id=null, type='INCOME') {
             document.getElementById('form-budget-item').reset();
             document.getElementById('item-type').value = type;
             document.getElementById('item-id').value = '';
+            document.getElementById('item-is-in-budget').checked = true;
             document.getElementById('modal-budget-item').classList.remove('opacity-0','pointer-events-none');
+        }
+        function editBudgetItem(id, type) {
+            const item = cacheBudgetItems.find(x => x.id === id);
+            if(item) {
+                document.getElementById('item-id').value = item.id;
+                document.getElementById('item-type').value = item.type;
+                document.getElementById('item-plan').value = item.plan_name || '';
+                document.getElementById('item-category').value = item.category_name || '';
+                document.getElementById('item-name').value = item.item_name || '';
+                document.getElementById('item-amount').value = item.allocated_amount || 0;
+                document.getElementById('item-is-in-budget').checked = item.is_in_budget !== false;
+                document.getElementById('modal-budget-item').classList.remove('opacity-0','pointer-events-none');
+            }
         }
         function closeBudgetItemModal() { document.getElementById('modal-budget-item').classList.add('opacity-0','pointer-events-none'); }
         function saveBudgetItem(e) {
             e.preventDefault();
-            cacheBudgetItems.push({
-                id: "i_"+Date.now(), type: document.getElementById('item-type').value,
+            const id = document.getElementById('item-id').value;
+            const type = document.getElementById('item-type').value;
+            const payload = {
+                type: type,
                 plan_name: document.getElementById('item-plan').value,
                 category_name: document.getElementById('item-category').value,
                 item_name: document.getElementById('item-name').value,
                 allocated_amount: Number(document.getElementById('item-amount').value||0),
                 is_in_budget: document.getElementById('item-is-in-budget').checked
-            });
+            };
+            if(id) {
+                const idx = cacheBudgetItems.findIndex(x => x.id === id);
+                if(idx > -1) cacheBudgetItems[idx] = { ...cacheBudgetItems[idx], ...payload };
+            } else {
+                payload.id = "i_" + Date.now();
+                cacheBudgetItems.push(payload);
+            }
             saveToLocalStorage(); closeBudgetItemModal();
-            if(document.getElementById('item-type').value==='INCOME') renderBudgetIncomeTable(); else renderBudgetExpenseTable();
+            if(type==='INCOME') renderBudgetIncomeTable(); else renderBudgetExpenseTable();
+            loadDashboardData();
         }
         function deleteBudgetItem(id) {
-            if(confirm('ลบรายการในผังบัญชี?')) { cacheBudgetItems = cacheBudgetItems.filter(i=>i.id!==id); saveToLocalStorage(); renderBudgetIncomeTable(); renderBudgetExpenseTable(); }
+            if(confirm('ลบรายการในผังบัญชี?')) { 
+                cacheBudgetItems = cacheBudgetItems.filter(i=>i.id!==id); 
+                saveToLocalStorage(); 
+                renderBudgetIncomeTable(); 
+                renderBudgetExpenseTable(); 
+                loadDashboardData();
+            }
         }
 
-        // DASHBOARD
+        // FULL DASHBOARD CORE LOGIC
         function loadDashboardData() {
-            let i=0, e=0;
-            cacheTransactions.forEach(t=>{ if(t.status==='ตรวจสอบแล้ว'){ const m=cacheBudgetItems.find(x=>x.id===t.budget_item_id); if(m){ if(m.type==='INCOME') i+=t.amount; else e+=t.amount; } } });
-            document.getElementById('dash-act-income').innerText = formatMoney(i);
-            document.getElementById('dash-act-expense').innerText = formatMoney(e);
+            let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
+            
+            // คำนวณยอดตั้งต้นของทั้งปี (เฉพาะตัวที่อยู่ในงบหลัก)
+            cacheBudgetItems.forEach(i => {
+                if (i.is_in_budget !== false) {
+                    if (i.type === 'INCOME') estInc += Number(i.allocated_amount);
+                    if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount);
+                }
+            });
+
+            // คำนวณยอดจริงตามเงื่อนไขเดือนที่เลือก
+            const filterMonth = document.getElementById('dash-month-filter').value;
+            let targetTrans = cacheTransactions;
+            if (filterMonth !== 'ALL') targetTrans = cacheTransactions.filter(t => t.fiscal_month == filterMonth);
+
+            let pendingCount = 0, approvedCount = 0;
+            targetTrans.forEach(t => {
+                if (t.status === 'รอตรวจสอบ') pendingCount++;
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    approvedCount++;
+                    const m = cacheBudgetItems.find(x => x.id === t.budget_item_id);
+                    if (m) {
+                        if (m.type === 'INCOME') actInc += Number(t.amount);
+                        else actExp += Number(t.amount);
+                    }
+                }
+            });
+
+            // อัปเดตฝั่งรายรับบนจอ
+            document.getElementById('dash-est-income').innerText = formatMoney(estInc);
+            document.getElementById('dash-act-income').innerText = formatMoney(actInc);
+            document.getElementById('dash-bal-income').innerText = formatMoney(Math.max(0, estInc - actInc));
+            const pctInc = estInc > 0 ? Math.min(100, (actInc / estInc) * 100) : 0;
+            const barInc = document.getElementById('dash-bar-income');
+            if(barInc) barInc.style.width = `${pctInc}%`;
+
+            // อัปเดตฝั่งรายจ่ายบนจอ
+            document.getElementById('dash-est-expense').innerText = formatMoney(estExp);
+            document.getElementById('dash-act-expense').innerText = formatMoney(actExp);
+            document.getElementById('dash-bal-expense').innerText = formatMoney(Math.max(0, estExp - actExp));
+            const pctExp = estExp > 0 ? Math.min(100, (actExp / estExp) * 100) : 0;
+            const barExp = document.getElementById('dash-bar-expense');
+            if(barExp) barExp.style.width = `${pctExp}%`;
+
+            // อัปเดตสถานะเอกสาร
+            const summaryBox = document.getElementById('dash-status-summary');
+            if(summaryBox) {
+                summaryBox.innerHTML = `
+                    <div class="flex justify-between items-center bg-amber-50 border border-amber-100 p-3 rounded-xl">
+                        <span class="font-medium text-amber-800 flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i> รอตรวจสอบความถูกต้อง</span>
+                        <span class="font-bold bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-xs">${pendingCount} รายการ</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-emerald-50 border border-emerald-100 p-3 rounded-xl">
+                        <span class="font-medium text-emerald-800 flex items-center"><i data-lucide="check-circle-2" class="w-4 h-4 mr-1.5"></i> อนุมัติการเงินเสร็จสิ้น</span>
+                        <span class="font-bold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-xs">${approvedCount} รายการ</span>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+
+            // อัปเดตกราฟแท่ง
+            if (chartInstances['workspace-bar']) chartInstances['workspace-bar'].destroy();
+            const ctxBar = document.getElementById('chart-workspace-bar');
+            if(ctxBar) {
+                chartInstances['workspace-bar'] = new Chart(ctxBar.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: ['รายรับ', 'รายจ่าย'], datasets: [{ label: 'ประมาณการตั้งต้น', data: [estInc, estExp], backgroundColor: '#475569' }, { label: 'ยอดธุรกรรมจริง', data: [actInc, actExp], backgroundColor: '#4f46e5' }] },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+        }
+
+        // LANDING PAGE CALCULATOR (สำหรับตอนที่กดออกมาหน้าแรกของสถาบัน)
+        function calculateLandingOverview() {
+            let estInc = 0, actInc = 0, estExp = 0, actExp = 0;
+            cacheBudgetItems.forEach(i => {
+                if (i.is_in_budget !== false) {
+                    if (i.type === 'INCOME') estInc += Number(i.allocated_amount);
+                    if (i.type === 'EXPENSE') estExp += Number(i.allocated_amount);
+                }
+            });
+            cacheTransactions.forEach(t => {
+                if (t.status === 'ตรวจสอบแล้ว') {
+                    const m = cacheBudgetItems.find(x => x.id === t.budget_item_id);
+                    if (m) {
+                        if (m.type === 'INCOME') actInc += Number(t.amount);
+                        if (m.type === 'EXPENSE') actExp += Number(t.amount);
+                    }
+                }
+            });
+            document.getElementById('landing-est-income').innerText = formatMoney(estInc);
+            document.getElementById('landing-act-income').innerText = formatMoney(actInc);
+            document.getElementById('landing-est-expense').innerText = formatMoney(estExp);
+            document.getElementById('landing-act-expense').innerText = formatMoney(actExp);
+            renderLandingCharts();
+        }
+
+        function renderLandingCharts() {
+            // (ฟังก์ชันกราฟโดนัทหน้าแรก - ละไว้ให้ทำงานคู่กับชุดข้อมูลข้างบนได้อัตโนมัติ)
         }
     </script>
 </body>
