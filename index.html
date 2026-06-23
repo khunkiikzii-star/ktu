@@ -42,7 +42,6 @@
 
     <main class="flex-grow w-full relative">
 
-        <!-- LANDING PAGE -->
         <section id="view-landing" class="w-full min-h-screen flex flex-col">
             <div class="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white overflow-hidden pb-12">
                 <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
@@ -425,7 +424,14 @@
                                     <thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase tracking-wider">
                                         <tr>
                                             <th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-adv" onclick="toggleSelectAll('ADVANCE')" class="w-4 h-4 rounded text-indigo-600 border-slate-300"></th>
-                                            <th class="py-3.5 px-4">วันที่ทำรายการ</th><th class="py-3.5 px-4">ชื่อผู้ยืม (บุคลากร)</th><th class="py-3.5 px-4">เลขที่สัญญา</th><th class="py-3.5 px-4">ชื่อกิจกรรม</th><th class="py-3.5 px-4 text-right">ยอดเงินยืม</th><th class="py-3.5 px-4 text-center">สถานะ</th><th class="py-3.5 px-4 text-center">จัดการ</th>
+                                            <th class="py-3.5 px-4">วันที่ทำรายการ</th>
+                                            <th class="py-3.5 px-4">ชื่อผู้ยืม (บุคลากร)</th>
+                                            <th class="py-3.5 px-4">เลขที่สัญญา</th>
+                                            <th class="py-3.5 px-4">ชื่อกิจกรรม</th>
+                                            <th class="py-3.5 px-4 text-right">ยอดเงินยืม</th>
+                                            <th class="py-3.5 px-4 text-right">ยอดคงเหลือ</th>
+                                            <th class="py-3.5 px-4 text-center">สถานะ</th>
+                                            <th class="py-3.5 px-4 text-center">จัดการ</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-advance-body" class="text-sm divide-y divide-slate-100"></tbody>
@@ -574,7 +580,7 @@
             <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-sm space-y-1">
                 <p>ผู้ยืม: <span id="adv-clear-person" class="font-bold text-slate-800"></span></p>
                 <p>กิจกรรมหลัก: <span id="adv-clear-activity" class="font-bold text-slate-800"></span></p>
-                <p>ยอดเงินที่ต้องเคลียร์: <span id="adv-clear-total" class="font-bold text-indigo-600 text-base"></span> บาท</p>
+                <p>ยอดคงเหลือที่ต้องเคลียร์: <span id="adv-clear-total" class="font-bold text-indigo-600 text-base"></span> บาท</p>
             </div>
             <form id="form-advance-clear" onsubmit="executeAdvanceClear(event)" class="space-y-3 text-sm mt-2">
                 <input type="hidden" id="adv-clear-id" data-total="0">
@@ -585,7 +591,9 @@
                         <button type="button" onclick="addAdvClearRow()" class="text-[11px] bg-amber-200 text-amber-900 px-2 py-1 rounded shadow-sm hover:bg-amber-300">+ เพิ่มรายการ</button>
                     </p>
                     
-                    <div id="adv-clear-rows" class="space-y-2"></div>
+                    <div id="adv-clear-rows" class="space-y-2">
+                        <!-- Dynamic Rows here -->
+                    </div>
                     <div class="text-right font-bold text-amber-900 mt-2 border-t border-amber-200 pt-2">รวมใช้จ่ายทั้งหมด: <span id="adv-clear-used-sum">0.00</span> บาท</div>
                 </div>
 
@@ -691,7 +699,7 @@
         </div>
     </div>
 
-    <!-- Modals ตั้งค่างบประมาณ -->
+    <!-- Modals เดิม... -->
     <div id="modal-budget-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-item-title">เพิ่มหัวข้องบประมาณ</h3><button onclick="closeBudgetItemModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
@@ -1234,15 +1242,22 @@
             let sumTotal = 0; let sumCleared = 0; let sumPending = 0;
 
             cacheAdvances.forEach(adv => {
+                let clearedTotal = Number(adv.cleared_used || 0) + Number(adv.cleared_returned || 0);
+                let balance = Number(adv.amount || 0) - clearedTotal;
+
                 sumTotal += Number(adv.amount || 0);
-                sumCleared += (Number(adv.cleared_used || 0) + Number(adv.cleared_returned || 0));
-                if (adv.status === 'รอเคลียร์') sumPending += Number(adv.amount || 0);
+                sumCleared += clearedTotal;
+                sumPending += balance > 0 ? balance : 0;
 
                 let fwBadge = adv.is_forward ? `<span class="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-[10px] font-bold block mt-0.5 w-max">ยอดยกมา</span>` : '';
-                let badge = adv.status === 'เคลียร์แล้ว' ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md text-xs font-bold">เคลียร์ยอดแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-md text-xs font-bold animate-pulse">รอเคลียร์ยอด</span>';
-                let btnClear = adv.status === 'รอเคลียร์' ? `<button onclick="openAdvanceClearModal('${adv.id}')" class="text-xs bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100 font-bold px-2 py-1.5 rounded-lg w-full mb-1 shadow-sm">คลิกเคลียร์เงิน</button>` : `<div class="text-[11px] text-slate-500 text-left bg-slate-50 p-1.5 rounded border border-slate-100">ใช้จริง: ${formatMoney(adv.cleared_used)}<br>คืนเงิน: ${formatMoney(adv.cleared_returned)}</div>`;
                 
-                let btnEdit = adv.status === 'รอเคลียร์' ? `<button onclick="editAdvance('${adv.id}')" class="text-indigo-500 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button>` : '';
+                let badge = '';
+                if (balance <= 0) badge = '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md text-xs font-bold">เคลียร์ยอดแล้ว</span>';
+                else if (clearedTotal > 0 && balance > 0) badge = '<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs font-bold">ทยอยเคลียร์</span>';
+                else badge = '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-md text-xs font-bold animate-pulse">รอเคลียร์ยอด</span>';
+                
+                let btnClear = balance > 0 ? `<button onclick="openAdvanceClearModal('${adv.id}')" class="text-xs bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100 font-bold px-2 py-1.5 rounded-lg w-full mb-1 shadow-sm">คลิกเคลียร์เงิน</button>` : `<div class="text-[11px] text-slate-500 text-left bg-slate-50 p-1.5 rounded border border-slate-100">ใช้จริง: ${formatMoney(adv.cleared_used)}<br>คืนเงิน: ${formatMoney(adv.cleared_returned)}</div>`;
+                let btnEdit = balance > 0 ? `<button onclick="editAdvance('${adv.id}')" class="text-indigo-500 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button>` : '';
                 let btnDel = `<button onclick="deleteAdvance('${adv.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg ml-1"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button>`;
 
                 let chkBox = `<input type="checkbox" class="chk-del-adv w-4 h-4 rounded text-indigo-600 border-slate-300" value="${adv.id}">`;
@@ -1254,8 +1269,9 @@
                     <td class="py-3 px-4 text-slate-500 font-mono">${adv.contract_no}</td>
                     <td class="py-3 px-4 text-indigo-700 font-medium">${adv.activity_name}</td>
                     <td class="py-3 px-4 text-right font-extrabold text-slate-800">${formatMoney(adv.amount)}${fwBadge}</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-red-500">${formatMoney(balance)}</td>
                     <td class="py-3 px-4 text-center">${badge}</td>
-                    <td class="py-3 px-4 text-center align-top w-40">${btnClear} <div class="flex justify-center mt-1">${btnEdit} ${adv.status === 'รอเคลียร์' ? btnDel : ''}</div></td>
+                    <td class="py-3 px-4 text-center align-top w-40">${btnClear} <div class="flex justify-center mt-1">${btnEdit} ${balance > 0 ? btnDel : ''}</div></td>
                 </tr>`;
             });
 
@@ -1263,7 +1279,7 @@
             if (document.getElementById('adv-sum-cleared')) document.getElementById('adv-sum-cleared').textContent = formatMoney(sumCleared);
             if (document.getElementById('adv-sum-pending')) document.getElementById('adv-sum-pending').textContent = formatMoney(sumPending);
 
-            if (cacheAdvances.length === 0) { body.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400">ยังไม่มีข้อมูลสัญญายืมเงินทดรองจ่าย</td></tr>`; return; }
+            if (cacheAdvances.length === 0) { body.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400">ยังไม่มีข้อมูลสัญญายืมเงินทดรองจ่าย</td></tr>`; return; }
             try { lucide.createIcons(); } catch(e) {}
         }
         function openAdvanceModal() { 
@@ -1322,8 +1338,12 @@
             const checked = Array.from(document.querySelectorAll('.chk-del-adv:checked')).map(cb => cb.value);
             if(checked.length === 0) return createToast('กรุณาเลือกรายการที่ต้องการลบ', 'danger');
             
-            const hasCleared = checked.some(id => cacheAdvances.find(a => a.id === id)?.status === 'เคลียร์แล้ว');
-            if(hasCleared) return createToast('ไม่สามารถลบสัญญาที่เคลียร์ยอดแล้วได้', 'danger');
+            const hasCleared = checked.some(id => {
+                const adv = cacheAdvances.find(a => a.id === id);
+                const balance = (adv.amount || 0) - ((adv.cleared_used || 0) + (adv.cleared_returned || 0));
+                return balance <= 0;
+            });
+            if(hasCleared) return createToast('ไม่สามารถลบสัญญาที่เคลียร์ยอดครบแล้วได้', 'danger');
 
             if(!confirm(`ยืนยันการลบ ${checked.length} รายการที่เลือกทิ้ง?`)) return;
             cacheAdvances = cacheAdvances.filter(a => !checked.includes(a.id)); saveToLocalStorage();
@@ -1348,7 +1368,6 @@
                     rows.forEach((r, idx) => {
                         if (idx === 0) return; // Skip Header
                         if (r[0] && r[1] && r[2]) {
-                            // r[0]: Date, r[1]: Contract, r[2]: Name, r[3]: Activity, r[4]: Amount, r[5]: Forward
                             let parsedDate = r[0]; // format from excel
                             let person = r[2].toString().trim();
                             let isForward = r[5] && r[5].toString().toUpperCase() === 'Y';
@@ -1394,21 +1413,23 @@
             document.querySelectorAll('.adv-clear-amt').forEach(el => sum += Number(el.value || 0));
             document.getElementById('adv-clear-used-sum').textContent = formatMoney(sum);
             
-            const totalAdv = Number(document.getElementById('adv-clear-id').dataset.total || 0);
-            let diff = totalAdv - sum;
+            const totalRemaining = Number(document.getElementById('adv-clear-id').dataset.total || 0);
+            let diff = totalRemaining - sum;
             document.getElementById('adv-clear-returned').value = diff > 0 ? diff : 0;
         }
 
         function openAdvanceClearModal(id) {
             const adv = cacheAdvances.find(a => a.id === id); if(!adv) return;
+            const balance = (adv.amount || 0) - ((adv.cleared_used || 0) + (adv.cleared_returned || 0));
+            
             document.getElementById('adv-clear-id').value = adv.id;
-            document.getElementById('adv-clear-id').dataset.total = adv.amount;
+            document.getElementById('adv-clear-id').dataset.total = balance;
             document.getElementById('adv-clear-person').textContent = adv.person_name;
             document.getElementById('adv-clear-activity').textContent = adv.activity_name;
-            document.getElementById('adv-clear-total').textContent = formatMoney(adv.amount);
+            document.getElementById('adv-clear-total').textContent = formatMoney(balance);
             
             document.getElementById('adv-clear-rows').innerHTML = ''; addAdvClearRow();
-            document.querySelector('.adv-clear-amt').value = adv.amount; calcAdvClearTotal();
+            document.querySelector('.adv-clear-amt').value = balance; calcAdvClearTotal();
 
             const bnkSel = document.getElementById('adv-clear-bank'); bnkSel.innerHTML = '';
             cacheBankAccounts.forEach(b => { bnkSel.innerHTML += `<option value="${b.id}">[${b.account_code||'-'}] ${b.bank_name}</option>`; });
@@ -1419,7 +1440,8 @@
         function executeAdvanceClear(e) {
             e.preventDefault();
             const id = document.getElementById('adv-clear-id').value; const adv = cacheAdvances.find(a => a.id === id); if(!adv) return;
-            
+            const balance = (adv.amount || 0) - ((adv.cleared_used || 0) + (adv.cleared_returned || 0));
+
             let usedAmt = 0; const expenseRows = [];
             document.querySelectorAll('.adv-clear-row').forEach(row => {
                 const amt = Number(row.querySelector('.adv-clear-amt').value || 0);
@@ -1429,8 +1451,8 @@
 
             const retAmt = Number(document.getElementById('adv-clear-returned').value);
             
-            if (usedAmt + retAmt !== adv.amount) {
-                if(!confirm(`ยอดรวมใช้จ่าย+เงินทอน (${formatMoney(usedAmt+retAmt)}) ไม่เท่ากับยอดตั้งต้นที่ยืมไป (${formatMoney(adv.amount)}) ยืนยันที่จะทำรายการต่อหรือไม่?`)) return;
+            if (usedAmt + retAmt !== balance) {
+                if(!confirm(`ยอดรวมใช้จ่าย+เงินทอน (${formatMoney(usedAmt+retAmt)}) ไม่เท่ากับยอดคงเหลือที่ต้องเคลียร์ (${formatMoney(balance)}) ยืนยันที่จะทำรายการต่อหรือไม่?`)) return;
             }
 
             const dateStr = new Date().toISOString().split('T')[0];
@@ -1455,7 +1477,14 @@
                 });
             }
 
-            adv.status = 'เคลียร์แล้ว'; adv.cleared_used = usedAmt; adv.cleared_returned = retAmt;
+            adv.cleared_used = (adv.cleared_used || 0) + usedAmt; 
+            adv.cleared_returned = (adv.cleared_returned || 0) + retAmt;
+            if (adv.cleared_used + adv.cleared_returned >= adv.amount) {
+                adv.status = 'เคลียร์แล้ว';
+            } else {
+                adv.status = 'ทยอยเคลียร์';
+            }
+
             saveToLocalStorage(); closeAdvanceClearModal(); renderAdvanceTable(); createToast('เคลียร์สัญญาและบันทึกบัญชีอัตโนมัติเรียบร้อย', 'success'); loadDashboardData();
         }
 
@@ -1472,7 +1501,7 @@
                 "สถานะ": a.status,
                 "ยอดใช้จ่ายจริง (บาท)": Number(a.cleared_used || 0),
                 "ยอดเงินทอนคืน (บาท)": Number(a.cleared_returned || 0),
-                "ค้างเคลียร์ (บาท)": a.status === 'รอเคลียร์' ? Number(a.amount) : 0
+                "ยอดคงเหลือ (บาท)": Number(a.amount) - (Number(a.cleared_used || 0) + Number(a.cleared_returned || 0))
             }));
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "สัญญาทดรองจ่าย"); XLSX.writeFile(wb, `รายงานเงินยืมทดรองจ่าย_KTU.xlsx`);
         }
