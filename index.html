@@ -697,7 +697,7 @@
 
     <div id="modal-budget-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
-            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-item-title">เพิ่มหัวข้องบประมาณ</h3><button onclick="closeBudgetItemModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-item-title">เพิ่มหัวข้องบประมาณ</h3><button type="button" onclick="closeBudgetItemModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
             <form id="form-budget-item" onsubmit="saveBudgetItem(event)" class="space-y-3 text-sm">
                 <input type="hidden" id="item-id"><input type="hidden" id="item-type">
                 <div><label class="block mb-1">แผนการดำเนินงาน</label><input type="text" id="item-plan" required class="w-full bg-slate-50 border rounded-xl p-2.5"></div>
@@ -712,7 +712,7 @@
 
     <div id="modal-transaction" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
-            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-trans-title">ลงบันทึกรายการจริง</h3><button onclick="closeTransactionModal()"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-trans-title">ลงบันทึกรายการจริง</h3><button type="button" onclick="closeTransactionModal()"><i data-lucide="x" class="w-4 h-4"></i></button></div>
             <form id="form-transaction" onsubmit="saveTransaction(event)" class="space-y-3 text-sm">
                 <input type="hidden" id="trans-id"><input type="hidden" id="trans-type-hidden">
                 <div class="grid grid-cols-2 gap-2">
@@ -758,13 +758,13 @@
             <p class="text-sm text-slate-500">เลือกวันที่ต้องการพิมพ์</p>
             <input type="hidden" id="print-type-hidden">
             <input type="date" id="print-date-input" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-center text-indigo-700 text-base">
-            <div class="flex space-x-2 pt-2"><button onclick="closePrintModal()" class="w-full py-2 border rounded-xl text-sm">ยกเลิก</button><button onclick="executePrintDaily()" class="w-full py-2 bg-emerald-600 text-white rounded-xl text-sm font-bold">สั่งพิมพ์ไฟล์ Excel</button></div>
+            <div class="flex space-x-2 pt-2"><button type="button" onclick="closePrintModal()" class="w-full py-2 border rounded-xl text-sm">ยกเลิก</button><button type="button" onclick="executePrintDaily()" class="w-full py-2 bg-emerald-600 text-white rounded-xl text-sm font-bold">สั่งพิมพ์ไฟล์ Excel</button></div>
         </div>
     </div>
 
     <div id="modal-user" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
-            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-user-title">จัดการข้อมูลบัญชี</h3><button onclick="closeUserModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+            <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-user-title">จัดการข้อมูลบัญชี</h3><button type="button" onclick="closeUserModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
             <form id="form-user" onsubmit="saveUser(event)" class="space-y-3 text-sm">
                 <input type="hidden" id="user-id">
                 <div class="grid grid-cols-2 gap-2"><div><label class="block mb-1">Username</label><input type="text" id="user-username" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">Password</label><input type="text" id="user-password" required class="w-full border rounded-xl p-2.5"></div></div>
@@ -1074,7 +1074,6 @@
                     rows.forEach((r, idx) => {
                         if (idx === 0) return; // Skip Header
                         if (r[0]) {
-                            // Check if exists
                             if(!cachePersonnel.find(p => p.name === r[0])) {
                                 cachePersonnel.push({ id: "p_" + Date.now() + "_" + count, name: r[0], position: r[1] || '-' });
                                 count++;
@@ -1091,7 +1090,6 @@
             const sel = document.getElementById(selectId); if(!sel) return; sel.innerHTML = '<option value="">-- กรุณาเลือกบุคลากร --</option>';
             cachePersonnel.forEach(p => { sel.innerHTML += `<option value="${p.name}">${p.name} ${p.position !== '-' ? `(${p.position})` : ''}</option>`; });
         }
-
 
         // CALCULATE DASHBOARD
         function loadDashboardData() {
@@ -1158,9 +1156,7 @@
                         options: { responsive: true, maintainAspectRatio: false }
                     });
                 }
-            } catch (err) {
-                console.error("Dashboard Render Failed:", err);
-            }
+            } catch (err) { console.error("Dashboard Render Failed:", err); }
         }
 
         function calculateLandingOverview() {
@@ -1233,7 +1229,6 @@
         // ====== สัญญายืมเงิน (ทดรองจ่าย) ======
         function renderAdvanceTable() {
             const body = document.getElementById('table-advance-body'); if(!body) return; body.innerHTML = '';
-            
             let sumTotal = 0; let sumCleared = 0; let sumPending = 0;
 
             cacheAdvances.forEach(adv => {
@@ -1344,8 +1339,6 @@
             cacheAdvances = cacheAdvances.filter(a => !checked.includes(a.id)); saveToLocalStorage();
             document.getElementById('chk-all-adv').checked = false; renderAdvanceTable(); createToast(`ลบสำเร็จ ${checked.length} สัญญา`, 'success');
         }
-
-        // --- นำเข้าจาก Excel สัญญายืมทดรอง ---
         function downloadAdvanceTemplate() {
             const data = [["วันที่ (YYYY-MM-DD)", "เลขที่สัญญา", "ชื่อผู้ยืม (ระบุให้ตรงกับฐานข้อมูล)", "ชื่อกิจกรรม", "ยอดเงิน (บาท)", "เป็นยอดยกมา (Y/N)"]];
             const ws = XLSX.utils.aoa_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Template"); XLSX.writeFile(wb, "Template_ยืมทดรองจ่าย.xlsx");
@@ -1363,12 +1356,10 @@
                     rows.forEach((r, idx) => {
                         if (idx === 0) return; // Skip Header
                         if (r[0] && r[1] && r[2]) {
-                            // r[0]: Date, r[1]: Contract, r[2]: Name, r[3]: Activity, r[4]: Amount, r[5]: Forward
-                            let parsedDate = r[0]; // format from excel
+                            let parsedDate = r[0]; 
                             let person = r[2].toString().trim();
                             let isForward = r[5] && r[5].toString().toUpperCase() === 'Y';
                             
-                            // Auto add personnel if not exist
                             if(!cachePersonnel.find(p => p.name === person)) { cachePersonnel.push({ id: "p_" + Date.now() + "_" + count, name: person, position: '-' }); }
 
                             cacheAdvances.push({
@@ -1386,7 +1377,7 @@
             reader.readAsBinaryString(file);
         }
 
-        // --- ระบบเคลียร์ยืมทดรองจ่ายแบบหลายกิจกรรม ---
+        // Advance Clear
         function renderAdvClearExpenseDropdown() {
             let opts = '<option value="">-- ไม่ระบุ (บันทึกเป็นนอกงบอัตโนมัติ) --</option>';
             cacheBudgetItems.filter(i => i.type === 'EXPENSE').forEach(i => { opts += `<option value="${i.id}">[${i.category_name}] ${i.item_name}</option>`; });
@@ -1475,45 +1466,19 @@
 
             adv.cleared_used = (adv.cleared_used || 0) + usedAmt; 
             adv.cleared_returned = (adv.cleared_returned || 0) + retAmt;
-            if (adv.cleared_used + adv.cleared_returned >= adv.amount) {
-                adv.status = 'เคลียร์แล้ว';
-            } else {
-                adv.status = 'ทยอยเคลียร์';
-            }
+            if (adv.cleared_used + adv.cleared_returned >= adv.amount) { adv.status = 'เคลียร์แล้ว'; } else { adv.status = 'ทยอยเคลียร์'; }
 
             saveToLocalStorage(); closeAdvanceClearModal(); renderAdvanceTable(); createToast('เคลียร์สัญญาและบันทึกบัญชีอัตโนมัติเรียบร้อย', 'success'); loadDashboardData();
         }
 
-        // Export Excel - Advance
-        function exportAdvanceExcel() {
-            if(cacheAdvances.length === 0) return createToast('ไม่มีข้อมูลสัญญายืมทดรองจ่ายให้ส่งออก', 'danger');
-            let data = cacheAdvances.map(a => ({
-                "วันที่ทำสัญญา": formatThaiDate(a.date),
-                "เลขที่สัญญา": a.contract_no,
-                "ชื่อผู้ยืม": a.person_name,
-                "กิจกรรม": a.activity_name,
-                "ยอดยกมา": a.is_forward ? 'ใช่' : 'ไม่ใช่',
-                "ยอดเงินยืม (บาท)": Number(a.amount),
-                "สถานะ": a.status,
-                "ยอดใช้จ่ายจริง (บาท)": Number(a.cleared_used || 0),
-                "ยอดเงินทอนคืน (บาท)": Number(a.cleared_returned || 0),
-                "ยอดคงเหลือ (บาท)": Number(a.amount) - (Number(a.cleared_used || 0) + Number(a.cleared_returned || 0))
-            }));
-            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "สัญญาทดรองจ่าย"); XLSX.writeFile(wb, `รายงานเงินยืมทดรองจ่าย_KTU.xlsx`);
-        }
-
-
         // ====== สัญญายืมเงิน (สวัสดิการ) ======
         function renderWelfareTable() {
             const body = document.getElementById('table-welfare-body'); if(!body) return; body.innerHTML = '';
-            
             let sumTotal = 0; let sumPaid = 0; let sumPending = 0;
 
             cacheWelfares.forEach(wel => {
                 const balance = wel.amount - wel.paid_amount;
-                sumTotal += Number(wel.amount || 0);
-                sumPaid += Number(wel.paid_amount || 0);
-                sumPending += Number(balance || 0);
+                sumTotal += Number(wel.amount || 0); sumPaid += Number(wel.paid_amount || 0); sumPending += Number(balance || 0);
 
                 let fwBadge = wel.is_forward ? `<span class="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-[10px] font-bold block mt-0.5 w-max">ยอดยกมา</span>` : '';
                 let badge = wel.status === 'ชำระครบ' ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-md text-xs font-bold">ปิดยอดแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-md text-xs font-bold animate-pulse">ยังชำระไม่ครบ</span>';
@@ -1611,7 +1576,6 @@
             document.getElementById('chk-all-wel').checked = false; renderWelfareTable(); createToast(`ลบสำเร็จ ${checked.length} สัญญา`, 'success');
         }
 
-        // --- นำเข้าจาก Excel สัญญายืมสวัสดิการ ---
         function downloadWelfareTemplate() {
             const data = [["วันที่ (YYYY-MM-DD)", "เลขที่สัญญา", "ชื่อผู้ยืม (ระบุให้ตรงกับฐานข้อมูล)", "ยอดเงินกู้รวม (บาท)", "ยอดผ่อนต่อเดือน (บาท)", "เริ่มชำระเดือนที่ (1=พ.ค., 2=มิ.ย., ..., 12=เม.ย.)", "เป็นยอดยกมา (Y/N)"]];
             const ws = XLSX.utils.aoa_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Template"); XLSX.writeFile(wb, "Template_ยืมสวัสดิการ.xlsx");
@@ -1680,12 +1644,10 @@
             const month = new Date(dateStr).getMonth() + 1; const fMonth = (month >= 5) ? (month - 4) : (month + 8);
             const incItem = cacheBudgetItems.find(i => i.item_name === 'รับชำระเงินยืมสวัสดิการ');
 
-            // บันทึกรับเงินในสมุดบัญชีกลาง
             cacheTransactions.push({
                 id: "t_" + Date.now(), budget_item_id: incItem.id, bank_account_id: bankId, transaction_date: dateStr, fiscal_month: fMonth, fiscal_year: 2569, receipt_no: '-', doc_no: wel.contract_no, amount: payAmt, remarks: `${payType} จาก ${wel.person_name} (สัญญา ${wel.contract_no})`, created_by: currentUser.id, status: 'ตรวจสอบแล้ว' 
             });
 
-            // อัปเดตยอดคงเหลือในสัญญา
             wel.paid_amount += payAmt;
             if (wel.paid_amount >= wel.amount) wel.status = 'ชำระครบ';
 
@@ -1716,7 +1678,6 @@
 
             cacheWelfares.forEach(wel => {
                 if (wel.status !== 'ชำระครบ') {
-                    // ลอจิก: ถ้ายอดยกมา หรือ เดือนปัจจุบัน >= เดือนที่เริ่มชำระ ให้หักได้
                     if (wel.is_forward || targetMonth >= (wel.start_month || 1)) {
                         const balance = wel.amount - (wel.paid_amount || 0);
                         const deductAmt = Math.min(balance, Number(wel.installment || 0));
@@ -1732,7 +1693,6 @@
             });
 
             if (totalDeducted > 0) {
-                // ขาจ่าย: หักเงินออก (จำลองหมวดจ่ายนอกงบ)
                 let tempExpId = "i_auto_exp";
                 if(!cacheBudgetItems.find(i => i.id === tempExpId)) {
                     cacheBudgetItems.push({ id: tempExpId, type: 'EXPENSE', plan_name: 'นอกงบประมาณ', category_name: 'เงินเดือน/บุคลากร', item_name: 'หักเงินสวัสดิการ (ออโต้)', allocated_amount: 0, is_in_budget: false });
@@ -1741,7 +1701,6 @@
                     id: "t_" + Date.now() + "_EXP", budget_item_id: tempExpId, bank_account_id: bankFromId, transaction_date: dateStr, fiscal_month: targetMonth, fiscal_year: 2569, receipt_no: '-', doc_no: 'AUTO', amount: totalDeducted, remarks: `หักสวัสดิการออโต้ เดือนที่ ${targetMonth} (จำนวน ${deductedCount} สัญญา)`, created_by: currentUser.id, status: 'ตรวจสอบแล้ว' 
                 });
 
-                // ขารับ: เอาเงินเข้ากองทุน
                 cacheTransactions.push({
                     id: "t_" + Date.now() + "_INC", budget_item_id: incItem.id, bank_account_id: bankToId, transaction_date: dateStr, fiscal_month: targetMonth, fiscal_year: 2569, receipt_no: '-', doc_no: 'AUTO', amount: totalDeducted, remarks: `รับชำระสวัสดิการออโต้ เดือนที่ ${targetMonth} (จำนวน ${deductedCount} สัญญา)`, created_by: currentUser.id, status: 'ตรวจสอบแล้ว' 
                 });
@@ -1772,7 +1731,7 @@
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "สัญญาสวัสดิการ"); XLSX.writeFile(wb, `รายงานเงินสวัสดิการ_KTU.xlsx`);
         }
 
-        // ====== GENERATE MAIN REPORT (พร้อมระบบค้นหา & เรียงลำดับ) ======
+        // ====== GENERATE MAIN REPORT (ค้นหา + จัดเรียงตัวเลข) ======
         let generatedReportRawData = [];
         function generateMainReport() {
             const table = document.getElementById('table-excel-mockup'); 
@@ -1786,7 +1745,7 @@
             let rowHTML = ''; 
             generatedReportRawData = [];
 
-            // ระบบเรียงลำดับอัจฉริยะ (Alphanumeric Sort)
+            // จัดเรียงแบบ Alphanumeric (เรียงตัวเลข 1, 1.1, 2, 2.1 ได้ถูกต้อง)
             const sortAlphaNumeric = (a, b) => {
                 let p = (a.plan_name || '').localeCompare(b.plan_name || '', 'th', { numeric: true });
                 if (p !== 0) return p;
@@ -1832,7 +1791,6 @@
             if(expenses.length > 0) {
                 rowHTML += `<tr class="bg-slate-100 font-bold text-amber-950"><td class="p-2 border" colspan="5">ส่วนที่ 2: หมวดรายจ่ายจำแนกตามแผนงาน</td></tr>`;
                 
-                // จับกลุ่มตามแผนงาน
                 const plans = [...new Set(expenses.map(i => i.plan_name))];
                 plans.forEach(planName => {
                     rowHTML += `<tr class="bg-amber-50/40 text-sm font-semibold"><td class="p-2 pl-2 border" colspan="5">📁 ${planName}</td></tr>`;
