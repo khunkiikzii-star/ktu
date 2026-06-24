@@ -125,7 +125,6 @@
             </div>
         </section>
 
-        <!-- LOGIN PAGE -->
         <section id="view-login" class="hidden w-full min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
             <div class="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 relative overflow-hidden">
                 <div class="absolute top-0 inset-x-0 h-2 bg-indigo-600"></div>
@@ -164,9 +163,7 @@
             </div>
         </section>
 
-        <!-- WORKSPACE -->
         <section id="view-workspace" class="hidden min-h-screen w-full flex flex-col lg:flex-row bg-slate-50">
-            <!-- Sidebar -->
             <aside id="sidebar-desktop" class="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 fixed inset-y-0 left-0 z-30 p-6 justify-between shadow-sm overflow-y-auto">
                 <div class="space-y-8">
                     <div class="flex items-center space-x-3 pb-4 border-b border-slate-100">
@@ -188,9 +185,7 @@
                 </div>
             </aside>
 
-            <!-- Main Content Area -->
             <div class="flex-grow lg:pl-72 pb-24 lg:pb-6 min-h-screen flex flex-col w-full">
-                <!-- Header -->
                 <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-sm lg:shadow-none">
                     <div>
                         <h3 class="text-lg font-bold text-slate-900" id="workspace-title">หน้าหลักควบคุมระบบ</h3>
@@ -206,7 +201,6 @@
 
                 <div class="p-4 sm:p-6 lg:p-8 flex-grow w-full" id="workspace-content-container">
                     
-                    <!-- Dashboard -->
                     <div id="subview-dashboard" class="space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-base sm:text-lg">สรุปผลการใช้งบประมาณแบบมิติตรวจสอบ</h4></div>
@@ -254,7 +248,6 @@
                         </div>
                     </div>
 
-                    <!-- Trans Incomes -->
                     <div id="subview-trans-income" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">บันทึกรายการรับ</h4></div>
@@ -284,7 +277,6 @@
                         </div>
                     </div>
 
-                    <!-- Trans Expenses -->
                     <div id="subview-trans-expense" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">บันทึกรายการจ่าย</h4></div>
@@ -314,7 +306,6 @@
                         </div>
                     </div>
 
-                    <!-- Budget Incomes -->
                     <div id="subview-budget-income" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">ผังตั้งค่ารายรับ</h4></div>
@@ -327,7 +318,6 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3 px-4">แผนการดำเนินงาน</th><th class="py-3 px-4">หมวดงบประมาณ</th><th class="py-3 px-4">รายการบัญชี</th><th class="py-3 px-4 text-right">ยอดตั้งต้น</th><th class="py-3 px-4 text-center">ประเภทรายงาน</th><th class="py-3 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-budget-income-body" class="text-sm divide-y"></tbody></table></div>
                     </div>
 
-                    <!-- Budget Expenses -->
                     <div id="subview-budget-expense" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">ผังตั้งค่ารายจ่าย</h4></div>
@@ -340,7 +330,6 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3 px-4">แผนการดำเนินงาน</th><th class="py-3 px-4">หมวดงบประมาณ</th><th class="py-3 px-4">รายการบัญชี</th><th class="py-3 px-4 text-right">ยอดตั้งต้น</th><th class="py-3 px-4 text-center">ประเภทรายงาน</th><th class="py-3 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-budget-expense-body" class="text-sm divide-y"></tbody></table></div>
                     </div>
 
-                    <!-- Banks -->
                     <div id="subview-bank-accounts" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -352,7 +341,6 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3 px-4 text-center">รหัสบัญชี</th><th class="py-3 px-4">ชื่อธนาคาร / หน่วยงาน / วัตถุประสงค์</th><th class="py-3 px-4">เลขที่บัญชี</th><th class="py-3 px-4 text-right">ยอดยกมา (ตั้งต้น)</th><th class="py-3 px-4 text-right">ยอดคงเหลือปัจจุบัน</th><th class="py-3 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-bank-body" class="text-sm divide-y"></tbody></table></div>
                     </div>
 
-                    <!-- Personnel -->
                     <div id="subview-personnel" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -384,7 +372,6 @@
                         </div>
                     </div>
 
-                    <!-- Advance Loans -->
                     <div id="subview-advance-loans" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -440,7 +427,6 @@
                         </div>
                     </div>
 
-                    <!-- Welfare Loans -->
                     <div id="subview-welfare-loans" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div>
@@ -494,17 +480,34 @@
                         </div>
                     </div>
 
-                    <!-- Reports -->
                     <div id="subview-reports" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">ระบบพิมพ์รายงานงบประมาณหลัก</h4></div>
                             <button onclick="exportToExcelMain()" class="bg-emerald-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm"><i data-lucide="download" class="w-4 h-4 inline mr-1"></i> ดาวน์โหลด Excel</button>
                         </div>
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm"><span class="text-sm font-bold text-slate-500 mr-2">เงื่อนไขรายงาน:</span><select id="report-view-mode" onchange="generateMainReport()" class="text-sm bg-slate-50 border rounded-xl py-2 px-3 w-56"><option value="ALL">รวมทั้งปี</option><option value="1">เดือนพฤษภาคม พ.ศ. 2569</option><option value="2">เดือนมิถุนายน พ.ศ. 2569</option><option value="3">เดือนกรกฎาคม พ.ศ. 2569</option><option value="4">เดือนสิงหาคม พ.ศ. 2569</option><option value="5">เดือนกันยายน พ.ศ. 2569</option><option value="6">เดือนตุลาคม พ.ศ. 2569</option><option value="7">เดือนพฤศจิกายน พ.ศ. 2569</option><option value="8">เดือนธันวาคม พ.ศ. 2569</option><option value="9">เดือนมกราคม พ.ศ. 2570</option><option value="10">เดือนกุมภาพันธ์ พ.ศ. 2570</option><option value="11">เดือนมีนาคม พ.ศ. 2570</option><option value="12">เดือนเมษายน พ.ศ. 2570</option></select></div>
+                        
+                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col sm:flex-row gap-4 items-center">
+                            <div class="w-full sm:w-1/2 relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400"><i data-lucide="search" class="w-4 h-4"></i></span>
+                                <input type="text" id="report-search" oninput="generateMainReport()" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-9 pr-4 text-sm focus:ring-2 focus:ring-indigo-500" placeholder="ค้นหารายการบัญชี (เช่น ค่าไฟ, 2.5)...">
+                            </div>
+                            <div class="w-full sm:w-1/2 flex items-center sm:justify-end">
+                                <span class="text-sm font-bold text-slate-500 mr-2 whitespace-nowrap">เงื่อนไขรายงาน:</span>
+                                <select id="report-view-mode" onchange="generateMainReport()" class="text-sm bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-3 w-56 focus:ring-2 focus:ring-indigo-500">
+                                    <option value="ALL">รวมทั้งปี</option>
+                                    <option value="1">เดือนพฤษภาคม พ.ศ. 2569</option><option value="2">เดือนมิถุนายน พ.ศ. 2569</option>
+                                    <option value="3">เดือนกรกฎาคม พ.ศ. 2569</option><option value="4">เดือนสิงหาคม พ.ศ. 2569</option>
+                                    <option value="5">เดือนกันยายน พ.ศ. 2569</option><option value="6">เดือนตุลาคม พ.ศ. 2569</option>
+                                    <option value="7">เดือนพฤศจิกายน พ.ศ. 2569</option><option value="8">เดือนธันวาคม พ.ศ. 2569</option>
+                                    <option value="9">เดือนมกราคม พ.ศ. 2570</option><option value="10">เดือนกุมภาพันธ์ พ.ศ. 2570</option>
+                                    <option value="11">เดือนมีนาคม พ.ศ. 2570</option><option value="12">เดือนเมษายน พ.ศ. 2570</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <div class="bg-white rounded-2xl border shadow-sm p-4 overflow-hidden"><table class="w-full text-sm border-collapse border border-slate-200" id="table-excel-mockup"></table></div>
                     </div>
 
-                    <!-- Users -->
                     <div id="subview-users" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">ระบบจัดการข้อมูลและสิทธิ์เจ้าหน้าที่</h4></div>
@@ -524,7 +527,6 @@
         </section>
     </main>
 
-    <!-- Modal พื้นฐาน -->
     <div id="modal-logout" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"><div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl"><div class="text-center"><h3 class="font-bold text-slate-900 mb-2">ยืนยันออกจากระบบ?</h3></div><div class="grid grid-cols-2 gap-3 pt-4"><button onclick="closeLogoutModal()" class="w-full border rounded-xl py-2 text-sm">ยกเลิก</button><button onclick="executeLogout()" class="w-full bg-red-500 text-white rounded-xl py-2 text-sm">ออกจากระบบ</button></div></div></div>
 
     <div id="modal-bank" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
@@ -540,7 +542,6 @@
         </div>
     </div>
 
-    <!-- Modals บุคลากร -->
     <div id="modal-personnel" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base">เพิ่มรายชื่อบุคลากร</h3><button type="button" onclick="closePersonnelModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
@@ -553,7 +554,6 @@
         </div>
     </div>
 
-    <!-- Modals สัญญายืมเงินทดรองจ่าย -->
     <div id="modal-advance" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-adv-title">บันทึกสัญญายืมเงิน (ทดรองจ่าย)</h3><button type="button" onclick="closeAdvanceModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
@@ -591,9 +591,7 @@
                         <button type="button" onclick="addAdvClearRow()" class="text-[11px] bg-amber-200 text-amber-900 px-2 py-1 rounded shadow-sm hover:bg-amber-300">+ เพิ่มรายการ</button>
                     </p>
                     
-                    <div id="adv-clear-rows" class="space-y-2">
-                        <!-- Dynamic Rows here -->
-                    </div>
+                    <div id="adv-clear-rows" class="space-y-2"></div>
                     <div class="text-right font-bold text-amber-900 mt-2 border-t border-amber-200 pt-2">รวมใช้จ่ายทั้งหมด: <span id="adv-clear-used-sum">0.00</span> บาท</div>
                 </div>
 
@@ -608,7 +606,6 @@
         </div>
     </div>
 
-    <!-- Modals สัญญายืมเงินสวัสดิการ -->
     <div id="modal-welfare" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-wel-title">บันทึกสัญญายืมเงินสวัสดิการ</h3><button type="button" onclick="closeWelfareModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
@@ -643,7 +640,6 @@
         </div>
     </div>
 
-    <!-- โหมดดึงออโต้สวัสดิการ -->
     <div id="modal-welfare-auto" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8 border-t-8 border-indigo-500">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-indigo-900 text-lg flex items-center"><i data-lucide="zap" class="w-5 h-5 mr-2 text-indigo-600"></i> ระบบดึงยอดหักสวัสดิการอัตโนมัติ</h3><button type="button" onclick="closeWelfareAutoModal()" class="text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button></div>
@@ -699,7 +695,6 @@
         </div>
     </div>
 
-    <!-- Modals เดิม... -->
     <div id="modal-budget-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-900 text-base" id="modal-item-title">เพิ่มหัวข้องบประมาณ</h3><button onclick="closeBudgetItemModal()" class="text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button></div>
@@ -1368,6 +1363,7 @@
                     rows.forEach((r, idx) => {
                         if (idx === 0) return; // Skip Header
                         if (r[0] && r[1] && r[2]) {
+                            // r[0]: Date, r[1]: Contract, r[2]: Name, r[3]: Activity, r[4]: Amount, r[5]: Forward
                             let parsedDate = r[0]; // format from excel
                             let person = r[2].toString().trim();
                             let isForward = r[5] && r[5].toString().toUpperCase() === 'Y';
@@ -1776,329 +1772,101 @@
             const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "สัญญาสวัสดิการ"); XLSX.writeFile(wb, `รายงานเงินสวัสดิการ_KTU.xlsx`);
         }
 
-        // BANK ACCOUNTS SYSTEM 
-        function renderBankTable() {
-            const body = document.getElementById('table-bank-body'); if(!body) return; body.innerHTML='';
-            cacheBankAccounts.forEach(b => {
-                let currentBal = Number(b.initial_balance);
-                cacheTransactions.filter(t => t.bank_account_id === b.id && t.status === 'ตรวจสอบแล้ว').forEach(t => {
-                    const item = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                    if(item) { if(item.type === 'INCOME') currentBal += Number(t.amount); else currentBal -= Number(t.amount); }
-                });
-                body.innerHTML += `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="py-3 px-4 text-center font-bold text-slate-500 bg-slate-50 border-r border-slate-100">${b.account_code || '-'}</td>
-                        <td class="py-3 px-4 font-bold text-indigo-700">${b.bank_name}</td>
-                        <td class="py-3 px-4 text-slate-600">${b.account_no}</td>
-                        <td class="py-3 px-4 text-right">${formatMoney(b.initial_balance)}</td>
-                        <td class="py-3 px-4 text-right font-bold text-emerald-600">${formatMoney(currentBal)}</td>
-                        <td class="py-3 px-4 text-center"><button onclick="editBank('${b.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBank('${b.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td>
-                    </tr>`;
-            });
-            try { lucide.createIcons(); } catch(e) {}
-        }
-        function openBankModal() { document.getElementById('form-bank').reset(); document.getElementById('bank-id').value = ''; document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none'); }
-        function editBank(id) {
-            const b = cacheBankAccounts.find(x => x.id === id);
-            if(b) {
-                document.getElementById('bank-id').value = b.id; document.getElementById('bank-code').value = b.account_code || ''; document.getElementById('bank-name').value = b.bank_name || ''; document.getElementById('bank-account-no').value = b.account_no || ''; document.getElementById('bank-initial').value = b.initial_balance || 0; document.getElementById('modal-bank').classList.remove('opacity-0','pointer-events-none');
-            }
-        }
-        function closeBankModal() { document.getElementById('modal-bank').classList.add('opacity-0','pointer-events-none'); }
-        function saveBank(e) {
-            e.preventDefault();
-            const id = document.getElementById('bank-id').value;
-            const payload = { account_code: document.getElementById('bank-code').value, bank_name: document.getElementById('bank-name').value, account_no: document.getElementById('bank-account-no').value, initial_balance: Number(document.getElementById('bank-initial').value) };
-            if(id) { const idx = cacheBankAccounts.findIndex(x => x.id === id); if(idx > -1) cacheBankAccounts[idx] = { ...cacheBankAccounts[idx], ...payload }; } 
-            else { payload.id = "b_" + Date.now(); cacheBankAccounts.push(payload); }
-            saveToLocalStorage(); closeBankModal(); renderBankTable(); createToast('บันทึกข้อมูลบัญชีธนาคารสำเร็จ'); loadDashboardData(); 
-        }
-        function deleteBank(id) { if(!confirm('ยืนยันลบบัญชีธนาคารนี้? (รายการที่ผูกไว้อาจได้รับผลกระทบ)')) return; cacheBankAccounts = cacheBankAccounts.filter(b => b.id !== id); saveToLocalStorage(); renderBankTable(); }
-        function populateBankDropdown() {
-            const sel = document.getElementById('trans-bank'); if(!sel) return; sel.innerHTML = '';
-            cacheBankAccounts.forEach(b => { sel.innerHTML += `<option value="${b.id}">[${b.account_code||'-'}] ${b.bank_name} ${b.account_no ? 'เลขที่ ' + b.account_no : ''}</option>`; });
-            if(lastSelectedBank) sel.value = lastSelectedBank;
-        }
-
-        // BUDGET SETUP CRUD
-        function importBudgetItems(event, type) { /* ... import func ... */ }
-        function renderBudgetIncomeTable() {
-            const body = document.getElementById('table-budget-income-body'); if(!body) return; const searchVal = document.getElementById('filter-item-search-income').value.toLowerCase(); body.innerHTML = '';
-            let filtered = cacheBudgetItems.filter(i => i.type === 'INCOME' && (i.category_name.toLowerCase().includes(searchVal) || i.item_name.toLowerCase().includes(searchVal)));
-            if(filtered.length === 0) { body.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">ไม่พบข้อมูลผังรายรับ</td></tr>`; return; }
-            filtered.forEach(i => {
-                const badgeType = i.is_in_budget !== false ? '<span class="bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-medium text-[10px]">ในแผนงบฯ</span>' : '<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md font-medium text-[10px]">นอกแผนงบฯ</span>';
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-slate-500">${i.plan_name}</td><td class="py-3 px-4 text-slate-700">${i.category_name}</td><td class="py-3 px-4 font-bold text-indigo-600">${i.item_name}</td><td class="py-3 px-4 text-right font-bold">${formatMoney(i.allocated_amount)}</td><td class="py-3 px-4 text-center">${badgeType}</td><td class="py-3 px-4 text-center"><button onclick="editBudgetItem('${i.id}', 'INCOME')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`;
-            });
-            try { lucide.createIcons(); } catch(e) {}
-        }
-        function renderBudgetExpenseTable() {
-            const body = document.getElementById('table-budget-expense-body'); if(!body) return; const searchVal = document.getElementById('filter-item-search-expense').value.toLowerCase(); body.innerHTML = '';
-            let filtered = cacheBudgetItems.filter(i => i.type === 'EXPENSE' && (i.category_name.toLowerCase().includes(searchVal) || i.item_name.toLowerCase().includes(searchVal)));
-            if(filtered.length === 0) { body.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">ไม่พบข้อมูลผังรายจ่าย</td></tr>`; return; }
-            filtered.forEach(i => {
-                const badgeType = i.is_in_budget !== false ? '<span class="bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-medium text-[10px]">ในแผนงบฯ</span>' : '<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md font-medium text-[10px]">นอกแผนงบฯ</span>';
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-slate-500">${i.plan_name}</td><td class="py-3 px-4 text-slate-700">${i.category_name}</td><td class="py-3 px-4 font-bold text-slate-700">${i.item_name}</td><td class="py-3 px-4 text-right font-bold">${formatMoney(i.allocated_amount)}</td><td class="py-3 px-4 text-center">${badgeType}</td><td class="py-3 px-4 text-center"><button onclick="editBudgetItem('${i.id}', 'EXPENSE')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg mr-1"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteBudgetItem('${i.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`;
-            });
-            try { lucide.createIcons(); } catch(e) {}
-        }
-        function openBudgetItemModal(id = null, forcedType = 'INCOME') {
-            document.getElementById('form-budget-item').reset(); document.getElementById('item-type-container') ? document.getElementById('item-type-container').style.display = 'none' : null; document.getElementById('item-type').value = forcedType; document.getElementById('item-is-in-budget').checked = true;
-            if (id) {
-                document.getElementById('modal-item-title').textContent = 'แก้ไขหัวข้องบประมาณ'; const item = cacheBudgetItems.find(i => i.id === id); document.getElementById('item-id').value = item.id; document.getElementById('item-plan').value = item.plan_name; document.getElementById('item-category').value = item.category_name; document.getElementById('item-name').value = item.item_name; document.getElementById('item-amount').value = item.allocated_amount; document.getElementById('item-is-in-budget').checked = item.is_in_budget !== false;
-            } else { document.getElementById('modal-item-title').textContent = forcedType === 'INCOME' ? 'เพิ่มหัวข้อรายรับใหม่' : 'เพิ่มหัวข้อรายจ่ายใหม่'; document.getElementById('item-id').value = ''; if(forcedType === 'INCOME') document.getElementById('item-plan').value = 'รายรับ'; }
-            const planIn = document.getElementById('item-plan'); if (forcedType === 'INCOME') { planIn.readOnly = true; planIn.classList.add('bg-slate-100', 'text-slate-400'); } else { planIn.readOnly = false; planIn.classList.remove('bg-slate-100', 'text-slate-400'); }
-            document.getElementById('modal-budget-item').classList.remove('opacity-0', 'pointer-events-none');
-        }
-        function editBudgetItem(id, type) { openBudgetItemModal(id, type); }
-        function closeBudgetItemModal() { document.getElementById('modal-budget-item').classList.add('opacity-0', 'pointer-events-none'); }
-        function saveBudgetItem(event) {
-            event.preventDefault();
-            const id = document.getElementById('item-id').value; const typeVal = document.getElementById('item-type').value;
-            const payload = { type: typeVal, plan_name: document.getElementById('item-plan').value, category_name: document.getElementById('item-category').value, item_name: document.getElementById('item-name').value, allocated_amount: Number(document.getElementById('item-amount').value || 0), is_in_budget: document.getElementById('item-is-in-budget').checked };
-            if (id) { const idx = cacheBudgetItems.findIndex(i => i.id === id); cacheBudgetItems[idx] = { ...cacheBudgetItems[idx], ...payload }; } 
-            else { payload.id = "i_" + Date.now(); cacheBudgetItems.push(payload); }
-            saveToLocalStorage(); createToast('บันทึกผังโครงสร้างบัญชีเรียบร้อย', 'success'); closeBudgetItemModal();
-            if(typeVal === 'INCOME') renderBudgetIncomeTable(); else renderBudgetExpenseTable(); loadDashboardData();
-        }
-        function deleteBudgetItem(id) { if (!confirm('ยืนยันลบหัวข้อผังงบประมาณนี้?')) return; const type = cacheBudgetItems.find(i => i.id === id)?.type; cacheBudgetItems = cacheBudgetItems.filter(i => i.id !== id); saveToLocalStorage(); createToast('ลบผังรายการบัญชีสำเร็จเรียบร้อย', 'warning'); if(type === 'INCOME') renderBudgetIncomeTable(); else renderBudgetExpenseTable(); loadDashboardData(); }
-
-        // TRANSACTIONS
-        let searchHeadingPool = [];
-        function populateTransactionDropdown(type) { searchHeadingPool = cacheBudgetItems.filter(i => i.type === type); populateBankDropdown(); }
-        function filterBudgetItemOptions(keyword) {
-            const dropdown = document.getElementById('trans-item-dropdown'); const quickPanel = document.getElementById('quick-add-panel'); dropdown.innerHTML = ''; document.getElementById('trans-item-id').value = '';
-            if (!keyword.trim()) { dropdown.classList.add('hidden'); quickPanel.classList.add('hidden'); return; }
-            const filtered = searchHeadingPool.filter(i => i.item_name.toLowerCase().includes(keyword.toLowerCase()));
-            if (filtered.length === 0) { dropdown.innerHTML = `<div class="p-2 text-slate-400 italic">ไม่พบบัญชีเดิม (ระบบจะสร้างเป็นรายการใหม่ด่วน)</div>`; quickPanel.classList.remove('hidden'); } 
-            else { quickPanel.classList.add('hidden'); filtered.forEach(i => { dropdown.innerHTML += `<div onclick="selectBudgetItemForTrans('${i.id}', '${i.item_name}')" class="p-2 text-sm hover:bg-indigo-50 cursor-pointer text-slate-700 font-bold">${i.item_name}</div>`; }); }
-            dropdown.classList.remove('hidden');
-        }
-        function selectBudgetItemForTrans(id, fullname) { document.getElementById('trans-item-id').value = id; document.getElementById('trans-item-search').value = fullname; document.getElementById('trans-item-dropdown').classList.add('hidden'); document.getElementById('quick-add-panel').classList.add('hidden'); }
-
-        function renderTransIncomeTable() {
-            const body = document.getElementById('table-trans-income-body'); if(!body) return; const search = document.getElementById('filter-trans-search-inc').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-inc').value; const statusFilter = document.getElementById('filter-trans-status-inc').value; body.innerHTML = '';
-            let filtered = cacheTransactions.filter(t => { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || {}; if(item.type !== 'INCOME') return false; const matchSearch = (t.remarks || '').toLowerCase().includes(search) || (item.item_name && item.item_name.toLowerCase().includes(search)) || (t.receipt_no || '').toLowerCase().includes(search) || (t.doc_no || '').toLowerCase().includes(search); const matchMonth = monthFilter === 'ALL' || t.fiscal_month == monthFilter; const matchStatus = statusFilter === 'ALL' || t.status === statusFilter; return matchSearch && matchMonth && matchStatus; });
-            filtered.sort((a,b) => new Date(a.transaction_date) - new Date(b.transaction_date));
-            if (filtered.length === 0) { body.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">ไม่มีข้อมูลบันทึกรายการ</td></tr>`; return; }
-            filtered.forEach(t => {
-                const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' }; const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
-                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
-                let badge = t.status === 'ตรวจสอบแล้ว' ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-md font-bold shadow-sm animate-pulse">⏳ รอตรวจสอบ</span>';
-                
-                let ops = ''; let chkBox = '';
-                if (t.status === 'ตรวจสอบแล้ว') {
-                    ops = `<div class="flex justify-center space-x-1"><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถแก้ไขได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถลบได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></div>`;
-                    chkBox = `<input type="checkbox" disabled class="w-4 h-4 rounded border-slate-200 bg-slate-100 cursor-not-allowed" title="รายการอนุมัติแล้ว">`;
-                } else {
-                    ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></div>`;
-                    chkBox = `<input type="checkbox" class="chk-del-income w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}">`;
-                }
-
-                let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-xs text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${formatThaiDate(t.transaction_date)}</td><td class="py-3 px-4 font-bold text-indigo-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-xs text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-emerald-600">+${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
-            });
-            try { lucide.createIcons(); } catch(e) {}
-        }
-
-        function renderTransExpenseTable() {
-            const body = document.getElementById('table-trans-expense-body'); if(!body) return; const search = document.getElementById('filter-trans-search-exp').value.toLowerCase(); const monthFilter = document.getElementById('filter-trans-month-exp').value; const statusFilter = document.getElementById('filter-trans-status-exp').value; body.innerHTML = '';
-            let filtered = cacheTransactions.filter(t => { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || {}; if(item.type !== 'EXPENSE') return false; const matchSearch = (t.remarks || '').toLowerCase().includes(search) || (item.item_name && item.item_name.toLowerCase().includes(search)) || (t.receipt_no || '').toLowerCase().includes(search) || (t.doc_no || '').toLowerCase().includes(search); const matchMonth = monthFilter === 'ALL' || t.fiscal_month == monthFilter; const matchStatus = statusFilter === 'ALL' || t.status === statusFilter; return matchSearch && matchMonth && matchStatus; });
-            filtered.sort((a,b) => new Date(a.transaction_date) - new Date(b.transaction_date));
-            if (filtered.length === 0) { body.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400">ไม่มีข้อมูลบันทึกรายการเบิกจ่าย</td></tr>`; return; }
-            filtered.forEach(t => {
-                const item = cacheBudgetItems.find(i => i.id === t.budget_item_id) || { item_name: 'ไม่มีหัวข้อ' }; const bank = cacheBankAccounts.find(b => b.id === t.bank_account_id);
-                const bankName = bank ? `[${bank.account_code||'-'}] ${bank.bank_name} ${bank.account_no ? '<br>เลขที่ '+bank.account_no : ''}` : '-';
-                let badge = t.status === 'ตรวจสอบแล้ว' ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-md font-bold shadow-sm">✓ อนุมัติแล้ว</span>' : '<span class="bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-md font-bold shadow-sm animate-pulse">⏳ รอตรวจสอบ</span>';
-                
-                let ops = ''; let chkBox = '';
-                if (t.status === 'ตรวจสอบแล้ว') {
-                    ops = `<div class="flex justify-center space-x-1"><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถแก้ไขได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="createToast('รายการอนุมัติแล้ว ไม่สามารถลบได้', 'warning')" class="text-slate-300 p-1.5 rounded-lg cursor-not-allowed"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></div>`;
-                    chkBox = `<input type="checkbox" disabled class="w-4 h-4 rounded border-slate-200 bg-slate-100 cursor-not-allowed" title="รายการอนุมัติแล้ว">`;
-                } else {
-                    ops = `<div class="flex justify-center space-x-1"><button onclick="editTransaction('${t.id}')" class="text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg"><i data-lucide="edit-2" class="w-4 h-4 inline"></i></button><button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></div>`;
-                    chkBox = `<input type="checkbox" class="chk-del-expense w-4 h-4 rounded text-indigo-600 border-slate-300" value="${t.id}">`;
-                }
-
-                let details = ''; if(t.receipt_no || t.doc_no) details += `<span class="text-xs text-slate-400 block mt-0.5">บิล: ${t.receipt_no||'-'} | เอกสาร: ${t.doc_no||'-'}</span>`;
-                body.innerHTML += `<tr class="hover:bg-slate-50/50"><td class="py-3 px-4 text-center">${chkBox}</td><td class="py-3 px-4 text-slate-600 font-medium">${formatThaiDate(t.transaction_date)}</td><td class="py-3 px-4 font-bold text-slate-700">${item.item_name} ${details}</td><td class="py-3 px-4 text-xs text-slate-500">${bankName}</td><td class="py-3 px-4 text-right font-extrabold text-slate-800">${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center cursor-pointer" onclick="changeTransStatus('${t.id}')" title="คลิกเพื่อเปลี่ยนสถานะ">${badge}</td><td class="py-3 px-4 text-center">${ops}</td></tr>`;
-            });
-            try { lucide.createIcons(); } catch(e) {}
-        }
-
-        function deleteSelectedTrans(type) {
-            const checked = Array.from(document.querySelectorAll(`.chk-del-${type.toLowerCase()}:checked`)).map(cb => cb.value);
-            if(checked.length === 0) return createToast('กรุณาเลือกรายการที่ต้องการลบ (คลิกช่องสี่เหลี่ยมด้านหน้า)', 'danger');
-            
-            const hasApproved = checked.some(id => cacheTransactions.find(t => t.id === id)?.status === 'ตรวจสอบแล้ว');
-            if(hasApproved) return createToast('ไม่สามารถลบรายการที่อนุมัติแล้วได้ กรุณาตรวจสอบใหม่', 'danger');
-
-            if(!confirm(`ยืนยันการลบ ${checked.length} รายการที่เลือกทิ้ง?`)) return;
-            cacheTransactions = cacheTransactions.filter(t => !checked.includes(t.id)); saveToLocalStorage();
-            const chkAll = document.getElementById(`chk-all-${type==='INCOME'?'inc':'exp'}`); if (chkAll) chkAll.checked = false;
-            if(type === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable();
-            createToast(`ลบรายการสำเร็จแล้วจำนวน ${checked.length} รายการ`, 'success'); loadDashboardData();
-        }
-
-        // --- ล็อกสิทธิ์การอนุมัติสำหรับผู้ใช้กลุ่ม "การเงิน" ---
-        function changeTransStatus(id) {
-            if (currentUser.role === 'การเงิน' || currentUser.role === 'ผอ.') {
-                return createToast('สิทธิ์ของคุณ ไม่สามารถกดอนุมัติรายการได้ (ต้องเป็น บัญชี หรือ แอดมิน)', 'danger');
-            }
-
-            const idx = cacheTransactions.findIndex(t => t.id === id);
-            if (idx > -1) {
-                cacheTransactions[idx].status = cacheTransactions[idx].status === 'รอตรวจสอบ' ? 'ตรวจสอบแล้ว' : 'รอตรวจสอบ';
-                saveToLocalStorage();
-                const type = cacheBudgetItems.find(i => i.id === cacheTransactions[idx].budget_item_id)?.type;
-                if(type === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable();
-                loadDashboardData();
-            }
-        }
-
-        function deleteTransaction(id) {
-            const t = cacheTransactions.find(trans => trans.id === id);
-            if(t && t.status === 'ตรวจสอบแล้ว') return createToast('รายการนี้ตรวจสอบ/อนุมัติแล้ว ไม่สามารถลบได้', 'danger');
-
-            if(!confirm('ยืนยันลบรายการนี้?')) return;
-            const itemType = cacheBudgetItems.find(i => i.id === t.budget_item_id)?.type;
-            cacheTransactions = cacheTransactions.filter(x => x.id !== id); saveToLocalStorage(); createToast('ลบรายการสำเร็จ', 'warning');
-            if(itemType === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable(); loadDashboardData();
-        }
-
-        function openTransactionModal(id = null, forcedType = 'INCOME') {
-            document.getElementById('form-transaction').reset(); 
-            const drop = document.getElementById('trans-item-dropdown'); if (drop) drop.classList.add('hidden'); 
-            const qPanel = document.getElementById('quick-add-panel'); if (qPanel) qPanel.classList.add('hidden');
-            let applyType = forcedType; populateTransactionDropdown(applyType); 
-            if (id) {
-                const t = cacheTransactions.find(trans => trans.id === id); const item = cacheBudgetItems.find(i => i.id === t.budget_item_id);
-                applyType = item ? item.type : 'INCOME'; populateTransactionDropdown(applyType);
-                document.getElementById('trans-id').value = t.id; document.getElementById('trans-date').value = t.transaction_date; document.getElementById('trans-item-id').value = t.budget_item_id; document.getElementById('trans-amount').value = t.amount; document.getElementById('trans-remarks').value = t.remarks || ''; document.getElementById('trans-receipt-no').value = t.receipt_no || ''; document.getElementById('trans-doc-no').value = t.doc_no || ''; document.getElementById('trans-item-search').value = item ? item.item_name : ''; document.getElementById('trans-bank').value = t.bank_account_id || ''; document.getElementById('modal-trans-title').textContent = 'แก้ไขข้อมูลรายการ';
-            } else {
-                document.getElementById('trans-id').value = ''; document.getElementById('trans-date').value = lastSelectedDate || new Date().toISOString().split('T')[0]; document.getElementById('modal-trans-title').textContent = applyType === 'INCOME' ? 'บันทึกการรับเงินจริง' : 'บันทึกการเบิกจ่ายจริง';
-            }
-            document.getElementById('trans-type-hidden').value = applyType; document.getElementById('modal-transaction').classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function editTransaction(id) { 
-            const t = cacheTransactions.find(trans => trans.id === id); 
-            if(t) { 
-                if(t.status === 'ตรวจสอบแล้ว') return createToast('รายการนี้ตรวจสอบ/อนุมัติแล้ว ไม่สามารถแก้ไขได้', 'danger');
-                const item = cacheBudgetItems.find(i => i.id === t.budget_item_id); 
-                openTransactionModal(id, item ? item.type : 'INCOME'); 
-            } 
-        }
-        function closeTransactionModal() { document.getElementById('modal-transaction').classList.add('opacity-0', 'pointer-events-none'); }
-        
-        function saveTransaction(event) {
-            event.preventDefault();
-            let headingId = document.getElementById('trans-item-id').value; const searchInputText = document.getElementById('trans-item-search').value.trim(); const type = document.getElementById('trans-type-hidden').value;
-
-            if(!headingId && searchInputText) {
-                const quickItem = { id: "i_" + Date.now(), type: type, plan_name: type === 'INCOME' ? 'รายรับเพิ่มด่วน' : 'รายจ่ายเพิ่มด่วน', category_name: document.getElementById('trans-quick-category').value || 'รายการด่วนอื่น ๆ', item_name: searchInputText, allocated_amount: 0, is_in_budget: document.getElementById('trans-quick-inbudget').value === 'true' };
-                cacheBudgetItems.push(quickItem); headingId = quickItem.id;
-            } else if(!headingId) { createToast('กรุณาระบุชื่อรายการบัญชี', 'danger'); return; }
-
-            const id = document.getElementById('trans-id').value; const dateStr = document.getElementById('trans-date').value; const bankId = document.getElementById('trans-bank').value;
-            lastSelectedDate = dateStr; lastSelectedBank = bankId;
-            const month = new Date(dateStr).getMonth() + 1; let fMonth = (month >= 5) ? (month - 4) : (month + 8);
-
-            const payload = {
-                budget_item_id: headingId, bank_account_id: bankId, transaction_date: dateStr, fiscal_month: fMonth, fiscal_year: 2569, receipt_no: document.getElementById('trans-receipt-no').value, doc_no: document.getElementById('trans-doc-no').value, amount: Number(document.getElementById('trans-amount').value), remarks: document.getElementById('trans-remarks').value, created_by: currentUser.id,
-                status: id ? cacheTransactions.find(t => t.id === id).status : 'รอตรวจสอบ' 
-            };
-
-            if (id) { const idx = cacheTransactions.findIndex(t => t.id === id); cacheTransactions[idx] = { ...cacheTransactions[idx], ...payload }; } 
-            else { payload.id = "t_" + Date.now(); cacheTransactions.push(payload); }
-            
-            saveToLocalStorage(); createToast('ลงบันทึกรายการเรียบร้อย', 'success');
-            if(type === 'INCOME') renderTransIncomeTable(); else renderTransExpenseTable(); loadDashboardData();
-
-            if(document.getElementById('trans-keep-open').checked && !id) {
-                document.getElementById('trans-amount').value = ''; document.getElementById('trans-item-search').value = ''; document.getElementById('trans-item-id').value = ''; document.getElementById('trans-receipt-no').value = ''; document.getElementById('trans-doc-no').value = ''; document.getElementById('trans-remarks').value = ''; const qp = document.getElementById('quick-add-panel'); if(qp) qp.classList.add('hidden'); document.getElementById('trans-item-search').focus(); 
-            } else { closeTransactionModal(); }
-        }
-
-        // PRINT DAILY REPORT
-        function openPrintModal(type) { document.getElementById('print-type-hidden').value = type; document.getElementById('print-date-input').value = lastSelectedDate || new Date().toISOString().split('T')[0]; document.getElementById('modal-print-date').classList.remove('opacity-0', 'pointer-events-none'); }
-        function closePrintModal() { document.getElementById('modal-print-date').classList.add('opacity-0', 'pointer-events-none'); }
-        function executePrintDaily() {
-            const dateStr = document.getElementById('print-date-input').value; const type = document.getElementById('print-type-hidden').value; if(!dateStr) return;
-            const dateStrDisplay = formatThaiDate(dateStr);
-            const titleType = type === 'INCOME' ? "รายละเอียดการรับเงิน" : "รายละเอียดการจ่ายเงิน";
-
-            let dailyList = cacheTransactions.filter(t => t.transaction_date === dateStr);
-            dailyList = dailyList.filter(t => { const item = cacheBudgetItems.find(i => i.id === t.budget_item_id); return item && item.type === type; });
-            dailyList.sort((a,b) => new Date(a.transaction_date) - new Date(b.transaction_date));
-
-            if(dailyList.length === 0) { createToast(`ไม่มีรายการบันทึกในวันที่เลือก`, 'danger'); return; }
-
-            let aoaData = [
-                ["โรงเรียนอนุบาลแห่งมหาวิทยาลัยธรรมศาสตร์ ในพระอุปถัมภ์ของ", "", "", "", "", ""],
-                ["สมเด็จพระเจ้าพี่นางเธอ เจ้าฟ้ากัลยาณิวัฒนา กรมหลวงนราธิวาสราชนครินทร์", "", "", "", "", ""],
-                [titleType, "", "", "", "", ""], ["วันที่ " + dateStrDisplay, "", "", "", "", ""],
-                ["ลำดับที่", "รายการ", "เลขที่ใบเสร็จ", "เลขที่เอกสาร", "จำนวนเงิน", "หมายเหตุ"]
-            ];
-            let sumTotal = 0;
-            dailyList.forEach((t, index) => {
-                const item = cacheBudgetItems.find(i => i.id === t.budget_item_id); sumTotal += Number(t.amount);
-                aoaData.push([ index + 1, item ? item.item_name : 'ทั่วไป', t.receipt_no || '', t.doc_no || '', t.amount, t.remarks || '' ]);
-            });
-
-            aoaData.push(["รวม", "รวมเงินสะสมรายวัน", "", "", sumTotal, ""]); aoaData.push(["", "", "", "", "", ""]);
-            aoaData.push(["", "……………………………….", "", "", "……………………………….", ""]); aoaData.push(["", "(นางปิยะมาศ  ดวงตาวงษ์)", "", "", "(นางสาวชนาภา แก้วพุฒ)", ""]);
-            aoaData.push(["", "เจ้าหน้าที่การเงิน", "", "", "หัวหน้าสำนักงาน", ""]); aoaData.push(["", "", "", "", "", ""]);
-            aoaData.push(["", "", "……………………………….", "", "", ""]); aoaData.push(["", "", "(นางวรินธร   สีทา)", "", "", ""]); aoaData.push(["", "", " ผู้อำนวยการโรงเรียน", "", "", ""]);
-
-            const ws = XLSX.utils.aoa_to_sheet(aoaData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "รายงานประจำวัน"); XLSX.writeFile(wb, `รายงานการเงิน_${type}_${dateStr}.xlsx`);
-            closePrintModal(); createToast('ดาวน์โหลดไฟล์รายงาน Excel สำเร็จ', 'success');
-        }
-
-        // GENERATE MAIN REPORT
+        // ====== GENERATE MAIN REPORT (พร้อมระบบค้นหา & เรียงลำดับ) ======
         let generatedReportRawData = [];
         function generateMainReport() {
-            const table = document.getElementById('table-excel-mockup'); const mode = document.getElementById('report-view-mode') ? document.getElementById('report-view-mode').value : 'ALL'; if(!table) return; table.innerHTML = '';
-            let headerHTML = `<thead><tr class="bg-indigo-900 text-white text-center font-bold"><th class="p-2 border" rowspan="2">แผนการดำเนินงาน / ผังโครงสร้างงบประมาณ</th><th class="p-2 border" rowspan="2">ประมาณการตั้งต้น (บาท)</th><th class="p-2 border" colspan="3">ผลสะสมการรับ/เบิกจ่ายจริง ณ ปัจจุบัน</th></tr><tr class="bg-indigo-800 text-white text-center font-bold"><th class="p-2 border">ยอดเดือนที่เลือก (บาท)</th><th class="p-2 border">ยอดยกสะสมมา (บาท)</th><th class="p-2 border">งบประมาณคงเหลือ (บาท)</th></tr></thead><tbody>`;
-            let rowHTML = ''; generatedReportRawData = [];
-            rowHTML += `<tr class="bg-slate-100 font-bold text-indigo-950"><td class="p-2" colspan="5">ส่วนที่ 1: หมวดงบประมาณรายรับ</td></tr>`;
+            const table = document.getElementById('table-excel-mockup'); 
+            const mode = document.getElementById('report-view-mode') ? document.getElementById('report-view-mode').value : 'ALL'; 
+            const searchKeyword = document.getElementById('report-search') ? document.getElementById('report-search').value.toLowerCase() : '';
             
-            cacheBudgetItems.filter(i => i.type === 'INCOME' && i.is_in_budget !== false).forEach(item => {
-                let currentMonthAmt = 0; let accumBeforeAmt = 0;
-                cacheTransactions.forEach(t => {
-                    if (t.budget_item_id === item.id && t.status === 'ตรวจสอบแล้ว') {
-                        const amt = Number(t.amount); if (mode === 'ALL') currentMonthAmt += amt;
-                        else { if (t.fiscal_month == mode) currentMonthAmt += amt; else if (t.fiscal_month < Number(mode)) accumBeforeAmt += amt; }
-                    }
-                });
-                const balance = Math.max(0, Number(item.allocated_amount) - (currentMonthAmt + accumBeforeAmt));
-                rowHTML += `<tr><td class="p-2 pl-4 border">${item.category_name} - ${item.item_name}</td><td class="p-2 border text-right">${formatMoney(item.allocated_amount)}</td><td class="p-2 border text-right text-indigo-600 font-bold">${formatMoney(currentMonthAmt)}</td><td class="p-2 border text-right text-slate-500">${formatMoney(accumBeforeAmt)}</td><td class="p-2 border text-right font-bold">${formatMoney(balance)}</td></tr>`;
-                generatedReportRawData.push({ "แผนงาน/รายการบัญชี": `${item.category_name} - ${item.item_name}`, "งบประมาณจัดสรรตั้งต้น": Number(item.allocated_amount), "ยอดตามรอบเดือนตรวจ": currentMonthAmt, "ยอดยกสะสมมา": accumBeforeAmt, "งบประมาณคงเหลือ": balance });
-            });
+            if(!table) return; 
+            table.innerHTML = '';
+            
+            let headerHTML = `<thead><tr class="bg-indigo-900 text-white text-center font-bold"><th class="p-2 border" rowspan="2">แผนการดำเนินงาน / ผังโครงสร้างงบประมาณ</th><th class="p-2 border" rowspan="2">ประมาณการตั้งต้น (บาท)</th><th class="p-2 border" colspan="3">ผลสะสมการรับ/เบิกจ่ายจริง ณ ปัจจุบัน</th></tr><tr class="bg-indigo-800 text-white text-center font-bold"><th class="p-2 border">ยอดเดือนที่เลือก (บาท)</th><th class="p-2 border">ยอดยกสะสมมา (บาท)</th><th class="p-2 border">งบประมาณคงเหลือ (บาท)</th></tr></thead><tbody>`;
+            let rowHTML = ''; 
+            generatedReportRawData = [];
 
-            rowHTML += `<tr class="bg-slate-100 font-bold text-amber-950"><td class="p-2" colspan="5">ส่วนที่ 2: หมวดรายจ่ายจำแนกตามแผนงาน</td></tr>`;
-            const plans = [...new Set(cacheBudgetItems.filter(i => i.type === 'EXPENSE' && i.is_in_budget !== false).map(i => i.plan_name))];
-            plans.forEach(planName => {
-                rowHTML += `<tr class="bg-amber-50/40 text-sm font-semibold"><td class="p-2 pl-2 border" colspan="5">📁 ${planName}</td></tr>`;
-                cacheBudgetItems.filter(i => i.type === 'EXPENSE' && i.plan_name === planName && i.is_in_budget !== false).forEach(item => {
+            // ระบบเรียงลำดับอัจฉริยะ (Alphanumeric Sort)
+            const sortAlphaNumeric = (a, b) => {
+                let p = (a.plan_name || '').localeCompare(b.plan_name || '', 'th', { numeric: true });
+                if (p !== 0) return p;
+                let c = (a.category_name || '').localeCompare(b.category_name || '', 'th', { numeric: true });
+                if (c !== 0) return c;
+                return (a.item_name || '').localeCompare(b.item_name || '', 'th', { numeric: true });
+            };
+
+            // ---- ส่วนที่ 1: รายรับ ----
+            let incomes = cacheBudgetItems.filter(i => i.type === 'INCOME' && i.is_in_budget !== false);
+            if (searchKeyword) {
+                incomes = incomes.filter(i => (i.plan_name||'').toLowerCase().includes(searchKeyword) || (i.category_name||'').toLowerCase().includes(searchKeyword) || (i.item_name||'').toLowerCase().includes(searchKeyword));
+            }
+            incomes.sort(sortAlphaNumeric);
+
+            if(incomes.length > 0) {
+                rowHTML += `<tr class="bg-slate-100 font-bold text-indigo-950"><td class="p-2 border" colspan="5">ส่วนที่ 1: หมวดงบประมาณรายรับ</td></tr>`;
+                incomes.forEach(item => {
                     let currentMonthAmt = 0; let accumBeforeAmt = 0;
                     cacheTransactions.forEach(t => {
                         if (t.budget_item_id === item.id && t.status === 'ตรวจสอบแล้ว') {
-                            const amt = Number(t.amount); if (mode === 'ALL') currentMonthAmt += amt;
-                            else { if (t.fiscal_month == mode) currentMonthAmt += amt; else if (t.fiscal_month < Number(mode)) accumBeforeAmt += amt; }
+                            const amt = Number(t.amount); 
+                            if (mode === 'ALL') currentMonthAmt += amt;
+                            else { 
+                                if (t.fiscal_month == mode) currentMonthAmt += amt; 
+                                else if (t.fiscal_month < Number(mode)) accumBeforeAmt += amt; 
+                            }
                         }
                     });
                     const balance = Math.max(0, Number(item.allocated_amount) - (currentMonthAmt + accumBeforeAmt));
-                    rowHTML += `<tr><td class="p-2 pl-6 border">${item.category_name} - ${item.item_name}</td><td class="p-2 border text-right">${formatMoney(item.allocated_amount)}</td><td class="p-2 border text-right text-slate-800 font-bold">${formatMoney(currentMonthAmt)}</td><td class="p-2 border text-right text-slate-500">${formatMoney(accumBeforeAmt)}</td><td class="p-2 border text-right text-emerald-600 font-bold">${formatMoney(balance)}</td></tr>`;
-                    generatedReportRawData.push({ "แผนงาน/รายการบัญชี": `(${planName}) ${item.category_name} - ${item.item_name}`, "งบประมาณจัดสรรตั้งต้น": Number(item.allocated_amount), "ยอดตามรอบเดือนตรวจ": currentMonthAmt, "ยอดยกสะสมมา": accumBeforeAmt, "งบประมาณคงเหลือ": balance });
+                    rowHTML += `<tr><td class="p-2 pl-4 border">${item.category_name} - ${item.item_name}</td><td class="p-2 border text-right">${formatMoney(item.allocated_amount)}</td><td class="p-2 border text-right text-indigo-600 font-bold">${formatMoney(currentMonthAmt)}</td><td class="p-2 border text-right text-slate-500">${formatMoney(accumBeforeAmt)}</td><td class="p-2 border text-right font-bold">${formatMoney(balance)}</td></tr>`;
+                    generatedReportRawData.push({ "แผนงาน/รายการบัญชี": `${item.category_name} - ${item.item_name}`, "งบประมาณจัดสรรตั้งต้น": Number(item.allocated_amount), "ยอดตามรอบเดือนตรวจ": currentMonthAmt, "ยอดยกสะสมมา": accumBeforeAmt, "งบประมาณคงเหลือ": balance });
                 });
-            });
+            }
+
+            // ---- ส่วนที่ 2: รายจ่าย ----
+            let expenses = cacheBudgetItems.filter(i => i.type === 'EXPENSE' && i.is_in_budget !== false);
+            if (searchKeyword) {
+                expenses = expenses.filter(i => (i.plan_name||'').toLowerCase().includes(searchKeyword) || (i.category_name||'').toLowerCase().includes(searchKeyword) || (i.item_name||'').toLowerCase().includes(searchKeyword));
+            }
+            expenses.sort(sortAlphaNumeric);
+
+            if(expenses.length > 0) {
+                rowHTML += `<tr class="bg-slate-100 font-bold text-amber-950"><td class="p-2 border" colspan="5">ส่วนที่ 2: หมวดรายจ่ายจำแนกตามแผนงาน</td></tr>`;
+                
+                // จับกลุ่มตามแผนงาน
+                const plans = [...new Set(expenses.map(i => i.plan_name))];
+                plans.forEach(planName => {
+                    rowHTML += `<tr class="bg-amber-50/40 text-sm font-semibold"><td class="p-2 pl-2 border" colspan="5">📁 ${planName}</td></tr>`;
+                    let planExpenses = expenses.filter(i => i.plan_name === planName);
+                    
+                    planExpenses.forEach(item => {
+                        let currentMonthAmt = 0; let accumBeforeAmt = 0;
+                        cacheTransactions.forEach(t => {
+                            if (t.budget_item_id === item.id && t.status === 'ตรวจสอบแล้ว') {
+                                const amt = Number(t.amount); 
+                                if (mode === 'ALL') currentMonthAmt += amt;
+                                else { 
+                                    if (t.fiscal_month == mode) currentMonthAmt += amt; 
+                                    else if (t.fiscal_month < Number(mode)) accumBeforeAmt += amt; 
+                                }
+                            }
+                        });
+                        const balance = Math.max(0, Number(item.allocated_amount) - (currentMonthAmt + accumBeforeAmt));
+                        rowHTML += `<tr><td class="p-2 pl-6 border">${item.category_name} - ${item.item_name}</td><td class="p-2 border text-right">${formatMoney(item.allocated_amount)}</td><td class="p-2 border text-right text-slate-800 font-bold">${formatMoney(currentMonthAmt)}</td><td class="p-2 border text-right text-slate-500">${formatMoney(accumBeforeAmt)}</td><td class="p-2 border text-right text-emerald-600 font-bold">${formatMoney(balance)}</td></tr>`;
+                        generatedReportRawData.push({ "แผนงาน/รายการบัญชี": `(${planName}) ${item.category_name} - ${item.item_name}`, "งบประมาณจัดสรรตั้งต้น": Number(item.allocated_amount), "ยอดตามรอบเดือนตรวจ": currentMonthAmt, "ยอดยกสะสมมา": accumBeforeAmt, "งบประมาณคงเหลือ": balance });
+                    });
+                });
+            }
+
+            if (incomes.length === 0 && expenses.length === 0) {
+                rowHTML += `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-medium">ไม่พบข้อมูลบัญชีที่ตรงกับคำค้นหา...</td></tr>`;
+            }
+
             table.innerHTML = headerHTML + rowHTML + `</tbody>`; 
             try { lucide.createIcons(); } catch(e) {}
         }
 
         function exportToExcelMain() {
-            if (generatedReportRawData.length === 0) return;
+            if (generatedReportRawData.length === 0) return createToast('ไม่มีข้อมูลรายงานสำหรับส่งออก', 'danger');
             const ws = XLSX.utils.json_to_sheet(generatedReportRawData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "KTU_Budget_Report"); XLSX.writeFile(wb, `KTU_Budget_Report_2569.xlsx`); createToast('ส่งออกไฟล์ Excel สำเร็จ!', 'success');
         }
 
