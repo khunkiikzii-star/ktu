@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- เพิ่ม Script ของ Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -28,13 +29,14 @@
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-3 pointer-events-none max-w-sm w-full"></div>
 
     <main class="flex-grow w-full relative">
+        <!-- Landing Page -->
         <section id="view-landing" class="w-full min-h-screen flex flex-col">
             <div class="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white overflow-hidden pb-12">
                 <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
                     <div class="flex justify-between items-center border-b border-white/10 pb-6 mb-12">
                         <div class="flex items-center space-x-3">
-                            <img src="https://raw.githubusercontent.com/khunkiikzii-star/ktu/main/logo.png" alt="โลโก้โรงเรียน" class="w-12 h-12 object-contain rounded-xl shadow-sm bg-white p-1">
+                            <img src="https://raw.githubusercontent.com/khunkiikzii-star/ktu/main/logo.png" alt="โลโก้โรงเรียน" class="w-12 h-12 object-contain rounded-xl shadow-sm">
                             <div>
                                 <h1 class="text-lg font-bold tracking-tight">KTU BUDGET SYSTEM</h1>
                                 <p class="text-xs text-indigo-200">โรงเรียนอนุบาลแห่งมหาวิทยาลัยธรรมศาสตร์ฯ</p>
@@ -101,6 +103,7 @@
             </div>
         </section>
 
+        <!-- Login Page -->
         <section id="view-login" class="hidden w-full min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
             <div class="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 relative overflow-hidden">
                 <div class="absolute top-0 inset-x-0 h-2 bg-indigo-600"></div>
@@ -123,6 +126,7 @@
             </div>
         </section>
 
+        <!-- Workspace Page -->
         <section id="view-workspace" class="hidden min-h-screen w-full flex flex-col lg:flex-row bg-slate-50">
             <aside id="sidebar-desktop" class="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 fixed inset-y-0 left-0 z-30 p-6 justify-between shadow-sm overflow-y-auto">
                 <div class="space-y-8">
@@ -147,6 +151,7 @@
 
                 <div class="p-4 sm:p-6 lg:p-8 flex-grow w-full" id="workspace-content-container">
                     
+                    <!-- Dashboard -->
                     <div id="subview-dashboard" class="space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-base sm:text-lg">สรุปผลการใช้งบประมาณแบบมิติตรวจสอบ</h4></div>
@@ -186,6 +191,7 @@
                         </div>
                     </div>
 
+                    <!-- Trans Income -->
                     <div id="subview-trans-income" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">บันทึกรายการรับ</h4></div>
@@ -209,6 +215,7 @@
                         </div>
                     </div>
 
+                    <!-- Trans Expense -->
                     <div id="subview-trans-expense" class="hidden space-y-6">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-slate-900 text-lg">บันทึกรายการจ่าย</h4></div>
@@ -232,6 +239,7 @@
                         </div>
                     </div>
 
+                    <!-- Budget Setup -->
                     <div id="subview-budget-income" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm"><div><h4 class="font-bold text-lg">ผังตั้งค่ารายรับ</h4></div><div><button onclick="openBudgetItemModal(null, 'INCOME')" class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-xl">เพิ่มผังรายรับ</button></div></div>
                         <div class="bg-white p-4 rounded-2xl border shadow-sm"><input type="text" id="filter-item-search-income" oninput="renderBudgetIncomeTable()" class="w-full bg-slate-50 border rounded-xl py-2 px-4 text-sm" placeholder="ค้นหาชื่อรายการ..."></div>
@@ -243,6 +251,7 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3 px-4">แผนการดำเนินงาน</th><th class="py-3 px-4">หมวดงบประมาณ</th><th class="py-3 px-4">รายการบัญชี</th><th class="py-3 px-4 text-right">ยอดตั้งต้น</th><th class="py-3 px-4 text-center">ประเภทรายงาน</th><th class="py-3 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-budget-expense-body" class="text-sm divide-y"></tbody></table></div>
                     </div>
 
+                    <!-- Personnel -->
                     <div id="subview-personnel" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-lg">ฐานข้อมูลบุคลากร</h4></div>
@@ -251,6 +260,7 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3.5 px-4 w-16 text-center">ลำดับ</th><th class="py-3.5 px-4">ชื่อ-นามสกุล บุคลากร</th><th class="py-3.5 px-4">ตำแหน่ง</th><th class="py-3.5 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-personnel-body" class="text-sm divide-y"></tbody></table></div>
                     </div>
 
+                    <!-- Advance Loans -->
                     <div id="subview-advance-loans" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-lg">สัญญายืมเงิน (ทดรองจ่าย)</h4></div>
@@ -264,6 +274,7 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-adv" onclick="toggleSelectAll('ADVANCE')" class="w-4 h-4 rounded text-indigo-600"></th><th class="py-3.5 px-4">วันที่</th><th class="py-3.5 px-4">ผู้ยืม</th><th class="py-3.5 px-4">เลขที่สัญญา</th><th class="py-3.5 px-4">ชื่อกิจกรรม</th><th class="py-3.5 px-4 text-right">ยอดเงินยืม</th><th class="py-3.5 px-4 text-right">ยอดคงเหลือ</th><th class="py-3.5 px-4 text-center">สถานะ</th><th class="py-3.5 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-advance-body" class="text-sm divide-y divide-slate-100"></tbody></table></div>
                     </div>
 
+                    <!-- Welfare Loans -->
                     <div id="subview-welfare-loans" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-lg">สัญญายืมเงินสวัสดิการ</h4></div>
@@ -280,6 +291,7 @@
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3.5 px-4 w-10 text-center"><input type="checkbox" id="chk-all-wel" onclick="toggleSelectAll('WELFARE')" class="w-4 h-4 rounded text-indigo-600"></th><th class="py-3.5 px-4">วันที่</th><th class="py-3.5 px-4">ผู้ยืม</th><th class="py-3.5 px-4">เลขที่สัญญา</th><th class="py-3.5 px-4 text-right">ยอดเงินกู้รวม</th><th class="py-3.5 px-4 text-right">ยอดคงเหลือ</th><th class="py-3.5 px-4 text-center">เริ่มชำระ/ผ่อน</th><th class="py-3.5 px-4 text-center">สถานะ</th><th class="py-3.5 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-welfare-body" class="text-sm divide-y divide-slate-100"></tbody></table></div>
                     </div>
 
+                    <!-- Reports -->
                     <div id="subview-reports" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                             <div><h4 class="font-bold text-lg">ระบบพิมพ์รายงานงบประมาณหลัก</h4></div>
@@ -291,9 +303,11 @@
                         </div>
                         <div class="bg-white rounded-2xl border shadow-sm p-4 overflow-hidden"><table class="w-full text-sm border-collapse border border-slate-200" id="table-excel-mockup"></table></div>
                         
+                        <!-- Report Summary Bottom -->
                         <div id="report-summary-bottom" class="bg-indigo-900 text-white p-6 rounded-2xl shadow-lg grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
                     </div>
 
+                    <!-- Users -->
                     <div id="subview-users" class="hidden space-y-6">
                         <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm"><div><h4 class="font-bold text-lg">จัดการผู้ใช้งาน</h4></div><button onclick="openUserModal()" class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-xl">เพิ่มบัญชี</button></div>
                         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-left border-collapse"><thead class="bg-slate-50 border-b text-sm font-bold text-slate-500 uppercase"><tr><th class="py-3 px-4">ชื่อผู้ใช้</th><th class="py-3 px-4">ชื่อ-สกุล</th><th class="py-3 px-4">ตำแหน่ง</th><th class="py-3 px-4">สิทธิ์</th><th class="py-3 px-4">รหัสผ่าน</th><th class="py-3 px-4 text-center">จัดการ</th></tr></thead><tbody id="table-users-body" class="text-sm divide-y"></tbody></table></div>
@@ -310,6 +324,7 @@
         </section>
     </main>
 
+    <!-- Modals -->
     <div id="modal-logout" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"><div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl text-center"><h3 class="font-bold text-slate-900 mb-4">ยืนยันออกจากระบบ?</h3><div class="grid grid-cols-2 gap-3"><button onclick="closeLogoutModal()" class="w-full border rounded-xl py-2 text-sm">ยกเลิก</button><button onclick="executeLogout()" class="w-full bg-red-500 text-white rounded-xl py-2 text-sm">ออกจากระบบ</button></div></div></div>
 
     <div id="modal-transaction" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
@@ -335,6 +350,7 @@
         </div>
     </div>
 
+    <!-- Modals (Budget Item, Personnel, Advance, AdvanceClear, Welfare, WelfarePay) -->
     <div id="modal-budget-item" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto"><div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4 my-8"><div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-base" id="modal-item-title">เพิ่มหัวข้องบประมาณ</h3><button type="button" onclick="closeBudgetItemModal()"><i data-lucide="x" class="w-4 h-4"></i></button></div><form id="form-budget-item" onsubmit="saveBudgetItem(event)" class="space-y-3 text-sm"><input type="hidden" id="item-id"><input type="hidden" id="item-type"><div><label class="block mb-1">แผนการดำเนินงาน</label><input type="text" id="item-plan" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">หมวดงบประมาณ</label><input type="text" id="item-category" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">รายการบัญชี</label><input type="text" id="item-name" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">ยอดจัดสรรตั้งต้น</label><input type="number" step="0.01" id="item-amount" class="w-full border rounded-xl p-2.5"></div><div><label class="flex items-center space-x-2 p-2.5 border rounded-xl cursor-pointer"><input type="checkbox" id="item-is-in-budget" checked class="w-5 h-5 text-indigo-600"><span>คำนวณในรายงานงบหลัก (ในงบ)</span></label></div><div class="flex justify-end pt-3"><button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">บันทึกข้อมูล</button></div></form></div></div>
     
     <div id="modal-personnel" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto"><div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4 my-8"><div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-base">เพิ่มบุคลากร</h3><button type="button" onclick="closePersonnelModal()"><i data-lucide="x" class="w-4 h-4"></i></button></div><form id="form-personnel" onsubmit="savePersonnel(event)" class="space-y-3 text-sm"><input type="hidden" id="person-id"><div><label class="block mb-1">ชื่อ-สกุล</label><input type="text" id="person-name" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">ตำแหน่ง</label><input type="text" id="person-pos" class="w-full border rounded-xl p-2.5"></div><div class="flex justify-end pt-3"><button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">บันทึกชื่อ</button></div></form></div></div>
@@ -347,6 +363,7 @@
 
     <div id="modal-welfare-pay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto"><div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4 my-8"><div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-base">รับชำระรายบุคคล</h3><button type="button" onclick="closeWelfarePayModal()"><i data-lucide="x" class="w-4 h-4"></i></button></div><div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-sm space-y-1"><p>ผู้ยืม: <span id="wel-pay-person" class="font-bold"></span></p><p>คงเหลือ: <span id="wel-pay-balance" class="font-bold text-red-600"></span></p></div><form id="form-welfare-pay" onsubmit="executeWelfarePay(event)" class="space-y-3 text-sm"><input type="hidden" id="wel-pay-id"><div class="grid grid-cols-2 gap-2"><div><label class="block mb-1">วันที่รับชำระ</label><input type="date" id="wel-pay-date" required class="w-full border rounded-xl p-2.5"></div><div><label class="block mb-1">ยอดชำระครั้งนี้</label><input type="number" step="0.01" id="wel-pay-amount" required class="w-full border rounded-xl p-2.5 font-bold bg-emerald-50"></div></div><div class="flex justify-end pt-3"><button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow-sm">บันทึกรับชำระเงิน</button></div></form></div></div>
 
+    <!-- Welfare Auto Modal (2-Step Preview) -->
     <div id="modal-welfare-auto" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl transform scale-95 transition-transform duration-200 space-y-4 my-8 border-t-8 border-indigo-500">
             <div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-indigo-900 text-lg flex items-center"><i data-lucide="zap" class="w-5 h-5 mr-2 text-indigo-600"></i> ดึงยอดหักสวัสดิการอัตโนมัติ</h3><button type="button" onclick="closeWelfareAutoModal()" class="text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button></div>
@@ -399,13 +416,13 @@
         let chartInstances = {};
         const monthNames = ["-", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน"];
 
-        // Mock Users (ใช้ UUID ที่ถูกต้องตาม PostgreSQL)
+        // ตั้งค่าผู้ใช้งานสำรองให้ตรงกับฐานข้อมูล เพื่อป้องกันกรณีที่เน็ตหลุด
         const mockUsers = [
-            { id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", username: "admin", password: "123", first_name: "แอดมิน", last_name: "ระบบ", position: "IT", role: "Admin" },
-            { id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", username: "acc", password: "123", first_name: "เจ้าหน้าที่", last_name: "บัญชี", position: "บัญชี", role: "บัญชี" }
+            { id: generateUUID(), username: "admin", password: "admin1234", first_name: "สมชาย", last_name: "สายเข้ม", position: "ผู้ดูแลระบบไอที", role: "Admin" },
+            { id: generateUUID(), username: "finance", password: "fin1234", first_name: "นภา", last_name: "เงินล้าน", position: "เจ้าหน้าที่การเงิน", role: "การเงิน" },
+            { id: generateUUID(), username: "accounting", password: "acc1234", first_name: "ปกรณ์", last_name: "ตรวจละเอียด", position: "นักวิชาการตรวจสอบบัญชี", role: "บัญชี" }
         ];
 
-        // สร้าง UUID v4 จำลองฝั่ง Client
         function generateUUID() {
             let d = new Date().getTime(); let d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -418,7 +435,7 @@
         /* =======================================================
            [SUPABASE DATABASE CONNECTION] 
            ======================================================= */
-        // ❗ นำ URL และ ANON KEY จาก Supabase ของคุณกิ๊กมาใส่ตรงนี้ ❗
+        // ❗ ตรงนี้สำคัญมาก กรุณาวาง URL และ KEY ให้ถูกต้อง ❗
         const SUPABASE_URL = 'https://ivluzauigxcqarscztrp.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2bHV6YXVpZ3hjcWFyc2N6dHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjIxMTYsImV4cCI6MjA5NzUzODExNn0.CUV1yMkTndUbvNGoq0Tosh1mqidO6fx_c9_rwnCm_k4';
         
@@ -447,17 +464,15 @@
             } catch (error) {
                 console.error("Error loading from Supabase:", error);
                 cacheSystemUsers = [...mockUsers]; checkAndCreateOffBudgetItems();
-                createToast('เชื่อมต่อฐานข้อมูลล้มเหลว (ทำงานแบบออฟไลน์)', 'warning');
+                createToast('เชื่อมต่อฐานข้อมูลล้มเหลว (ดึงรหัสผ่านสำรองมาใช้)', 'warning');
             }
         }
 
-        // ฟังก์ชันอัปเดตข้อมูลขึ้น Database
         async function upsertData(table, data) {
             try { const { error } = await supabase.from(table).upsert(data); if(error) console.error("Upsert Error:", error); } 
             catch(e) { console.error(e); }
         }
         
-        // ฟังก์ชันลบข้อมูลจาก Database
         async function deleteData(table, id) {
             try { const { error } = await supabase.from(table).delete().eq('id', id); if(error) console.error("Delete Error:", error); } 
             catch(e) { console.error(e); }
@@ -529,7 +544,7 @@
                 document.getElementById('form-login').reset(); switchView('workspace'); createToast(`เข้าสู่ระบบสำเร็จ`, 'success');
             } else createToast('รหัสผ่านไม่ถูกต้อง', 'danger');
         }
-        function bypassLoginQuick() { document.getElementById('login-username').value = 'admin'; document.getElementById('login-password').value = '123'; handleLogin(null); }
+        function bypassLoginQuick() { document.getElementById('login-username').value = 'admin'; document.getElementById('login-password').value = 'admin1234'; handleLogin(null); }
         function openLogoutModal() { document.getElementById('modal-logout').classList.remove('opacity-0', 'pointer-events-none'); }
         function closeLogoutModal() { document.getElementById('modal-logout').classList.add('opacity-0', 'pointer-events-none'); }
         function executeLogout() { currentUser = null; closeLogoutModal(); switchView('landing'); }
