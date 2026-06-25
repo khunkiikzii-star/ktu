@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         body { font-family: 'Sarabun', sans-serif; }
@@ -52,7 +53,7 @@
                         <div class="glass p-6 rounded-2xl text-slate-800 shadow-2xl space-y-6">
                             <div class="flex justify-between items-center">
                                 <h3 class="font-bold text-lg text-indigo-950 flex items-center space-x-2"><i data-lucide="activity" class="text-indigo-600"></i> <span>สรุปงบประมาณภาพรวม</span></h3>
-                                <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
+                                <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">เชื่อมต่อ Supabase แล้ว</span>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
@@ -118,7 +119,6 @@
                     </div>
                     <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-md transition-colors flex items-center justify-center space-x-2 text-base z-10"><span>เข้าสู่ระบบ</span></button>
                 </form>
-                <div class="pt-2"><button type="button" onclick="bypassLoginQuick()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm py-2.5 rounded-xl border border-slate-200 font-bold transition-colors z-10">⚡ ล็อกอินด่วน (Bypass เข้าใช้งานสิทธิ์ Admin)</button></div>
                 <div class="pt-2 border-t border-slate-100 text-center"><button type="button" onclick="switchView('landing')" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center z-10"><i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> ย้อนกลับหน้าสาธารณะ</button></div>
             </div>
         </section>
@@ -142,7 +142,7 @@
             <div class="flex-grow lg:pl-72 pb-24 lg:pb-6 min-h-screen flex flex-col w-full">
                 <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-sm lg:shadow-none">
                     <div><h3 class="text-lg font-bold text-slate-900" id="workspace-title">หน้าหลักควบคุมระบบ</h3></div>
-                    <div class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span><span>ระบบออนไลน์</span></div>
+                    <div class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-semibold flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span><span>ระบบเชื่อมต่อ Supabase</span></div>
                 </header>
 
                 <div class="p-4 sm:p-6 lg:p-8 flex-grow w-full" id="workspace-content-container">
@@ -399,44 +399,87 @@
         let chartInstances = {};
         const monthNames = ["-", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน"];
 
-        // Mock Users
+        // Mock Users (ใช้ UUID ที่ถูกต้องตาม PostgreSQL)
         const mockUsers = [
-            { id: "u1", username: "admin", password: "123", first_name: "แอดมิน", last_name: "ระบบ", position: "IT", role: "Admin" },
-            { id: "u2", username: "acc", password: "123", first_name: "เจ้าหน้าที่", last_name: "บัญชี", position: "บัญชี", role: "บัญชี" }
+            { id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", username: "admin", password: "123", first_name: "แอดมิน", last_name: "ระบบ", position: "IT", role: "Admin" },
+            { id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", username: "acc", password: "123", first_name: "เจ้าหน้าที่", last_name: "บัญชี", position: "บัญชี", role: "บัญชี" }
         ];
 
-        /* --- GOOGLE SHEETS API SETUP (READY FOR FUTURE) --- 
-           แทนที่ฟังก์ชัน load/save เหล่านี้ด้วย fetch(GAS_URL) ได้เลย
-        ------------------------------------------------------ */
-        function saveToLocalStorage() {
-            localStorage.setItem('ktu_users_v2', JSON.stringify(cacheSystemUsers));
-            localStorage.setItem('ktu_items_v2', JSON.stringify(cacheBudgetItems));
-            localStorage.setItem('ktu_trans_v2', JSON.stringify(cacheTransactions));
-            localStorage.setItem('ktu_advances_v2', JSON.stringify(cacheAdvances));
-            localStorage.setItem('ktu_welfares_v2', JSON.stringify(cacheWelfares));
-            localStorage.setItem('ktu_personnel_v2', JSON.stringify(cachePersonnel));
+        // สร้าง UUID v4 จำลองฝั่ง Client
+        function generateUUID() {
+            let d = new Date().getTime(); let d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                let r = Math.random() * 16;
+                if(d > 0){ r = (d + r)%16 | 0; d = Math.floor(d/16); } else { r = (d2 + r)%16 | 0; d2 = Math.floor(d2/16); }
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
         }
 
-        function loadFromLocalStorage() {
-            const lU = localStorage.getItem('ktu_users_v2'); cacheSystemUsers = lU ? JSON.parse(lU) : [...mockUsers];
-            const lI = localStorage.getItem('ktu_items_v2'); cacheBudgetItems = lI ? JSON.parse(lI) : [];
-            const lT = localStorage.getItem('ktu_trans_v2'); cacheTransactions = lT ? JSON.parse(lT) : [];
-            const lA = localStorage.getItem('ktu_advances_v2'); cacheAdvances = lA ? JSON.parse(lA) : [];
-            const lW = localStorage.getItem('ktu_welfares_v2'); cacheWelfares = lW ? JSON.parse(lW) : [];
-            const lP = localStorage.getItem('ktu_personnel_v2'); cachePersonnel = lP ? JSON.parse(lP) : [];
-            checkAndCreateOffBudgetItems();
-            saveToLocalStorage();
+        /* =======================================================
+           [SUPABASE DATABASE CONNECTION] 
+           ======================================================= */
+        // ❗ นำ URL และ ANON KEY จาก Supabase ของคุณกิ๊กมาใส่ตรงนี้ ❗
+        const SUPABASE_URL = 'https://ivluzauigxcqarscztrp.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_yxRBYhKKTdlst59ViHJ6TA_zTUl2gJI';
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function loadFromSupabase() {
+            try {
+                const [resUsers, resItems, resTrans, resAdv, resWel, resPers] = await Promise.all([
+                    supabase.from('system_users').select('*').limit(10000),
+                    supabase.from('budget_items').select('*').limit(10000),
+                    supabase.from('budget_transactions').select('*').limit(10000),
+                    supabase.from('advances').select('*').limit(10000),
+                    supabase.from('welfares').select('*').limit(10000),
+                    supabase.from('personnel').select('*').limit(10000)
+                ]);
+
+                if(resUsers.data && resUsers.data.length > 0) cacheSystemUsers = resUsers.data; else cacheSystemUsers = [...mockUsers];
+                if(resItems.data) cacheBudgetItems = resItems.data;
+                if(resTrans.data) cacheTransactions = resTrans.data;
+                if(resAdv.data) cacheAdvances = resAdv.data;
+                if(resWel.data) cacheWelfares = resWel.data;
+                if(resPers.data) cachePersonnel = resPers.data;
+
+                checkAndCreateOffBudgetItems();
+                createToast('เชื่อมต่อฐานข้อมูล Supabase สำเร็จ', 'success');
+            } catch (error) {
+                console.error("Error loading from Supabase:", error);
+                cacheSystemUsers = [...mockUsers]; checkAndCreateOffBudgetItems();
+                createToast('เชื่อมต่อฐานข้อมูลล้มเหลว (ทำงานแบบออฟไลน์)', 'warning');
+            }
+        }
+
+        // ฟังก์ชันอัปเดตข้อมูลขึ้น Database
+        async function upsertData(table, data) {
+            try { const { error } = await supabase.from(table).upsert(data); if(error) console.error("Upsert Error:", error); } 
+            catch(e) { console.error(e); }
+        }
+        
+        // ฟังก์ชันลบข้อมูลจาก Database
+        async function deleteData(table, id) {
+            try { const { error } = await supabase.from(table).delete().eq('id', id); if(error) console.error("Delete Error:", error); } 
+            catch(e) { console.error(e); }
         }
 
         function checkAndCreateOffBudgetItems() {
-            if(!cacheBudgetItems.find(i => i.item_name === 'รับคืนเงินทดรองจ่าย')) cacheBudgetItems.push({ id: "i_adv_back", type: 'INCOME', plan_name: 'นอกงบประมาณ', category_name: 'หมวดเงินยืม', item_name: 'รับคืนเงินทดรองจ่าย', allocated_amount: 0, is_in_budget: false });
-            if(!cacheBudgetItems.find(i => i.item_name === 'รับชำระเงินยืมสวัสดิการ')) cacheBudgetItems.push({ id: "i_wel_back", type: 'INCOME', plan_name: 'นอกงบประมาณ', category_name: 'หมวดเงินยืม', item_name: 'รับชำระเงินยืมสวัสดิการ', allocated_amount: 0, is_in_budget: false });
+            const idAdvBack = "22222222-0000-0000-0000-000000000001";
+            const idWelBack = "22222222-0000-0000-0000-000000000002";
+            if(!cacheBudgetItems.find(i => i.item_name === 'รับคืนเงินทดรองจ่าย')) {
+                const p = { id: idAdvBack, type: 'INCOME', plan_name: 'นอกงบประมาณ', category_name: 'หมวดเงินยืม', item_name: 'รับคืนเงินทดรองจ่าย', allocated_amount: 0, is_in_budget: false };
+                cacheBudgetItems.push(p); upsertData('budget_items', p);
+            }
+            if(!cacheBudgetItems.find(i => i.item_name === 'รับชำระเงินยืมสวัสดิการ')) {
+                const p = { id: idWelBack, type: 'INCOME', plan_name: 'นอกงบประมาณ', category_name: 'หมวดเงินยืม', item_name: 'รับชำระเงินยืมสวัสดิการ', allocated_amount: 0, is_in_budget: false };
+                cacheBudgetItems.push(p); upsertData('budget_items', p);
+            }
         }
 
         /* =======================================================
            [CORE UTILS] 
            ======================================================= */
-        window.addEventListener('DOMContentLoaded', () => { try { lucide.createIcons(); } catch(e){} loadFromLocalStorage(); switchView('login'); });
+        window.addEventListener('DOMContentLoaded', () => { try { lucide.createIcons(); } catch(e){} loadFromSupabase(); switchView('login'); });
         function formatThaiDate(dateStr) { if (!dateStr) return '-'; const d = new Date(dateStr); return isNaN(d) ? dateStr : `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear() + 543}`; }
         function formatMoney(num) { return parseFloat(num || 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
         function createToast(msg, type = 'success') {
@@ -478,7 +521,7 @@
             if(id === 'users') renderUsersTable();
         }
         function handleLogin(e) {
-            if(e) e.preventDefault(); loadFromLocalStorage();
+            if(e) e.preventDefault(); 
             const u = document.getElementById('login-username').value.trim(); const p = document.getElementById('login-password').value.trim();
             const match = cacheSystemUsers.find(x => x.username.toLowerCase() === u.toLowerCase() && x.password === p);
             if(match) {
@@ -495,15 +538,15 @@
             const deskNav = document.getElementById('nav-menu-desktop'); const mobNav = document.getElementById('sidebar-mobile'); const mobGrid = document.getElementById('admin-mobile-grid-menu');
             deskNav.innerHTML = ''; mobNav.innerHTML = ''; mobGrid.innerHTML = '';
             const allMenus = [
-                { id:'dashboard', label:'แดชบอร์ด', icon:'pie-chart', roles:['Admin','บัญชี','ผอ.'] },
-                { id:'trans-income', label:'บันทึกรับเงิน', icon:'plus-circle', roles:['Admin','บัญชี'] },
-                { id:'trans-expense', label:'บันทึกจ่ายเงิน', icon:'minus-circle', roles:['Admin','บัญชี'] },
-                { id:'advance-loans', label:'ยืมทดรอง', icon:'file-signature', roles:['Admin','บัญชี'] },
-                { id:'welfare-loans', label:'ยืมสวัสดิการ', icon:'heart-handshake', roles:['Admin','บัญชี'] },
+                { id:'dashboard', label:'แดชบอร์ด', icon:'pie-chart', roles:['Admin','บัญชี','การเงิน','ผอ.'] },
+                { id:'trans-income', label:'บันทึกรับเงิน', icon:'plus-circle', roles:['Admin','บัญชี','การเงิน'] },
+                { id:'trans-expense', label:'บันทึกจ่ายเงิน', icon:'minus-circle', roles:['Admin','บัญชี','การเงิน'] },
+                { id:'advance-loans', label:'ยืมทดรอง', icon:'file-signature', roles:['Admin','บัญชี','การเงิน'] },
+                { id:'welfare-loans', label:'ยืมสวัสดิการ', icon:'heart-handshake', roles:['Admin','บัญชี','การเงิน'] },
                 { id:'budget-income', label:'ผังรับ', icon:'download', roles:['Admin','บัญชี'] },
                 { id:'budget-expense', label:'ผังจ่าย', icon:'upload', roles:['Admin','บัญชี'] },
                 { id:'personnel', label:'บุคลากร', icon:'users', roles:['Admin','บัญชี'] },
-                { id:'reports', label:'รายงาน Excel', icon:'file-text', roles:['Admin','บัญชี','ผอ.'] },
+                { id:'reports', label:'รายงาน Excel', icon:'file-text', roles:['Admin','บัญชี','การเงิน','ผอ.'] },
                 { id:'users', label:'จัดการสิทธิ์', icon:'settings', roles:['Admin'] }
             ];
             const allowed = allMenus.filter(m => m.roles.includes(currentUser.role));
@@ -519,28 +562,22 @@
 
         /* =======================================================
            [CASCADE REVERSE LOGIC] 
-           ฟังก์ชันนี้สำคัญมาก: วิ่งคืนยอดลูกหนี้เวลามีคนลบรายการทิ้ง
            ======================================================= */
         function reverseCascade(t) {
-            // เช็คทดรองจ่าย
             let adv = cacheAdvances.find(a => a.contract_no === t.doc_no);
             if (adv) {
                 if ((t.remarks||'').includes('เงินทอน')) adv.cleared_returned = Math.max(0, (adv.cleared_returned || 0) - t.amount);
                 else adv.cleared_used = Math.max(0, (adv.cleared_used || 0) - t.amount);
-                
                 let balance = adv.amount - (adv.cleared_used + adv.cleared_returned);
-                if (balance >= adv.amount) adv.status = 'รอเคลียร์';
-                else if (balance <= 0) adv.status = 'เคลียร์แล้ว';
-                else adv.status = 'ทยอยเคลียร์';
+                adv.status = balance >= adv.amount ? 'รอเคลียร์' : balance <= 0 ? 'เคลียร์แล้ว' : 'ทยอยเคลียร์';
+                upsertData('advances', adv);
             }
-            // เช็คสวัสดิการ
             let wel = cacheWelfares.find(w => w.contract_no === t.doc_no);
             if (wel) {
                 wel.paid_amount = Math.max(0, (wel.paid_amount || 0) - t.amount);
                 let balance = wel.amount - wel.paid_amount;
-                if (balance >= wel.amount) wel.status = 'รอชำระ';
-                else if (balance <= 0) wel.status = 'ชำระครบ';
-                else wel.status = 'ทยอยชำระ';
+                wel.status = balance >= wel.amount ? 'รอชำระ' : balance <= 0 ? 'ชำระครบ' : 'ทยอยชำระ';
+                upsertData('welfares', wel);
             }
         }
 
@@ -557,14 +594,13 @@
             if(s !== 'ALL') trans = trans.filter(t => t.status === s);
             if(kw) trans = trans.filter(t => (cacheBudgetItems.find(i => i.id === t.budget_item_id)?.item_name||'').toLowerCase().includes(kw) || (t.remarks||'').toLowerCase().includes(kw));
 
-            // แก้ไข: เรียงวันที่จาก น้อย ไป มาก (เก่าสุดไปใหม่สุด)
+            // เรียงวันที่จากน้อยไปมาก
             trans.sort((a, b) => new Date(a.transaction_date) - new Date(b.transaction_date));
             
             trans.forEach(t => {
                 const item = cacheBudgetItems.find(i => i.id === t.budget_item_id);
                 const isAppr = t.status === 'ตรวจสอบแล้ว';
                 let btnAppr = !isAppr && currentUser && ['Admin', 'บัญชี'].includes(currentUser.role) ? `<button onclick="approveTrans('${t.id}')" class="text-emerald-600 bg-emerald-50 border px-2 py-1 rounded text-xs mr-2">อนุมัติ</button>` : '';
-                // แอดมินและบัญชี สามารถลบได้เสมอ
                 let btnDel = currentUser && ['Admin', 'บัญชี'].includes(currentUser.role) ? `<button onclick="deleteTrans('${t.id}')" class="text-red-500 hover:bg-red-50 p-1.5 rounded"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '';
                 
                 body.innerHTML += `<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-center"><input type="checkbox" class="chk-del-${type.toLowerCase()} w-4 h-4 rounded" value="${t.id}"></td><td class="py-3 px-4 text-slate-600">${formatThaiDate(t.transaction_date)}</td><td class="py-3 px-4 font-bold text-slate-700">${item?item.item_name:'-'}<br><span class="text-xs text-slate-400 font-normal">${t.remarks||''}</span></td><td class="py-3 px-4 text-slate-500">${t.doc_no||'-'}</td><td class="py-3 px-4 text-right font-extrabold ${type==='INCOME'?'text-indigo-600':'text-slate-800'}">${formatMoney(t.amount)}</td><td class="py-3 px-4 text-center"><span class="${isAppr?'text-emerald-600 bg-emerald-50':'text-amber-600 bg-amber-50'} px-2 py-1 rounded text-xs font-bold">${t.status}</span></td><td class="py-3 px-4 text-center">${btnAppr}${btnDel}</td></tr>`;
@@ -573,22 +609,26 @@
             try { lucide.createIcons(); } catch(e){}
         }
         function renderTransIncomeTable() { renderTransTable('INCOME'); } function renderTransExpenseTable() { renderTransTable('EXPENSE'); }
-        function approveTrans(id) { const t=cacheTransactions.find(x=>x.id===id); if(t){ t.status='ตรวจสอบแล้ว'; saveToLocalStorage(); renderTransIncomeTable(); renderTransExpenseTable(); loadDashboardData(); createToast('อนุมัติแล้ว', 'success'); } }
         
+        function approveTrans(id) { 
+            const t = cacheTransactions.find(x => x.id === id); 
+            if(t) { t.status = 'ตรวจสอบแล้ว'; upsertData('budget_transactions', t); renderTransIncomeTable(); renderTransExpenseTable(); loadDashboardData(); createToast('อนุมัติแล้ว', 'success'); } 
+        }
         function deleteTrans(id) {
             if(!confirm('ยืนยันลบรายการนี้? (หากเป็นรายการตัดยอดลูกหนี้ ยอดหนี้จะเด้งกลับคืนอัตโนมัติ)')) return;
             const t = cacheTransactions.find(x => x.id === id);
-            if(t) reverseCascade(t); // ดึงยอดลูกหนี้คืน
+            if(t) reverseCascade(t); 
             cacheTransactions = cacheTransactions.filter(x => x.id !== id); 
-            saveToLocalStorage(); renderTransIncomeTable(); renderTransExpenseTable(); renderAdvanceTable(); renderWelfareTable(); loadDashboardData(); createToast('ลบรายการสำเร็จ', 'warning');
+            deleteData('budget_transactions', id);
+            renderTransIncomeTable(); renderTransExpenseTable(); renderAdvanceTable(); renderWelfareTable(); loadDashboardData(); createToast('ลบรายการสำเร็จ', 'warning');
         }
         function deleteSelectedTrans(type) {
             const chk = Array.from(document.querySelectorAll(type==='INCOME'?'.chk-del-income:checked':'.chk-del-expense:checked')).map(c=>c.value);
             if(chk.length===0) return createToast('เลือกรายการก่อน', 'danger');
-            if(!confirm(`ยืนยันลบ ${chk.length} รายการที่เลือกทิ้ง? (ยอดลูกหนี้จะเด้งกลับอัตโนมัติ)`)) return;
-            chk.forEach(id => { const t = cacheTransactions.find(x => x.id === id); if(t) reverseCascade(t); });
+            if(!confirm(`ยืนยันลบ ${chk.length} รายการที่เลือกทิ้ง?`)) return;
+            chk.forEach(id => { const t = cacheTransactions.find(x => x.id === id); if(t) reverseCascade(t); deleteData('budget_transactions', id); });
             cacheTransactions = cacheTransactions.filter(t => !chk.includes(t.id)); 
-            saveToLocalStorage(); document.getElementById(type==='INCOME'?'chk-all-inc':'chk-all-exp').checked=false; renderTransIncomeTable(); renderTransExpenseTable(); renderAdvanceTable(); renderWelfareTable(); loadDashboardData(); createToast(`ลบสำเร็จ ${chk.length} รายการ`, 'success');
+            document.getElementById(type==='INCOME'?'chk-all-inc':'chk-all-exp').checked=false; renderTransIncomeTable(); renderTransExpenseTable(); renderAdvanceTable(); renderWelfareTable(); loadDashboardData(); createToast(`ลบสำเร็จ ${chk.length} รายการ`, 'success');
         }
 
         function openTransactionModal(id, type) {
@@ -608,8 +648,10 @@
             e.preventDefault(); const t = document.getElementById('trans-type-hidden').value; const itemId = document.getElementById('trans-item-id').value;
             if(!itemId) return createToast('กรุณาเลือกหมวดงบ', 'danger');
             const dt = document.getElementById('trans-date').value; const m = new Date(dt).getMonth()+1; const fM = m>=5?m-4:m+8;
-            cacheTransactions.push({ id:"t_"+Date.now(), budget_item_id:itemId, transaction_date:dt, fiscal_month:fM, fiscal_year:2569, doc_no:document.getElementById('trans-doc-no').value, amount:Number(document.getElementById('trans-amount').value), remarks:document.getElementById('trans-remarks').value, created_by:currentUser.id, status:(currentUser&&['Admin','บัญชี'].includes(currentUser.role))?'ตรวจสอบแล้ว':'รอตรวจสอบ' });
-            saveToLocalStorage(); if(t==='INCOME') renderTransIncomeTable(); else renderTransExpenseTable(); loadDashboardData(); createToast('บันทึกสำเร็จ', 'success');
+            const p = { id: document.getElementById('trans-id').value || generateUUID(), budget_item_id: itemId, transaction_date: dt, fiscal_month: fM, fiscal_year: 2569, doc_no: document.getElementById('trans-doc-no').value, amount: Number(document.getElementById('trans-amount').value), remarks: document.getElementById('trans-remarks').value, created_by: currentUser.id, status: (currentUser&&['Admin','บัญชี'].includes(currentUser.role))?'ตรวจสอบแล้ว':'รอตรวจสอบ' };
+            const ix = cacheTransactions.findIndex(x => x.id === p.id); if(ix > -1) cacheTransactions[ix] = p; else cacheTransactions.push(p);
+            upsertData('budget_transactions', p);
+            if(t==='INCOME') renderTransIncomeTable(); else renderTransExpenseTable(); loadDashboardData(); createToast('บันทึกสำเร็จ', 'success');
             if(!document.getElementById('trans-keep-open').checked) closeTransactionModal(); else { document.getElementById('trans-amount').value=''; document.getElementById('trans-doc-no').value=''; }
         }
 
@@ -631,19 +673,21 @@
             else{ document.getElementById('item-id').value=''; document.getElementById('item-is-in-budget').checked=true; } document.getElementById('modal-budget-item').classList.remove('opacity-0','pointer-events-none');
         }
         function closeBudgetItemModal() { document.getElementById('modal-budget-item').classList.add('opacity-0','pointer-events-none'); }
-        function saveBudgetItem(e) { e.preventDefault(); const id=document.getElementById('item-id').value; const t=document.getElementById('item-type').value; const p={ type:t, plan_name:document.getElementById('item-plan').value, category_name:document.getElementById('item-category').value, item_name:document.getElementById('item-name').value, allocated_amount:Number(document.getElementById('item-amount').value), is_in_budget:document.getElementById('item-is-in-budget').checked };
-            if(id) { const ix=cacheBudgetItems.findIndex(x=>x.id===id); if(ix>-1) cacheBudgetItems[ix]={...cacheBudgetItems[ix], ...p}; } else { p.id="i_"+Date.now(); cacheBudgetItems.push(p); }
-            saveToLocalStorage(); closeBudgetItemModal(); t==='INCOME'?renderBudgetIncomeTable():renderBudgetExpenseTable(); createToast('บันทึกสำเร็จ');
+        function saveBudgetItem(e) { 
+            e.preventDefault(); const id=document.getElementById('item-id').value; const t=document.getElementById('item-type').value; 
+            const p = { id: id || generateUUID(), type:t, plan_name:document.getElementById('item-plan').value, category_name:document.getElementById('item-category').value, item_name:document.getElementById('item-name').value, allocated_amount:Number(document.getElementById('item-amount').value), is_in_budget:document.getElementById('item-is-in-budget').checked };
+            const ix = cacheBudgetItems.findIndex(x=>x.id===p.id); if(ix>-1) cacheBudgetItems[ix]=p; else cacheBudgetItems.push(p);
+            upsertData('budget_items', p); closeBudgetItemModal(); t==='INCOME'?renderBudgetIncomeTable():renderBudgetExpenseTable(); createToast('บันทึกสำเร็จ');
         }
-        function deleteBudgetItem(id, t) { if(!confirm('ลบผังรายการนี้?')) return; cacheBudgetItems=cacheBudgetItems.filter(i=>i.id!==id); saveToLocalStorage(); t==='INCOME'?renderBudgetIncomeTable():renderBudgetExpenseTable(); createToast('ลบแล้ว','warning'); }
+        function deleteBudgetItem(id, t) { if(!confirm('ลบผังรายการนี้?')) return; cacheBudgetItems=cacheBudgetItems.filter(i=>i.id!==id); deleteData('budget_items', id); t==='INCOME'?renderBudgetIncomeTable():renderBudgetExpenseTable(); createToast('ลบแล้ว','warning'); }
 
         /* =======================================================
            [PERSONNEL] 
            ======================================================= */
-        function renderPersonnelTable() { const b=document.getElementById('table-personnel-body'); if(!b) return; b.innerHTML=''; cachePersonnel.forEach((p,i) => b.innerHTML+=`<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-center">${i+1}</td><td class="py-3 px-4 font-bold text-indigo-700">${p.name}</td><td class="py-3 px-4 text-slate-600">${p.position||'-'}</td><td class="py-3 px-4 text-center"><button onclick="cachePersonnel=cachePersonnel.filter(x=>x.id!=='${p.id}'); saveToLocalStorage(); renderPersonnelTable(); createToast('ลบแล้ว','warning');" class="text-red-500"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`); try{lucide.createIcons();}catch(e){} }
+        function renderPersonnelTable() { const b=document.getElementById('table-personnel-body'); if(!b) return; b.innerHTML=''; cachePersonnel.forEach((p,i) => b.innerHTML+=`<tr class="hover:bg-slate-50"><td class="py-3 px-4 text-center">${i+1}</td><td class="py-3 px-4 font-bold text-indigo-700">${p.name}</td><td class="py-3 px-4 text-slate-600">${p.position||'-'}</td><td class="py-3 px-4 text-center"><button onclick="cachePersonnel=cachePersonnel.filter(x=>x.id!=='${p.id}'); deleteData('personnel', '${p.id}'); renderPersonnelTable(); createToast('ลบแล้ว','warning');" class="text-red-500"><i data-lucide="trash-2" class="w-4 h-4 inline"></i></button></td></tr>`); try{lucide.createIcons();}catch(e){} }
         function openPersonnelModal() { document.getElementById('form-personnel').reset(); document.getElementById('person-id').value=''; document.getElementById('modal-personnel').classList.remove('opacity-0','pointer-events-none'); }
         function closePersonnelModal() { document.getElementById('modal-personnel').classList.add('opacity-0','pointer-events-none'); }
-        function savePersonnel(e) { e.preventDefault(); const p={name:document.getElementById('person-name').value, position:document.getElementById('person-pos').value}; p.id="p_"+Date.now(); cachePersonnel.push(p); saveToLocalStorage(); closePersonnelModal(); renderPersonnelTable(); createToast('เพิ่มบุคลากรแล้ว'); }
+        function savePersonnel(e) { e.preventDefault(); const p={ id: generateUUID(), name:document.getElementById('person-name').value, position:document.getElementById('person-pos').value}; cachePersonnel.push(p); upsertData('personnel', p); closePersonnelModal(); renderPersonnelTable(); createToast('เพิ่มบุคลากรแล้ว'); }
         function populatePersonnelDropdown(id) { const sel=document.getElementById(id); if(!sel) return; sel.innerHTML=''; cachePersonnel.forEach(p=>sel.innerHTML+=`<option value="${p.name}">${p.name}</option>`); }
 
         /* =======================================================
@@ -664,8 +708,13 @@
         }
         function openAdvanceModal() { document.getElementById('form-advance').reset(); populatePersonnelDropdown('adv-person'); document.getElementById('adv-id').value=''; document.getElementById('adv-date').value=new Date().toISOString().split('T')[0]; document.getElementById('modal-advance').classList.remove('opacity-0','pointer-events-none'); }
         function closeAdvanceModal() { document.getElementById('modal-advance').classList.add('opacity-0','pointer-events-none'); }
-        function saveAdvance(e) { e.preventDefault(); const id=document.getElementById('adv-id').value; const p={ date:document.getElementById('adv-date').value, contract_no:document.getElementById('adv-contract-no').value, person_name:document.getElementById('adv-person').value, activity_name:document.getElementById('adv-activity').value, amount:Number(document.getElementById('adv-amount').value), is_forward:document.getElementById('adv-is-forward').checked }; if(!id) { p.id="adv_"+Date.now(); p.status='รอเคลียร์'; p.cleared_used=0; p.cleared_returned=0; cacheAdvances.push(p); } else { const ix=cacheAdvances.findIndex(x=>x.id===id); if(ix>-1) cacheAdvances[ix]={...cacheAdvances[ix],...p}; } saveToLocalStorage(); closeAdvanceModal(); renderAdvanceTable(); createToast('บันทึกสัญญาทดรองสำเร็จ'); }
-        function deleteSelectedAdvance() { const chk=Array.from(document.querySelectorAll('.chk-del-adv:checked')).map(c=>c.value); if(chk.length===0) return; if(!confirm(`ลบ ${chk.length} สัญญา?`)) return; cacheAdvances=cacheAdvances.filter(a=>!chk.includes(a.id)); saveToLocalStorage(); document.getElementById('chk-all-adv').checked=false; renderAdvanceTable(); createToast('ลบสำเร็จ','warning'); }
+        function saveAdvance(e) { 
+            e.preventDefault(); const id=document.getElementById('adv-id').value; 
+            const p = { id: id || generateUUID(), date:document.getElementById('adv-date').value, contract_no:document.getElementById('adv-contract-no').value, person_name:document.getElementById('adv-person').value, activity_name:document.getElementById('adv-activity').value, amount:Number(document.getElementById('adv-amount').value), is_forward:document.getElementById('adv-is-forward').checked }; 
+            if(!id) { p.status='รอเคลียร์'; p.cleared_used=0; p.cleared_returned=0; cacheAdvances.push(p); } else { const ix=cacheAdvances.findIndex(x=>x.id===id); if(ix>-1) { p.status = cacheAdvances[ix].status; p.cleared_used = cacheAdvances[ix].cleared_used; p.cleared_returned = cacheAdvances[ix].cleared_returned; cacheAdvances[ix]=p; } } 
+            upsertData('advances', p); closeAdvanceModal(); renderAdvanceTable(); createToast('บันทึกสัญญาทดรองสำเร็จ'); 
+        }
+        function deleteSelectedAdvance() { const chk=Array.from(document.querySelectorAll('.chk-del-adv:checked')).map(c=>c.value); if(chk.length===0) return; if(!confirm(`ลบ ${chk.length} สัญญา?`)) return; chk.forEach(id => deleteData('advances', id)); cacheAdvances=cacheAdvances.filter(a=>!chk.includes(a.id)); document.getElementById('chk-all-adv').checked=false; renderAdvanceTable(); createToast('ลบสำเร็จ','warning'); }
 
         // เคลียร์ทดรอง
         function renderAdvClearExpenseDropdown() { let opts='<option value="">-- ไม่ระบุ (ลงนอกงบออโต้) --</option>'; cacheBudgetItems.filter(i=>i.type==='EXPENSE').forEach(i=>opts+=`<option value="${i.id}">[${i.category_name}] ${i.item_name}</option>`); return opts; }
@@ -678,10 +727,17 @@
             let used=0; const rows=[]; document.querySelectorAll('.adv-clear-row').forEach(r=>{ const amt=Number(r.querySelector('.adv-clear-amt').value||0); if(amt>0){ used+=amt; rows.push({id:r.querySelector('.adv-clear-item').value, amt}); }});
             const ret=Number(document.getElementById('adv-clear-returned').value); if(used+ret !== bal && !confirm(`ยอดรวม(${formatMoney(used+ret)}) ไม่ตรงกับยอดคงเหลือ(${formatMoney(bal)}) ทำต่อไหม?`)) return;
             const dt=new Date().toISOString().split('T')[0]; const fm=new Date(dt).getMonth()+1>=5?new Date(dt).getMonth()-3:new Date(dt).getMonth()+9;
-            rows.forEach((r,i) => { let exId=r.id; if(!exId){ exId="i_adv_exp_"+Date.now()+i; cacheBudgetItems.push({id:exId, type:'EXPENSE', plan_name:'นอกงบ', category_name:'เคลียร์เงินยืม', item_name:`กิจกรรม: ${a.activity_name}`, allocated_amount:0, is_in_budget:false}); } cacheTransactions.push({id:"t_"+Date.now()+"E"+i, budget_item_id:exId, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:a.contract_no, amount:r.amt, remarks:`เคลียร์ทดรอง: ${a.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'}); });
-            if(ret>0){ cacheTransactions.push({id:"t_"+Date.now()+"I", budget_item_id:cacheBudgetItems.find(i=>i.item_name==='รับคืนเงินทดรองจ่าย').id, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:a.contract_no, amount:ret, remarks:`ทอนเงินทดรอง: ${a.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'}); }
+            rows.forEach((r,i) => { 
+                let exId=r.id; if(!exId){ exId=generateUUID(); const newEx = {id:exId, type:'EXPENSE', plan_name:'นอกงบ', category_name:'เคลียร์เงินยืม', item_name:`กิจกรรม: ${a.activity_name}`, allocated_amount:0, is_in_budget:false}; cacheBudgetItems.push(newEx); upsertData('budget_items', newEx); } 
+                const newT = {id:generateUUID(), budget_item_id:exId, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:a.contract_no, amount:r.amt, remarks:`เคลียร์ทดรอง: ${a.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'};
+                cacheTransactions.push(newT); upsertData('budget_transactions', newT);
+            });
+            if(ret>0){ 
+                const newT = {id:generateUUID(), budget_item_id:cacheBudgetItems.find(i=>i.item_name==='รับคืนเงินทดรองจ่าย').id, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:a.contract_no, amount:ret, remarks:`ทอนเงินทดรอง: ${a.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'}; 
+                cacheTransactions.push(newT); upsertData('budget_transactions', newT);
+            }
             a.cleared_used=(a.cleared_used||0)+used; a.cleared_returned=(a.cleared_returned||0)+ret; a.status=(a.cleared_used+a.cleared_returned>=a.amount)?'เคลียร์แล้ว':'ทยอยเคลียร์';
-            saveToLocalStorage(); closeAdvanceClearModal(); renderAdvanceTable(); loadDashboardData(); createToast('เคลียร์สัญญาสำเร็จ');
+            upsertData('advances', a); closeAdvanceClearModal(); renderAdvanceTable(); loadDashboardData(); createToast('เคลียร์สัญญาสำเร็จ');
         }
 
         /* =======================================================
@@ -700,24 +756,33 @@
         }
         function openWelfareModal() { document.getElementById('form-welfare').reset(); populatePersonnelDropdown('wel-person'); document.getElementById('wel-id').value=''; document.getElementById('wel-date').value=new Date().toISOString().split('T')[0]; document.getElementById('modal-welfare').classList.remove('opacity-0','pointer-events-none'); }
         function closeWelfareModal() { document.getElementById('modal-welfare').classList.add('opacity-0','pointer-events-none'); }
-        function saveWelfare(e) { e.preventDefault(); const id=document.getElementById('wel-id').value; const p={ date:document.getElementById('wel-date').value, contract_no:document.getElementById('wel-contract-no').value, person_name:document.getElementById('wel-person').value, amount:Number(document.getElementById('wel-amount').value), installment:Number(document.getElementById('wel-installment').value), start_month:Number(document.getElementById('wel-start-month').value), is_forward:document.getElementById('wel-is-forward').checked }; if(!id) { p.id="wel_"+Date.now(); p.status='รอชำระ'; p.paid_amount=0; cacheWelfares.push(p); } else { const ix=cacheWelfares.findIndex(x=>x.id===id); if(ix>-1) cacheWelfares[ix]={...cacheWelfares[ix],...p}; } saveToLocalStorage(); closeWelfareModal(); renderWelfareTable(); createToast('บันทึกสำเร็จ'); }
-        function deleteSelectedWelfare() { const chk=Array.from(document.querySelectorAll('.chk-del-wel:checked')).map(c=>c.value); if(chk.length===0) return; if(!confirm(`ลบ ${chk.length} สัญญา?`)) return; cacheWelfares=cacheWelfares.filter(w=>!chk.includes(w.id)); saveToLocalStorage(); document.getElementById('chk-all-wel').checked=false; renderWelfareTable(); createToast('ลบสำเร็จ','warning'); }
+        function saveWelfare(e) { 
+            e.preventDefault(); const id=document.getElementById('wel-id').value; 
+            const p = { id: id || generateUUID(), date:document.getElementById('wel-date').value, contract_no:document.getElementById('wel-contract-no').value, person_name:document.getElementById('wel-person').value, amount:Number(document.getElementById('wel-amount').value), installment:Number(document.getElementById('wel-installment').value), start_month:Number(document.getElementById('wel-start-month').value), is_forward:document.getElementById('wel-is-forward').checked }; 
+            if(!id) { p.status='รอชำระ'; p.paid_amount=0; cacheWelfares.push(p); } else { const ix=cacheWelfares.findIndex(x=>x.id===id); if(ix>-1) { p.status = cacheWelfares[ix].status; p.paid_amount = cacheWelfares[ix].paid_amount; cacheWelfares[ix]=p; } } 
+            upsertData('welfares', p); closeWelfareModal(); renderWelfareTable(); createToast('บันทึกสำเร็จ'); 
+        }
+        function deleteSelectedWelfare() { const chk=Array.from(document.querySelectorAll('.chk-del-wel:checked')).map(c=>c.value); if(chk.length===0) return; if(!confirm(`ลบ ${chk.length} สัญญา?`)) return; chk.forEach(id => deleteData('welfares', id)); cacheWelfares=cacheWelfares.filter(w=>!chk.includes(w.id)); document.getElementById('chk-all-wel').checked=false; renderWelfareTable(); createToast('ลบสำเร็จ','warning'); }
 
         // รับชำระรายคน
         function openWelfarePayModal(id) { const w=cacheWelfares.find(x=>x.id===id); if(!w) return; const bal=w.amount-w.paid_amount; document.getElementById('wel-pay-id').value=w.id; document.getElementById('wel-pay-person').textContent=w.person_name; document.getElementById('wel-pay-balance').textContent=formatMoney(bal); document.getElementById('wel-pay-date').value=new Date().toISOString().split('T')[0]; document.getElementById('wel-pay-amount').value=bal; document.getElementById('modal-welfare-pay').classList.remove('opacity-0','pointer-events-none'); }
         function closeWelfarePayModal() { document.getElementById('modal-welfare-pay').classList.add('opacity-0','pointer-events-none'); }
-        function executeWelfarePay(e) { e.preventDefault(); const w=cacheWelfares.find(x=>x.id===document.getElementById('wel-pay-id').value); if(!w) return; const amt=Number(document.getElementById('wel-pay-amount').value); const dt=document.getElementById('wel-pay-date').value; const fm=new Date(dt).getMonth()+1>=5?new Date(dt).getMonth()-3:new Date(dt).getMonth()+9; cacheTransactions.push({id:"t_"+Date.now(), budget_item_id:cacheBudgetItems.find(i=>i.item_name==='รับชำระเงินยืมสวัสดิการ').id, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:w.contract_no, amount:amt, remarks:`ชำระสวัสดิการ: ${w.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'}); w.paid_amount+=amt; if(w.paid_amount>=w.amount) w.status='ชำระครบ'; saveToLocalStorage(); closeWelfarePayModal(); renderWelfareTable(); loadDashboardData(); createToast('รับชำระสำเร็จ'); }
+        function executeWelfarePay(e) { 
+            e.preventDefault(); const w=cacheWelfares.find(x=>x.id===document.getElementById('wel-pay-id').value); if(!w) return; const amt=Number(document.getElementById('wel-pay-amount').value); const dt=document.getElementById('wel-pay-date').value; const fm=new Date(dt).getMonth()+1>=5?new Date(dt).getMonth()-3:new Date(dt).getMonth()+9; 
+            const newT = {id:generateUUID(), budget_item_id:cacheBudgetItems.find(i=>i.item_name==='รับชำระเงินยืมสวัสดิการ').id, transaction_date:dt, fiscal_month:fm, fiscal_year:2569, doc_no:w.contract_no, amount:amt, remarks:`ชำระสวัสดิการ: ${w.person_name}`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'};
+            cacheTransactions.push(newT); upsertData('budget_transactions', newT);
+            w.paid_amount+=amt; if(w.paid_amount>=w.amount) w.status='ชำระครบ'; 
+            upsertData('welfares', w); closeWelfarePayModal(); renderWelfareTable(); loadDashboardData(); createToast('รับชำระสำเร็จ'); 
+        }
 
         // ระบบหักสวัสดิการแบบมี Preview (Step 1 -> Step 2)
         function openWelfareAutoModal() { document.getElementById('welfare-auto-step1').classList.remove('hidden'); document.getElementById('welfare-auto-step2').classList.add('hidden'); document.getElementById('modal-welfare-auto').classList.remove('opacity-0','pointer-events-none'); }
         function closeWelfareAutoModal() { document.getElementById('modal-welfare-auto').classList.add('opacity-0','pointer-events-none'); }
         function backToWelfareAutoStep1() { document.getElementById('welfare-auto-step1').classList.remove('hidden'); document.getElementById('welfare-auto-step2').classList.add('hidden'); }
         
-        let pendingWelfareAutoList = [];
-        let targetAutoMonth = 1;
+        let pendingWelfareAutoList = []; let targetAutoMonth = 1;
         function previewWelfareAuto(e) {
-            e.preventDefault();
-            targetAutoMonth = Number(document.getElementById('wel-auto-month').value);
+            e.preventDefault(); targetAutoMonth = Number(document.getElementById('wel-auto-month').value);
             const body = document.getElementById('welfare-auto-preview-body'); body.innerHTML = '';
             pendingWelfareAutoList = []; let totalPreview = 0;
 
@@ -726,8 +791,7 @@
                     const balance = w.amount - (w.paid_amount || 0);
                     const defaultDeduct = Math.min(balance, Number(w.installment || 0));
                     if (defaultDeduct > 0) {
-                        pendingWelfareAutoList.push(w);
-                        totalPreview += defaultDeduct;
+                        pendingWelfareAutoList.push(w); totalPreview += defaultDeduct;
                         body.innerHTML += `<tr><td class="p-2 border-b text-xs font-mono">${w.contract_no}</td><td class="p-2 border-b font-bold">${w.person_name}</td><td class="p-2 border-b"><input type="number" step="0.01" class="w-full text-right border rounded p-1.5 font-bold text-emerald-700 wel-auto-input" data-id="${w.id}" value="${defaultDeduct}" oninput="calcWelfareAutoPreview()"></td></tr>`;
                     }
                 }
@@ -741,8 +805,7 @@
         }
 
         function calcWelfareAutoPreview() {
-            let sum = 0;
-            document.querySelectorAll('.wel-auto-input').forEach(el => sum += Number(el.value || 0));
+            let sum = 0; document.querySelectorAll('.wel-auto-input').forEach(el => sum += Number(el.value || 0));
             document.getElementById('welfare-auto-total-preview').textContent = formatMoney(sum);
         }
 
@@ -752,26 +815,24 @@
             const incItem = cacheBudgetItems.find(i => i.item_name === 'รับชำระเงินยืมสวัสดิการ');
 
             document.querySelectorAll('.wel-auto-input').forEach(el => {
-                const wId = el.getAttribute('data-id');
-                const amt = Number(el.value || 0);
+                const wId = el.getAttribute('data-id'); const amt = Number(el.value || 0);
                 if (amt > 0) {
                     const w = cacheWelfares.find(x => x.id === wId);
-                    if(w) {
-                        w.paid_amount = (w.paid_amount || 0) + amt;
-                        if (w.paid_amount >= w.amount) w.status = 'ชำระครบ';
-                        totalDeducted += amt; deductedCount++;
-                    }
+                    if(w) { w.paid_amount = (w.paid_amount || 0) + amt; if (w.paid_amount >= w.amount) w.status = 'ชำระครบ'; totalDeducted += amt; deductedCount++; upsertData('welfares', w); }
                 }
             });
 
             if (totalDeducted > 0) {
                 // ขาจ่าย (ตัดงบ)
-                let exId = "i_auto_exp"; if(!cacheBudgetItems.find(i=>i.id===exId)) cacheBudgetItems.push({id:exId, type:'EXPENSE', plan_name:'นอกงบ', category_name:'สวัสดิการ', item_name:'หักเงินสวัสดิการออโต้', allocated_amount:0, is_in_budget:false});
-                cacheTransactions.push({id:"t_"+Date.now()+"_EXP", budget_item_id:exId, transaction_date:dateStr, fiscal_month:targetAutoMonth, fiscal_year:2569, doc_no:'AUTO', amount:totalDeducted, remarks:`หักสวัสดิการออโต้ เดือน ${targetAutoMonth} (${deductedCount} ราย)`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'});
+                let exItem = cacheBudgetItems.find(i=>i.item_name==='หักเงินสวัสดิการออโต้');
+                if(!exItem) { exItem = {id:generateUUID(), type:'EXPENSE', plan_name:'นอกงบ', category_name:'สวัสดิการ', item_name:'หักเงินสวัสดิการออโต้', allocated_amount:0, is_in_budget:false}; cacheBudgetItems.push(exItem); upsertData('budget_items', exItem); }
+                const expT = {id:generateUUID(), budget_item_id:exItem.id, transaction_date:dateStr, fiscal_month:targetAutoMonth, fiscal_year:2569, doc_no:'AUTO', amount:totalDeducted, remarks:`หักสวัสดิการออโต้ เดือน ${targetAutoMonth} (${deductedCount} ราย)`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'};
+                cacheTransactions.push(expT); upsertData('budget_transactions', expT);
                 // ขารับ
-                cacheTransactions.push({id:"t_"+Date.now()+"_INC", budget_item_id:incItem.id, transaction_date:dateStr, fiscal_month:targetAutoMonth, fiscal_year:2569, doc_no:'AUTO', amount:totalDeducted, remarks:`รับชำระสวัสดิการออโต้ เดือน ${targetAutoMonth} (${deductedCount} ราย)`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'});
+                const incT = {id:generateUUID(), budget_item_id:incItem.id, transaction_date:dateStr, fiscal_month:targetAutoMonth, fiscal_year:2569, doc_no:'AUTO', amount:totalDeducted, remarks:`รับชำระสวัสดิการออโต้ เดือน ${targetAutoMonth} (${deductedCount} ราย)`, created_by:currentUser.id, status:'ตรวจสอบแล้ว'};
+                cacheTransactions.push(incT); upsertData('budget_transactions', incT);
                 
-                saveToLocalStorage(); closeWelfareAutoModal(); renderWelfareTable(); loadDashboardData();
+                closeWelfareAutoModal(); renderWelfareTable(); loadDashboardData();
                 createToast(`ดึงยอดและลงบัญชีสำเร็จ ${deductedCount} ราย รวม ${formatMoney(totalDeducted)} บ.`, 'success');
             } else { closeWelfareAutoModal(); }
         }
@@ -817,7 +878,6 @@
             if(!incHtml && !expHtml) html += `<tr><td colspan="5" class="p-6 text-center text-slate-400">ไม่พบข้อมูล...</td></tr>`;
             table.innerHTML = html + `</tbody>`;
 
-            // อัปเดตกล่องสรุปด้านล่าง
             const sumBox = document.getElementById('report-summary-bottom');
             if(sumBox) {
                 sumBox.innerHTML = `
@@ -856,10 +916,10 @@
         /* =======================================================
            [USERS] 
            ======================================================= */
-        function renderUsersTable() { const b=document.getElementById('table-users-body'); if(!b) return; b.innerHTML=''; cacheSystemUsers.forEach(u=>b.innerHTML+=`<tr class="hover:bg-slate-50"><td class="py-2 px-4 font-bold">${u.username}</td><td class="py-2 px-4">${u.first_name} ${u.last_name}</td><td class="py-2 px-4 text-slate-500">${u.position}</td><td class="py-2 px-4"><span class="bg-slate-100 px-2 rounded text-xs font-bold">${u.role}</span></td><td class="py-2 px-4 font-mono text-slate-400">${u.password}</td><td class="py-2 px-4 text-center"><button onclick="openUserModal('${u.id}')" class="text-indigo-600 mr-2">แก้ไข</button><button onclick="if(confirm('ลบผู้ใช้?')) { cacheSystemUsers=cacheSystemUsers.filter(x=>x.id!=='${u.id}'); saveToLocalStorage(); renderUsersTable(); createToast('ลบแล้ว','warning'); }" class="text-red-500">ลบ</button></td></tr>`); }
+        function renderUsersTable() { const b=document.getElementById('table-users-body'); if(!b) return; b.innerHTML=''; cacheSystemUsers.forEach(u=>b.innerHTML+=`<tr class="hover:bg-slate-50"><td class="py-2 px-4 font-bold">${u.username}</td><td class="py-2 px-4">${u.first_name} ${u.last_name}</td><td class="py-2 px-4 text-slate-500">${u.position}</td><td class="py-2 px-4"><span class="bg-slate-100 px-2 rounded text-xs font-bold">${u.role}</span></td><td class="py-2 px-4 font-mono text-slate-400">******</td><td class="py-2 px-4 text-center"><button onclick="openUserModal('${u.id}')" class="text-indigo-600 mr-2">แก้ไข</button><button onclick="if(confirm('ลบผู้ใช้?')) { cacheSystemUsers=cacheSystemUsers.filter(x=>x.id!=='${u.id}'); deleteData('system_users', '${u.id}'); renderUsersTable(); createToast('ลบแล้ว','warning'); }" class="text-red-500">ลบ</button></td></tr>`); }
         function openUserModal(id=null) { if(currentUser.role!=='Admin') return createToast('เฉพาะ Admin','danger'); document.getElementById('form-user').reset(); if(id){ const u=cacheSystemUsers.find(x=>x.id===id); document.getElementById('user-id').value=u.id; document.getElementById('user-username').value=u.username; document.getElementById('user-password').value=u.password; document.getElementById('user-firstname').value=u.first_name; document.getElementById('user-lastname').value=u.last_name; document.getElementById('user-position').value=u.position; document.getElementById('user-role').value=u.role; } else document.getElementById('user-id').value=''; document.getElementById('modal-user').classList.remove('opacity-0', 'pointer-events-none'); }
         function closeUserModal() { document.getElementById('modal-user').classList.add('opacity-0', 'pointer-events-none'); }
-        function saveUser(e) { e.preventDefault(); const id=document.getElementById('user-id').value; const p={username:document.getElementById('user-username').value, password:document.getElementById('user-password').value, first_name:document.getElementById('user-firstname').value, last_name:document.getElementById('user-lastname').value, position:document.getElementById('user-position').value, role:document.getElementById('user-role').value}; if(id){ const ix=cacheSystemUsers.findIndex(x=>x.id===id); cacheSystemUsers[ix]={...cacheSystemUsers[ix],...p}; }else{ p.id="u_"+Date.now(); cacheSystemUsers.push(p); } saveToLocalStorage(); closeUserModal(); renderUsersTable(); createToast('บันทึกสำเร็จ'); }
+        function saveUser(e) { e.preventDefault(); const id=document.getElementById('user-id').value; const p={ id: id || generateUUID(), username:document.getElementById('user-username').value, password:document.getElementById('user-password').value, first_name:document.getElementById('user-firstname').value, last_name:document.getElementById('user-lastname').value, position:document.getElementById('user-position').value, role:document.getElementById('user-role').value}; const ix=cacheSystemUsers.findIndex(x=>x.id===p.id); if(ix>-1) cacheSystemUsers[ix]=p; else cacheSystemUsers.push(p); upsertData('system_users', p); closeUserModal(); renderUsersTable(); createToast('บันทึกสำเร็จ'); }
     </script>
 </body>
 </html>
